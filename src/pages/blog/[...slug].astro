@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles', ({ data }) => !data.draft);
@@ -14,7 +15,7 @@ const { article } = Astro.props;
 const { Content } = await article.render();
 ---
 
-<BaseLayout currentPath="/blog" title={article.data.title} description={article.data.description}>
+<BaseLayout currentPath="/blog" title={article.data.title} description={article.data.description} image={article.data.image}>
   <article style="max-width:820px;margin:0 auto;padding:110px 2rem 60px;">
     <div style="margin-bottom:30px;">
       <div style="display:flex;gap:12px;font-size:0.78rem;color:var(--muted);margin-bottom:12px;align-items:center;">
@@ -41,6 +42,8 @@ const { Content } = await article.render();
       <a href="/blog" class="btn-wash secondary">← Zurück zum Blog</a>
     </div>
   </article>
+
+  <NewsletterSignup />
 </BaseLayout>
 
 <style>

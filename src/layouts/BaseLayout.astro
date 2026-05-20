@@ -8,11 +8,21 @@ export interface Props {
   description?: string;
   currentPath?: string;
   canonical?: string;
+  image?: string;
 }
 
-const { title = 'Poker Basecamp', description = 'Bot Development & GTO Tools — Die einzige Plattform die Poker Bot Development + interaktive GTO-Tools + Human-vs-Machine Content vereint.', currentPath = '', canonical } = Astro.props;
+const {
+  title = 'Poker Basecamp',
+  description = 'Bot Development & GTO Tools — Die einzige Plattform die Poker Bot Development + interaktive GTO-Tools + Human-vs-Machine Content vereint.',
+  currentPath = '',
+  canonical,
+  image,
+} = Astro.props;
 
 const fullTitle = title === 'Poker Basecamp' ? title : `${title} — Poker Basecamp`;
+const ogImage = image || '/og-default.svg';
+const siteUrl = 'https://pokerbasecamp.com';
+const pageUrl = canonical || (currentPath ? `${siteUrl}${currentPath}` : siteUrl);
 ---
 
 <!DOCTYPE html>
@@ -30,7 +40,13 @@ const fullTitle = title === 'Poker Basecamp' ? title : `${title} — Poker Basec
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
+  <meta property="og:locale" content="de_DE" />
+  <meta property="og:url" content={pageUrl} />
+  <meta property="og:image" content={`${siteUrl}${ogImage}`} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@pokerbasecamp" />
 </head>
 <body>
   <!-- Warhol Background -->

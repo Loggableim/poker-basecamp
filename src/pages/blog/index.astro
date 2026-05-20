@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.draft);
 const articles = allArticles.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -100,6 +101,8 @@ const series = articles.slice(1);
       </div>
     </div>
   </section>
+
+  <NewsletterSignup />
 </BaseLayout>
 
 <script>

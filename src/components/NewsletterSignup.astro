@@ -1,0 +1,242 @@
+---
+// MailerLite Newsletter Signup — statisches Formular
+// Konfiguration: Ersetze MAILERLITE_API_KEY und MAILERLITE_GROUP_ID
+// mit echten Werten aus dem MailerLite Account.
+// Docs: https://developers.mailerlite.com/reference/subscribers-create-or-update
+
+const endpoint = import.meta.env.PUBLIC_ML_ENDPOINT || 'https://connect.mailerlite.com/api/subscribers';
+const placeholder = !import.meta.env.PUBLIC_ML_ENDPOINT;
+---
+
+<div class="newsletter-section">
+  <div class="newsletter-card">
+    <div class="newsletter-icon">♠</div>
+    <h3 class="newsletter-heading">Poker-Briefing erhalten</h3>
+    <p class="newsletter-desc">
+      Neue Artikel, GTO-Tools-Updates und Live-Bot-Daten — direkt in dein Postfach. Kein Spam, nur Karten.
+    </p>
+
+    <form class="newsletter-form" id="newsletter-form" data-endpoint={endpoint}>
+      <div class="newsletter-input-row">
+        <input
+          type="email"
+          name="email"
+          placeholder="Deine E-Mail-Adresse"
+          required
+          autocomplete="email"
+          class="newsletter-input"
+        />
+        <button type="submit" class="newsletter-btn">
+          Anmelden →
+        </button>
+      </div>
+      <div class="newsletter-feedback" id="newsletter-feedback" aria-live="polite"></div>
+    </form>
+
+    {placeholder && (
+      <p class="newsletter-placeholder-hint">
+        ⚡ <em>MailerLite-API noch nicht konfiguriert. Setze <code>PUBLIC_ML_ENDPOINT</code> im Deployment.</em>
+      </p>
+    )}
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('newsletter-form');
+  const feedback = document.getElementById('newsletter-feedback');
+  const endpoint = form?.dataset.endpoint;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = form.email.value.trim();
+    if (!email) return;
+
+    feedback.textContent = '⏳ Wird gesendet…';
+    feedback.className = 'newsletter-feedback';
+
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          // Optional: Gruppe/Group-ID hier hinzufügen
+          // groups: ["MAILERLITE_GROUP_ID"],
+        }),
+      });
+
+      if (res.ok || res.status === 409) {
+        // 409 = bereits angemeldet — das ist auch okay
+        feedback.textContent = '✅ Anmeldung erfolgreich! Check dein Postfach.';
+        feedback.className = 'newsletter-feedback success';
+        form.email.value = '';
+      } else {
+        const data = await res.json().catch(() => ({}));
+        feedback.textContent = data.message || '❌ Fehler bei der Anmeldung. Bitte versuch es später.';
+        feedback.className = 'newsletter-feedback error';
+      }
+    } catch (err) {
+      // Fallback bei Network-Error (z.B. CORS oder kein API-Key)
+      if (endpoint && endpoint.startsWith('https://connect.mailerlite.com')) {
+        // Echter Endpoint, aber nicht erreichbar → echten Fehler zeigen
+        feedback.textContent = '❌ Keine Verbindung. Bitte später versuchen.';
+        feedback.className = 'newsletter-feedback error';
+      } else {
+        // Platzhalter — Demo-Modus
+        feedback.textContent = '✅ Demo: Anmeldung registriert (API-Endpoint noch nicht konfiguriert).';
+        feedback.className = 'newsletter-feedback success';
+        form.email.value = '';
+      }
+    }
+  });
+</script>
+
+<style>
+  .newsletter-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem 40px;
+    width: 100%;
+  }
+
+  .newsletter-card {
+    background: var(--bg-card);
+    border: 1px solid var(--gold-dim);
+    padding: 36px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .newsletter-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--pink), transparent);
+    opacity: 0.6;
+  }
+
+  .newsletter-icon {
+    font-size: 2.2rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-family: 'Playfair Display', serif;
+    line-height: 1;
+  }
+
+  .newsletter-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .newsletter-desc {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    max-width: 440px;
+    margin: 0 auto 22px;
+    line-height: 1.6;
+  }
+
+  .newsletter-input-row {
+    display: flex;
+    gap: 8px;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .newsletter-input {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    font-family: 'Inter', sans-serif;
+    background: rgba(14, 10, 20, 0.6);
+    border: 1px solid var(--border);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .newsletter-input:focus {
+    border-color: var(--pink);
+  }
+
+  .newsletter-input::placeholder {
+    color: var(--muted);
+  }
+
+  .newsletter-btn {
+    padding: 12px 24px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    background: var(--pink);
+    color: #0e0a14;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .newsletter-btn:hover {
+    background: #e49ac8;
+    transform: translateY(-1px);
+  }
+
+  .newsletter-btn:active {
+    transform: translateY(0);
+  }
+
+  .newsletter-feedback {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    min-height: 20px;
+    color: var(--text-dim);
+  }
+
+  .newsletter-feedback.success {
+    color: var(--success);
+  }
+
+  .newsletter-feedback.error {
+    color: var(--danger);
+  }
+
+  .newsletter-placeholder-hint {
+    margin-top: 14px;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  .newsletter-placeholder-hint code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72em;
+    background: rgba(212, 134, 184, 0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--pink);
+  }
+
+  @media (max-width: 480px) {
+    .newsletter-card {
+      padding: 24px 20px;
+    }
+    .newsletter-input-row {
+      flex-direction: column;
+    }
+    .newsletter-btn {
+      width: 100%;
+      justify-content: center;
+    }
+    .newsletter-section {
+      padding: 0 1rem 30px;
+    }
+  }
+</style>

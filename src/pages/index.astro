@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
+import NewsletterSignup from '../components/NewsletterSignup.astro';
 
 const articles = await getCollection('articles', ({ data }) => !data.draft);
 const recentArticles = articles.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
@@ -167,4 +168,6 @@ const featured = articles.find(a => a.slug === 'warum-ich-einen-poker-bot-gebaut
       <a href="/bot-vs-human">⚔️ Watch the Challenge →</a> ✦
     </div>
   </div>
+
+  <NewsletterSignup />
 </BaseLayout>

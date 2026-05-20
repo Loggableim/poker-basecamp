@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Push/Fold Nash Tables — Poker Basecamp</title>
+<style>
+:root {
+  --bg-dark: #0e0a14;
+  --bg-card: #160e20;
+  --bg-card-hover: #1e1430;
+  --border: #2a1a40;
+  --border-hover: #4a2a6a;
+  --pink: #d486b8;
+  --gold: #d4a844;
+  --green: #7ab87a;
+  --mauve: #9a7aae;
+  --text: #e8daf0;
+  --text-dim: #b098c8;
+  --muted: #6a4a7a;
+  --accent: var(--gold);
+  --accent-dim: #b8902e;
+  --success: var(--green);
+  --danger: #d48678;
+  --gradient: linear-gradient(135deg, var(--gold) 0%, var(--pink) 100%);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-display: 'Playfair Display', Georgia, serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-dark);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+a { color: var(--gold); text-decoration: none; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+/* ─── Navbar ─── */
+.navbar {
+  background: rgba(14,10,20,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.navbar .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--text);
+}
+.navbar .logo .logo-icon {
+  width: 34px; height: 34px;
+  background: var(--gradient);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 800; color: #0e0a14;
+}
+.navbar .nav-links { display: flex; gap: 18px; align-items: center; }
+.navbar .nav-links a {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navbar .nav-links a:hover,
+.navbar .nav-links a.active { color: var(--gold); }
+
+/* ─── Container ─── */
+.container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+/* ─── Header ─── */
+.page-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.page-header h1 {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+}
+.page-header p {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+/* ─── Card ─── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: rgba(212,168,68,0.2); }
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+
+/* ─── Slider ─── */
+.slider-group { margin-bottom: 6px; }
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.slider-header label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.slider-header .slider-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--gold);
+  font-family: var(--font-mono);
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: var(--gradient);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid var(--bg-dark);
+  box-shadow: 0 2px 10px rgba(212,168,68,0.3);
+  transition: transform 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+input[type="range"]::-moz-range-thumb {
+  width: 24px; height: 24px;
+  background: var(--gradient);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid var(--bg-dark);
+}
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  padding: 0 2px;
+}
+.slider-labels span {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ─── Buttons ─── */
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.btn {
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  line-height: 1.4;
+}
+.btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.btn.active {
+  background: rgba(212,168,68,0.15);
+  color: var(--gold);
+  border-color: var(--gold);
+}
+.btn-sm { padding: 4px 12px; font-size: 0.75rem; }
+
+/* ─── Grid ─── */
+.grid-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  overflow-x: auto;
+}
+.grid-container {
+  display: inline-grid;
+  grid-template-columns: 32px repeat(13, 38px);
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  user-select: none;
+}
+.grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  height: 28px;
+}
+.grid-header.corner { font-size: 0.6rem; color: var(--muted); }
+.grid-cell {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.1s;
+  position: relative;
+  background: var(--bg-dark);
+  color: var(--text-dim);
+  border: 1px solid transparent;
+}
+.grid-cell:hover {
+  border-color: var(--gold);
+  transform: scale(1.1);
+  z-index: 2;
+  box-shadow: 0 0 8px rgba(212,168,68,0.2);
+}
+.grid-cell.suited { font-style: italic; }
+
+/* Heatmap colors */
+.grid-cell.push-strong {
+  background: #1a4a2a;
+  color: #7ab87a;
+  border-color: #2a6a3a;
+}
+.grid-cell.push-medium {
+  background: #3a4a1a;
+  color: #b8b87a;
+  border-color: #5a6a2a;
+}
+.grid-cell.push-weak {
+  background: #4a3a1a;
+  color: #d4a844;
+  border-color: #6a4a2a;
+}
+.grid-cell.push-marginal {
+  background: #3a2a1a;
+  color: #c48868;
+  border-color: #5a3a2a;
+}
+.grid-cell.push-no {
+  background: var(--bg-dark);
+  color: #4a3a5a;
+}
+.grid-cell.call-strong {
+  background: #1a3a4a;
+  color: #7ab8c8;
+  border-color: #2a5a6a;
+}
+.grid-cell.call-medium {
+  background: #2a3a3a;
+  color: #88b898;
+  border-color: #3a5a4a;
+}
+.grid-cell.call-marginal {
+  background: #3a2a3a;
+  color: #b888a8;
+  border-color: #5a3a5a;
+}
+.grid-cell.call-no {
+  background: var(--bg-dark);
+  color: #4a3a5a;
+}
+
+/* ─── Range String ─── */
+.range-string-box {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--gold);
+  word-break: break-all;
+  line-height: 1.5;
+  min-height: 38px;
+}
+.range-string-box .range-label {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.range-string-box .range-pct {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ─── Detail Tooltip ─── */
+.hand-detail {
+  position: fixed;
+  background: var(--bg-card);
+  border: 1px solid var(--border-hover);
+  border-radius: 10px;
+  padding: 14px 18px;
+  z-index: 1000;
+  min-width: 180px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  pointer-events: none;
+  display: none;
+}
+.hand-detail .hd-hand {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.hand-detail .hd-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 3px;
+}
+.hand-detail .hd-row .hd-val {
+  color: var(--gold);
+  font-weight: 600;
+}
+.hand-detail .hd-row .hd-val.push { color: var(--green); }
+.hand-detail .hd-row .hd-val.fold { color: var(--danger); }
+
+/* ─── Two-column layout ─── */
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 820px) {
+  .grid-2col { grid-template-columns: 1fr; }
+}
+
+/* ─── Info / Disclaimer ─── */
+.disclaimer {
+  font-size: 0.78rem;
+  color: var(--muted);
+  background: rgba(106,74,122,0.1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.disclaimer strong { color: var(--text-dim); }
+
+/* ─── Mode Toggle ─── */
+.mode-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 14px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.mode-tab {
+  flex: 1;
+  padding: 10px 14px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text-dim);
+  border: none;
+  background: transparent;
+  font-family: inherit;
+}
+.mode-tab:hover { background: var(--bg-card-hover); }
+.mode-tab.active {
+  background: rgba(212,168,68,0.12);
+  color: var(--gold);
+  box-shadow: inset 0 -2px 0 var(--gold);
+}
+.mode-tab:not(:last-child) { border-right: 1px solid var(--border); }
+
+/* ─── Legend ─── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ─── Stats ─── */
+.stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.stat-box {
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  text-align: center;
+  flex: 1;
+  min-width: 100px;
+}
+.stat-box .stat-label {
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.stat-box .stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+  font-family: var(--font-mono);
+}
+.stat-box .stat-value.green { color: var(--green); }
+.stat-box .stat-value.pink { color: var(--pink); }
+
+/* ─── Caller pos selector ─── */
+.caller-pos { margin-top: 10px; }
+.caller-pos label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* ─── Footer ─── */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  border-top: 1px solid var(--border);
+  margin-top: 20px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .container { padding: 14px 12px; }
+  .card { padding: 14px 16px; }
+  .page-header h1 { font-size: 1.5rem; }
+  .grid-container { grid-template-columns: 26px repeat(13, 32px); }
+  .grid-cell { width: 32px; height: 32px; font-size: 0.55rem; }
+  .navbar { padding: 0 12px; }
+  .slider-header .slider-value { font-size: 1.3rem; }
+  .stats-row { gap: 8px; }
+  .stat-box { min-width: 80px; padding: 6px 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="/" class="logo">
+    <span class="logo-icon">♠</span>
+    Poker Basecamp
+  </a>
+  <div class="nav-links">
+    <a href="/tools/equity-calc/">Equity</a>
+    <a href="/tools/range-viz/">Range Viz</a>
+    <a href="/tools/icm-calc/">ICM</a>
+    <a href="/tools/mdf-calc/">MDF</a>
+    <a href="/tools/push-fold/" class="active">Push/Fold</a>
+  </div>
+</nav>
+
+<!-- Main -->
+<div class="container">
+
+  <div class="page-header">
+    <h1>🎯 Push/Fold Nash Tables</h1>
+    <p>Nash-Equilibria für Push/Fold-Spots (3–20 BB). Wähle Stack-Größe und Position — das Grid zeigt dir, welche Hände du pushen bzw. calleen kannst.</p>
+  </div>
+
+  <!-- ─── Controls Card ─── -->
+  <div class="card">
+    <div class="card-title">⚙️ Konfiguration</div>
+
+    <!-- Stack Depth Slider -->
+    <div class="slider-group">
+      <div class="slider-header">
+        <label>Stack Depth</label>
+        <span class="slider-value" id="stackDisplay">10<small style="font-size:0.6em;font-weight:400;color:var(--muted)"> BB</small></span>
+      </div>
+      <input type="range" id="stackSlider" min="3" max="20" value="10" step="1">
+      <div class="slider-labels">
+        <span>3 BB</span>
+        <span>5 BB</span>
+        <span>8 BB</span>
+        <span>10 BB</span>
+        <span>12 BB</span>
+        <span>15 BB</span>
+        <span>20 BB</span>
+      </div>
+    </div>
+
+    <!-- Position Selection -->
+    <div style="margin-top:14px;">
+      <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Deine Position</label>
+      <div class="btn-group" id="posBtns">
+        <button class="btn active" data-pos="UTG">UTG</button>
+        <button class="btn" data-pos="MP">MP</button>
+        <button class="btn" data-pos="CO">CO</button>
+        <button class="btn" data-pos="BTN">BTN</button>
+        <button class="btn" data-pos="SB">SB</button>
+        <button class="btn" data-pos="BB">BB</button>
+      </div>
+    </div>
+
+    <!-- Mode Toggle -->
+    <div style="margin-top:14px;">
+      <label style="display:block;font-size:0.75rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Ansicht</label>
+      <div class="mode-tabs" id="modeTabs">
+        <button class="mode-tab active" data-mode="push">🤜 Hero Push-Range</button>
+        <button class="mode-tab" data-mode="call-hero">🛡️ Hero Call-Range (vs Push)</button>
+      </div>
+    </div>
+
+    <!-- Caller position (only visible in call mode) -->
+    <div class="caller-pos" id="callerPosGroup" style="display:none;">
+      <label>Gegner pusht von Position</label>
+      <div class="btn-group" id="callerPosBtns">
+        <button class="btn active" data-pos="UTG">UTG</button>
+        <button class="btn" data-pos="MP">MP</button>
+        <button class="btn" data-pos="CO">CO</button>
+        <button class="btn" data-pos="BTN">BTN</button>
+        <button class="btn" data-pos="SB">SB</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Grid Card ─── -->
+  <div class="card">
+    <div class="card-title" id="gridTitle">📊 Push-Range <span style="font-size:0.7rem;font-weight:400;color:var(--text-dim);">(UTG · 10 BB)</span></div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-box">
+        <div class="stat-label">Range</div>
+        <div class="stat-value" id="rangePct">0%</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Combos</div>
+        <div class="stat-value green" id="comboCount">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Pairs</div>
+        <div class="stat-value pink" id="pairCount">0</div>
+      </div>
+    </div>
+
+    <div class="grid-wrapper">
+      <div class="grid-container" id="handGrid"></div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend" id="legendArea"></div>
+
+    <!-- Range String -->
+    <div class="range-string-box" id="rangeStringBox">
+      <div class="range-label">Range String</div>
+      <div id="rangeString">—</div>
+      <div class="range-pct" id="rangeStringPct"></div>
+    </div>
+  </div>
+
+  <!-- ─── Info Card ─── -->
+  <div class="card">
+    <div class="card-title">📖 Über Push/Fold Nash</div>
+    <div style="font-size:0.85rem;color:var(--text-dim);line-height:1.7;">
+      <p>Die Nash-Equilibria für Push/Fold beschreiben, welche Hände sich in einem bestimmten Spot (+Position, +Stackgröße) profitabel pushen bzw. callen lassen — <strong>unter der Annahme, dass beide Spieler optimal spielen</strong>.</p>
+      <ul style="margin:10px 0 0 18px;list-style:disc;">
+        <li><strong>Je kleiner der Stack</strong>, desto weiter sind die Ranges (mehr Fold Equity + bessere Pot Odds für den Caller).</li>
+        <li><strong>Je später die Position</strong>, desto weiter kannst du pushen (weniger Spieler hinter dir).</li>
+        <li><strong>Call-Ranges</strong> sind enger als Push-Ranges — du brauchst eine stärkere Hand, um einen All-In zu callen.</li>
+      </ul>
+    </div>
+    <div class="disclaimer">
+      <strong>⚠️ Hinweis:</strong> Dieses Tool zeigt <strong>approximierte Nash-Equilibria</strong> auf Basis eines vereinfachten Modells. Die dargestellten Ranges sind für Bildungszwecke optimiert und können von exakten Lösungen abweichen. Für Turnierentscheidungen mit hohem €-Einsatz empfehlen wir Tools wie HRC oder ICMIZER.
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  ♠ Poker Basecamp — GTO-Tools. Open Source · Education · No AI Hype.
+</div>
+
+<!-- Hand Detail Tooltip -->
+<div class="hand-detail" id="handDetail">
+  <div class="hd-hand" id="hdHand">AKs</div>
+  <div class="hd-row"><span>Score</span><span class="hd-val" id="hdScore">0</span></div>
+  <div class="hd-row"><span>Threshold</span><span class="hd-val" id="hdThreshold">0</span></div>
+  <div class="hd-row"><span>Aktion</span><span class="hd-val" id="hdAction">—</span></div>
+  <div class="hd-row"><span>Equity vs Random</span><span class="hd-val" id="hdEquity">—</span></div>
+</div>
+
+<script>
+// ===== Rank Utilities =====
+const RANKS = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
+const RANK_VALUES = { '2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'T':10,'J':11,'Q':12,'K':13,'A':14 };
+const RANK_NAMES = { '2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9','T':'10','J':'J','Q':'Q','K':'K','A':'A' };
+const SUIT_SYMBOLS = { 's': '♠', 'h': '♥', 'd': '♦', 'c': '♣' };
+const SUIT_COLORS = { 's': '', 'h': '', 'd': '', 'c': '' };
+
+const ALL_POSITIONS = ['UTG','MP','CO','BTN','SB','BB'];
+const PUSH_POSITIONS = ['UTG','MP','CO','BTN','SB']; // BB doesn't push
+const POS_INDEX = { 'UTG':0, 'MP':1, 'CO':2, 'BTN':3, 'SB':4, 'BB':5 };
+
+// ===== Hand Score Model =====
+// Score = high_rank*2 + low_rank*2 + pair_bonus + suited_bonus
+// Pair bonus = 14, Suited bonus = 1
+function handScore(r1, r2, suited) {
+  const v1 = RANK_VALUES[r1];
+  const v2 = RANK_VALUES[r2];
+  const hi = Math.max(v1, v2);
+  const lo = Math.min(v1, v2);
+  let score = hi * 2 + lo * 2;
+  if (v1 === v2) score += 14; // pair bonus
+  if (suited) score += 1;
+  return score;
+}
+
+// Hand string like "AKs", "KQo", "TT"
+function handString(r1, r2, suited) {
+  if (r1 === r2) return r1 + r2;
+  const hi = RANK_VALUES[r1] >= RANK_VALUES[r2] ? r1 : r2;
+  const lo = RANK_VALUES[r1] >= RANK_VALUES[r2] ? r2 : r1;
+  return hi + lo + (suited ? 's' : 'o');
+}
+
+// ===== Threshold Tables =====
+// Breakpoints: 3, 5, 8, 10, 12, 15, 20 BB
+const BB_BREAKPOINTS = [3, 5, 8, 10, 12, 15, 20];
+
+// Push thresholds per position per breakpoint
+const PUSH_THRESHOLDS = {
+  'UTG': [22, 28, 34, 38, 42, 46, 50],
+  'MP':  [18, 24, 30, 34, 38, 42, 46],
+  'CO':  [14, 20, 26, 30, 34, 38, 42],
+  'BTN': [10, 16, 22, 26, 30, 34, 38],
+  'SB':  [6,  12, 18, 22, 26, 30, 34]
+};
+
+// Call thresholds (from perspective of BB caller) vs each position
+const CALL_THRESHOLDS = {
+  'UTG': [26, 32, 38, 42, 46, 50, 54],
+  'MP':  [24, 30, 36, 40, 44, 48, 52],
+  'CO':  [22, 28, 34, 38, 42, 46, 50],
+  'BTN': [20, 26, 32, 36, 40, 44, 48],
+  'SB':  [18, 24, 30, 34, 38, 42, 46]
+};
+
+// Interpolate threshold for any BB value
+function interpolateThreshold(thresholds, bb) {
+  if (bb <= BB_BREAKPOINTS[0]) return thresholds[0];
+  if (bb >= BB_BREAKPOINTS[BB_BREAKPOINTS.length - 1]) return thresholds[BB_BREAKPOINTS.length - 1];
+  
+  for (let i = 0; i < BB_BREAKPOINTS.length - 1; i++) {
+    if (bb >= BB_BREAKPOINTS[i] && bb <= BB_BREAKPOINTS[i + 1]) {
+      const t = (bb - BB_BREAKPOINTS[i]) / (BB_BREAKPOINTS[i + 1] - BB_BREAKPOINTS[i]);
+      return thresholds[i] + t * (thresholds[i + 1] - thresholds[i]);
+    }
+  }
+  return thresholds[thresholds.length - 1];
+}
+
+// ===== Hand Evaluation =====
+function isPushHand(r1, r2, suited, position, bb) {
+  const score = handScore(r1, r2, suited);
+  const thresh = interpolateThreshold(PUSH_THRESHOLDS[position], bb);
+  return score >= thresh;
+}
+
+function isCallHand(r1, r2, suited, pusherPos, bb) {
+  const score = handScore(r1, r2, suited);
+  const thresh = interpolateThreshold(CALL_THRESHOLDS[pusherPos], bb);
+  return score >= thresh;
+}
+
+function getPushThreshold(position, bb) {
+  return interpolateThreshold(PUSH_THRESHOLDS[position], bb);
+}
+
+function getCallThreshold(pusherPos, bb) {
+  return interpolateThreshold(CALL_THRESHOLDS[pusherPos], bb);
+}
+
+// ===== Generate Grid =====
+function buildGrid() {
+  const grid = document.getElementById('handGrid');
+  grid.innerHTML = '';
+  
+  // Header row
+  const corner = document.createElement('div');
+  corner.className = 'grid-header corner';
+  corner.textContent = '';
+  grid.appendChild(corner);
+  
+  for (const r of RANKS) {
+    const h = document.createElement('div');
+    h.className = 'grid-header';
+    h.textContent = r;
+    grid.appendChild(h);
+  }
+  
+  const state = getState();
+  
+  // Grid rows
+  for (let row = 0; row < 13; row++) {
+    // Row label
+    const label = document.createElement('div');
+    label.className = 'grid-header';
+    label.textContent = RANKS[12 - row];
+    grid.appendChild(label);
+    
+    for (let col = 0; col < 13; col++) {
+      // Hand: row rank vs column rank
+      // Row goes A down to 2 (13-0), col goes 2 to A (0-12)
+      const r1 = RANKS[12 - row]; // row rank (A on top)
+      const r2 = RANKS[col];       // col rank (2 on left)
+      const isPair = r1 === r2;
+      const isSuited = col >= (12 - row); // above diagonal = suited
+      // Actually: hands above the diagonal (col > 12-row) are suited
+      // Diagonal = pairs
+      // Below diagonal = offsuit
+      
+      let suited;
+      if (col === 12 - row) { // diagonal
+        suited = false; // pairs have no suit
+      } else if (col > 12 - row) {
+        suited = true; // above diagonal = suited
+      } else {
+        suited = false; // below diagonal = offsuit
+      }
+      
+      // For pairs, use row rank
+      const displayR1 = isPair ? r1 : (RANK_VALUES[r1] >= RANK_VALUES[r2] ? r1 : r2);
+      const displayR2 = isPair ? r2 : (RANK_VALUES[r1] >= RANK_VALUES[r2] ? r2 : r1);
+      
+      const isPush = isPushHand(r1, r2, suited, state.position, state.bb);
+      const isCall = isCallHand(r1, r2, suited, state.oppPosition, state.bb);
+      
+      const cell = document.createElement('div');
+      cell.className = 'grid-cell';
+      if (isPair) cell.classList.add('pair');
+      if (suited) cell.classList.add('suited');
+      
+      // Determine heatmap class based on mode
+      if (state.mode === 'push') {
+        if (isPush) {
+          const score = handScore(r1, r2, suited);
+          const thresh = getPushThreshold(state.position, state.bb);
+          const margin = score - thresh;
+          if (margin >= 10) cell.classList.add('push-strong');
+          else if (margin >= 5) cell.classList.add('push-medium');
+          else if (margin >= 2) cell.classList.add('push-weak');
+          else cell.classList.add('push-marginal');
+        } else {
+          cell.classList.add('push-no');
+        }
+      } else {
+        // Call mode
+        if (isCall) {
+          const score = handScore(r1, r2, suited);
+          const thresh = getCallThreshold(state.oppPosition, state.bb);
+          const margin = score - thresh;
+          if (margin >= 8) cell.classList.add('call-strong');
+          else if (margin >= 3) cell.classList.add('call-medium');
+          else cell.classList.add('call-marginal');
+        } else {
+          cell.classList.add('call-no');
+        }
+      }
+      
+      // Display text
+      if (isPair) {
+        cell.textContent = displayR1 + displayR2;
+      } else {
+        cell.textContent = (RANK_VALUES[displayR1] >= RANK_VALUES[displayR2] ? displayR1 + displayR2 : displayR2 + displayR1);
+      }
+      
+      // Data attributes
+      cell.dataset.r1 = r1;
+      cell.dataset.r2 = r2;
+      cell.dataset.suited = suited ? '1' : '0';
+      
+      // Hover for detail
+      cell.addEventListener('mouseenter', showHandDetail);
+      cell.addEventListener('mouseleave', hideHandDetail);
+      
+      grid.appendChild(cell);
+    }
+  }
+  
+  updateStats();
+  updateRangeString();
+}
+
+// ===== Hand Detail Tooltip =====
+function showHandDetail(e) {
+  const cell = e.currentTarget;
+  const r1 = cell.dataset.r1;
+  const r2 = cell.dataset.r2;
+  const suited = cell.dataset.suited === '1';
+  const state = getState();
+  
+  const score = handScore(r1, r2, suited);
+  const hStr = handString(r1, r2, suited);
+  
+  let thresh, action, actionClass;
+  if (state.mode === 'push') {
+    thresh = getPushThreshold(state.position, state.bb);
+    const push = score >= thresh;
+    action = push ? 'Push ✅' : 'Fold ❌';
+    actionClass = push ? 'push' : 'fold';
+  } else {
+    thresh = getCallThreshold(state.oppPosition, state.bb);
+    const call = score >= thresh;
+    action = call ? 'Call ✅' : 'Fold ❌';
+    actionClass = call ? 'push' : 'fold';
+  }
+  
+  document.getElementById('hdHand').textContent = hStr;
+  document.getElementById('hdScore').textContent = score.toFixed(0);
+  document.getElementById('hdThreshold').textContent = thresh.toFixed(1);
+  const actEl = document.getElementById('hdAction');
+  actEl.textContent = action;
+  actEl.className = 'hd-val ' + actionClass;
+  
+  // Equity vs random (approximate)
+  const eq = getApproxEquity(r1, r2, suited);
+  document.getElementById('hdEquity').textContent = eq + '%';
+  
+  const detail = document.getElementById('handDetail');
+  detail.style.display = 'block';
+  
+  // Position tooltip
+  const rect = cell.getBoundingClientRect();
+  let left = rect.right + 10;
+  let top = rect.top - 10;
+  
+  // Keep in viewport
+  const tw = 180;
+  const th = 150;
+  if (left + tw > window.innerWidth) left = rect.left - tw - 10;
+  if (top + th > window.innerHeight) top = window.innerHeight - th - 10;
+  if (top < 10) top = 10;
+  
+  detail.style.left = left + 'px';
+  detail.style.top = top + 'px';
+}
+
+function hideHandDetail() {
+  document.getElementById('handDetail').style.display = 'none';
+}
+
+// Approximate equity vs random hand (simplified)
+function getApproxEquity(r1, r2, suited) {
+  const v1 = RANK_VALUES[r1];
+  const v2 = RANK_VALUES[r2];
+  const hi = Math.max(v1, v2);
+  const lo = Math.min(v1, v2);
+  
+  if (v1 === v2) {
+    // Pairs: ~52% for 22 up to ~85% for AA
+    return (52 + (v1 - 2) * 2.5).toFixed(1);
+  }
+  
+  let eq = 0;
+  if (hi === 14) { // Has an Ace
+    eq = 55 + (lo - 2) * 1.2; // A2 ~55%, AK ~69%
+  } else if (hi === 13) { // Has a King
+    eq = 48 + (lo - 2) * 0.8;
+  } else if (hi === 12) { // Has a Queen
+    eq = 44 + (lo - 2) * 0.6;
+  } else {
+    eq = 40 + (hi - lo) * 0.5;
+  }
+  
+  if (suited) eq += 3;
+  if (hi - lo <= 2) eq += 2; // connected bonus
+  if (hi - lo <= 1) eq += 1; // very connected
+  
+  return Math.min(90, Math.max(30, eq)).toFixed(1);
+}
+
+// ===== Stats & Range String =====
+function updateStats() {
+  const state = getState();
+  const cells = document.querySelectorAll('#handGrid .grid-cell');
+  let total = 0;
+  let inRange = 0;
+  let pairs = 0;
+  let pairInRange = 0;
+  
+  for (const cell of cells) {
+    const r1 = cell.dataset.r1;
+    const r2 = cell.dataset.r2;
+    const suited = cell.dataset.suited === '1';
+    const isPair = r1 === r2;
+    total++;
+    
+    let inR = false;
+    if (state.mode === 'push') {
+      inR = isPushHand(r1, r2, suited, state.position, state.bb);
+    } else {
+      inR = isCallHand(r1, r2, suited, state.oppPosition, state.bb);
+    }
+    
+    if (inR) {
+      inRange++;
+      if (isPair) pairInRange++;
+    }
+    if (isPair) pairs++;
+  }
+  
+  const pct = (inRange / total * 100);
+  document.getElementById('rangePct').textContent = pct.toFixed(1) + '%';
+  document.getElementById('comboCount').textContent = inRange;
+  document.getElementById('pairCount').textContent = pairInRange;
+}
+
+function updateRangeString() {
+  const state = getState();
+  const allHands = [];
+  
+  const ranks = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
+  
+  for (let i = 0; i < 13; i++) {
+    for (let j = i; j < 13; j++) {
+      const r1 = ranks[12 - i]; // row -> high card side
+      const r2 = ranks[j];      // col -> low card side
+      
+      // For pairs
+      if (r1 === r2) {
+        const inR = state.mode === 'push'
+          ? isPushHand(r1, r2, false, state.position, state.bb)
+          : isCallHand(r1, r2, false, state.oppPosition, state.bb);
+        if (inR) allHands.push(r1 + r2);
+        continue;
+      }
+      
+      const hi = RANK_VALUES[r1] >= RANK_VALUES[r2] ? r1 : r2;
+      const lo = RANK_VALUES[r1] >= RANK_VALUES[r2] ? r2 : r1;
+      
+      // Suited
+      const inS = state.mode === 'push'
+        ? isPushHand(hi, lo, true, state.position, state.bb)
+        : isCallHand(hi, lo, true, state.oppPosition, state.bb);
+      
+      // Offsuit
+      const inO = state.mode === 'push'
+        ? isPushHand(hi, lo, false, state.position, state.bb)
+        : isCallHand(hi, lo, false, state.oppPosition, state.bb);
+      
+      if (inS && inO) {
+        allHands.push(hi + lo);
+      } else if (inS && !inO) {
+        allHands.push(hi + lo + 's');
+      } else if (!inS && inO) {
+        allHands.push(hi + lo + 'o');
+      }
+    }
+  }
+  
+  // Compact range string
+  const rangeStr = compactRangeString(allHands);
+  document.getElementById('rangeString').textContent = rangeStr || '—';
+  
+  // Count combos
+  let combos = 0;
+  for (const h of allHands) {
+    if (h.length === 2) combos += 6; // pair
+    else if (h.endsWith('s')) combos += 4; // suited
+    else if (h.endsWith('o')) combos += 12; // offsuit
+    else combos += 16; // all combos
+  }
+  document.getElementById('rangeStringPct').textContent = combos + ' Combos (' + (combos/1326*100).toFixed(1) + '%)';
+}
+
+// Compact range string: group pairs, suited, offsuit
+function compactRangeString(hands) {
+  if (hands.length === 0) return '—';
+  
+  const pairs = [];
+  const suited = [];
+  const offsuit = [];
+  const all = [];
+  
+  for (const h of hands) {
+    if (h.length === 2) pairs.push(h);
+    else if (h.endsWith('s')) suited.push(h.slice(0, 2));
+    else if (h.endsWith('o')) offsuit.push(h.slice(0, 2));
+    else all.push(h);
+  }
+  
+  const parts = [];
+  
+  // Group connected ranges
+  const groupRange = (arr, suffix) => {
+    if (arr.length === 0) return null;
+    // Sort by rank value (high to low)
+    arr.sort((a, b) => {
+      const va = RANK_VALUES[a[0]] * 10 + RANK_VALUES[a[1]];
+      const vb = RANK_VALUES[b[0]] * 10 + RANK_VALUES[b[1]];
+      return vb - va;
+    });
+    
+    // For pairs: "TT+", "88+", etc.
+    if (suffix === '') { // pairs
+      // Find the highest pair, then check if it's contiguous downward
+      const hiRank = RANK_VALUES[arr[0][0]];
+      let j;
+      for (j = 1; j < arr.length; j++) {
+        if (RANK_VALUES[arr[j][0]] !== hiRank - j) break;
+      }
+      if (j === arr.length && arr.length > 1) {
+        return arr[arr.length-1][0] + arr[arr.length-1][0] + '+';
+      }
+      return arr.join(', ');
+    }
+    
+    // For all/suited/offsuit: try to group
+    // Separate into groups by high card
+    const groups = {};
+    for (const h of arr) {
+      const high = h[0];
+      if (!groups[high]) groups[high] = [];
+      groups[high].push(h);
+    }
+    
+    const result = [];
+    const sortedRanks = Object.keys(groups).sort((a,b) => RANK_VALUES[b] - RANK_VALUES[a]);
+    
+    for (const high of sortedRanks) {
+      const g = groups[high];
+      // Check if contiguous
+      g.sort((a,b) => RANK_VALUES[b[1]] - RANK_VALUES[a[1]]);
+      const lowVals = g.map(h => RANK_VALUES[h[1]]);
+      
+      if (g.length > 1 && isContiguous(lowVals)) {
+        result.push(high + g[g.length-1][1] + suffix + '+');
+      } else if (g.length === 1) {
+        result.push(g[0] + suffix);
+      } else {
+        result.push(g.map(h => h + suffix).join(', '));
+      }
+    }
+    return result.join(', ');
+  };
+  
+  const pGroup = groupRange(pairs, '');
+  if (pGroup) parts.push(pGroup);
+  
+  const aGroup = groupRange(all, '');
+  if (aGroup) parts.push(aGroup);
+  
+  const sGroup = groupRange(suited, 's');
+  if (sGroup) parts.push(sGroup);
+  
+  const oGroup = groupRange(offsuit, 'o');
+  if (oGroup) parts.push(oGroup);
+  
+  return parts.join(', ');
+}
+
+function isContiguous(vals) {
+  vals.sort((a,b) => b - a);
+  for (let i = 1; i < vals.length; i++) {
+    if (vals[i] !== vals[i-1] - 1) return false;
+  }
+  return true;
+}
+
+// ===== State Management =====
+function getState() {
+  const bb = parseInt(document.getElementById('stackSlider').value);
+  const activePos = document.querySelector('#posBtns .btn.active');
+  const mode = document.querySelector('#modeTabs .mode-tab.active').dataset.mode;
+  const position = activePos ? activePos.dataset.pos : 'UTG';
+  const activeOpp = document.querySelector('#callerPosBtns .btn.active');
+  const oppPosition = activeOpp ? activeOpp.dataset.pos : 'UTG';
+  return { bb, position, mode, oppPosition };
+}
+
+function updateAll() {
+  const state = getState();
+  
+  // Update stack display
+  document.getElementById('stackDisplay').innerHTML = state.bb + '<small style="font-size:0.6em;font-weight:400;color:var(--muted)"> BB</small>';
+  
+  // Update grid title
+  const modeLabel = state.mode === 'push' ? 'Push-Range' : 'Call-Range vs ' + state.oppPosition;
+  const posLabel = state.mode === 'push' ? state.position : (state.position === 'BB' ? 'BB (Big Blind)' : state.position);
+  document.getElementById('gridTitle').innerHTML = '📊 ' + modeLabel + ' <span style="font-size:0.7rem;font-weight:400;color:var(--text-dim);">(' + posLabel + ' · ' + state.bb + ' BB)</span>';
+  
+  // Show/hide caller position selector
+  document.getElementById('callerPosGroup').style.display = state.mode === 'call-hero' ? 'block' : 'none';
+  
+  // Update legend
+  updateLegend(state.mode);
+  
+  buildGrid();
+}
+
+function updateLegend(mode) {
+  const legend = document.getElementById('legendArea');
+  if (mode === 'push') {
+    legend.innerHTML = `
+      <div class="legend-item"><span class="legend-swatch" style="background:#1a4a2a;"></span> Strong Push</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#3a4a1a;"></span> Medium</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#4a3a1a;"></span> Weak</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#3a2a1a;"></span> Marginal</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#0e0a14;border-color:#4a3a5a;"></span> Fold</div>
+    `;
+  } else {
+    legend.innerHTML = `
+      <div class="legend-item"><span class="legend-swatch" style="background:#1a3a4a;"></span> Clear Call</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#2a3a3a;"></span> Call</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#3a2a3a;"></span> Marginal Call</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#0e0a14;border-color:#4a3a5a;"></span> Fold</div>
+    `;
+  }
+}
+
+// ===== Event Listeners =====
+document.getElementById('stackSlider').addEventListener('input', updateAll);
+
+document.querySelectorAll('#posBtns .btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('#posBtns .btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    updateAll();
+  });
+});
+
+document.querySelectorAll('#modeTabs .mode-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('#modeTabs .mode-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    updateAll();
+  });
+});
+
+document.querySelectorAll('#callerPosBtns .btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('#callerPosBtns .btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    updateAll();
+  });
+});
+
+// ===== Init =====
+updateAll();
+
+</script>
+</body>
+</html>

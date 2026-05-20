@@ -4,26 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MDF Calculator — Poker Basecamp</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg-dark: #0f0f1a;
   --bg-card: #1a1a2e;
   --bg-card-hover: #22223a;
   --accent: #e2b714;
-  --accent-dim: #b8940f;
   --success: #22c55e;
   --danger: #ef4444;
   --text: #e2e8f0;
   --text-dim: #94a3b8;
   --muted: #64748b;
   --border: #2a2a3e;
-  --gradient: linear-gradient(135deg, #e2b714 0%, #f59e0b 100%);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; scroll-behavior: smooth; }
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   background: var(--bg-dark);
   color: var(--text);
   min-height: 100vh;
@@ -32,9 +29,8 @@ body {
   line-height: 1.6;
 }
 a { color: var(--accent); text-decoration: none; }
-a:hover { color: var(--accent-dim); }
 
-/* Navbar */
+/* ── Navbar ── */
 .navbar {
   background: rgba(15,15,26,0.95);
   backdrop-filter: blur(12px);
@@ -58,7 +54,7 @@ a:hover { color: var(--accent-dim); }
 }
 .navbar .logo .logo-icon {
   width: 32px; height: 32px;
-  background: var(--gradient);
+  background: linear-gradient(135deg, #e2b714 0%, #f59e0b 100%);
   border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
   font-size: 1.1rem; font-weight: 800; color: #0f0f1a;
@@ -70,18 +66,19 @@ a:hover { color: var(--accent-dim); }
   font-weight: 500;
   transition: color 0.2s;
 }
-.navbar .nav-links a:hover, .navbar .nav-links a.active { color: var(--accent); }
+.navbar .nav-links a:hover,
+.navbar .nav-links a.active { color: var(--accent); }
 .navbar .nav-links a.active { border-bottom: 2px solid var(--accent); padding-bottom: 2px; }
 
-/* Container */
+/* ── Container ── */
 .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; flex: 1; }
 
-/* Header */
+/* ── Header ── */
 .page-header { margin-bottom: 2.5rem; }
 .page-header h1 {
-  font-size: 2.25rem;
+  font-size: 2.5rem;
   font-weight: 800;
-  background: var(--gradient);
+  background: linear-gradient(135deg, #e2b714 0%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -94,7 +91,7 @@ a:hover { color: var(--accent-dim); }
   max-width: 600px;
 }
 
-/* Cards */
+/* ── Cards ── */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -112,18 +109,8 @@ a:hover { color: var(--accent-dim); }
   align-items: center;
   gap: 0.5rem;
 }
-.card-title .badge {
-  font-size: 0.65rem;
-  font-weight: 600;
-  background: var(--accent);
-  color: #0f0f1a;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
 
-/* Form elements */
+/* ── Form Elements ── */
 .form-row { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: end; margin-bottom: 1.25rem; }
 .form-group { flex: 1; min-width: 160px; }
 .form-group label {
@@ -135,22 +122,21 @@ a:hover { color: var(--accent-dim); }
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.form-group .input-wrapper {
-  position: relative;
-}
-.form-group input, .form-group select {
+.form-group .input-wrapper { position: relative; }
+.form-group input {
   width: 100%;
-  padding: 0.6rem 0.85rem;
+  padding: 0.7rem 0.9rem;
   background: var(--bg-dark);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text);
-  font-size: 0.95rem;
-  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: inherit;
   transition: border-color 0.2s;
   outline: none;
 }
-.form-group input:focus, .form-group select:focus {
+.form-group input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(226,183,20,0.1);
 }
@@ -160,13 +146,13 @@ a:hover { color: var(--accent-dim); }
   top: 50%;
   transform: translateY(-50%);
   color: var(--muted);
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 600;
   pointer-events: none;
 }
 
-/* Slider */
-.slider-group { margin-bottom: 1.5rem; }
+/* ── Slider ── */
+.slider-group { margin-bottom: 1rem; }
 .slider-header {
   display: flex;
   justify-content: space-between;
@@ -180,59 +166,93 @@ a:hover { color: var(--accent-dim); }
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.slider-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.15rem;
-  font-weight: 700;
+.slider-header .slider-value {
+  font-size: 1.4rem;
+  font-weight: 800;
   color: var(--accent);
 }
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 6px;
+  height: 8px;
   background: var(--border);
-  border-radius: 3px;
+  border-radius: 4px;
   outline: none;
   cursor: pointer;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
-  background: var(--gradient);
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #e2b714 0%, #f59e0b 100%);
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid var(--bg-dark);
+  border: 3px solid var(--bg-dark);
   box-shadow: 0 2px 8px rgba(226,183,20,0.3);
   transition: transform 0.15s;
 }
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 input[type="range"]::-moz-range-thumb {
-  width: 20px; height: 20px;
-  background: var(--gradient);
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, #e2b714 0%, #f59e0b 100%);
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid var(--bg-dark);
+  border: 3px solid var(--bg-dark);
 }
-.slider-labels {
+.slider-ticks {
   display: flex;
   justify-content: space-between;
-  margin-top: 0.35rem;
+  margin-top: 0.5rem;
+  padding: 0 4px;
 }
-.slider-labels span {
+.slider-ticks span {
   font-size: 0.7rem;
   color: var(--muted);
   font-weight: 500;
+  text-align: center;
+  flex: 1;
+}
+.slider-ticks span.active {
+  color: var(--accent);
+  font-weight: 700;
 }
 
-/* Results Grid */
+/* ── Quick Bet Buttons ── */
+.bet-presets {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+.btn-preset {
+  padding: 0.45rem 0.9rem;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.btn-preset:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(226,183,20,0.08);
+}
+.btn-preset.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(226,183,20,0.12);
+}
+
+/* ── Results Grid ── */
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -252,73 +272,55 @@ input[type="range"]::-moz-range-thumb {
   margin-bottom: 0.3rem;
 }
 .result-card .result-value {
-  font-size: 2rem;
+  font-size: 2.8rem;
   font-weight: 800;
-  color: var(--accent);
-  font-family: 'JetBrains Mono', monospace;
-  line-height: 1.2;
+  line-height: 1.1;
+  margin-bottom: 0.25rem;
 }
+.result-card .result-value.mdf-color { color: var(--success); }
+.result-card .result-value.alpha-color { color: var(--accent); }
+.result-card .result-value.bv-color { color: var(--danger); }
 .result-card .result-sub {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--muted);
-  margin-top: 0.25rem;
 }
 
-/* Progress Bars */
-.bar-container { margin-bottom: 1rem; }
+/* ── Progress Bars (24px height, 12px radius) ── */
+.bars-section .bar-container { margin-bottom: 1.25rem; }
+.bars-section .bar-container:last-child { margin-bottom: 0; }
 .bar-label {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
-  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
 }
-.bar-label .bar-name {
-  font-weight: 600;
-  color: var(--text);
-}
+.bar-label .bar-name { font-weight: 600; color: var(--text); }
 .bar-label .bar-pct {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 600;
-  color: var(--accent);
+  font-weight: 700;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
 }
 .bar-track {
-  height: 10px;
+  height: 24px;
   background: var(--border);
-  border-radius: 5px;
+  border-radius: 12px;
   overflow: hidden;
+  position: relative;
 }
 .bar-fill {
   height: 100%;
-  border-radius: 5px;
-  transition: width 0.25s ease;
-  background: var(--gradient);
+  border-radius: 12px;
+  transition: width 0.2s ease;
+  min-width: 0;
 }
 .bar-fill.mdf-fill { background: linear-gradient(90deg, #22c55e, #16a34a); }
-.bar-fill.alpha-fill { background: linear-gradient(90deg, #ef4444, #dc2626); }
-.bar-fill.bv-fill { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.bar-fill.alpha-fill { background: linear-gradient(90deg, #e2b714, #f59e0b); }
+.bar-fill.bv-fill { background: linear-gradient(90deg, #ef4444, #dc2626); }
+.bar-pct.mdf-pct { color: var(--success); }
+.bar-pct.alpha-pct { color: var(--accent); }
+.bar-pct.bv-pct { color: var(--danger); }
 
-/* Defense Table */
-.defense-table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
-.defense-table th, .defense-table td {
-  padding: 0.6rem 0.85rem;
-  text-align: center;
-  font-size: 0.85rem;
-  border-bottom: 1px solid var(--border);
-}
-.defense-table th {
-  color: var(--text-dim);
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.7rem;
-  letter-spacing: 0.06em;
-  background: rgba(15,15,26,0.5);
-}
-.defense-table tr:nth-child(even) { background: rgba(15,15,26,0.3); }
-.defense-table tr:hover { background: rgba(226,183,20,0.05); }
-.defense-table td:first-child { font-weight: 600; color: var(--accent); }
-.defense-table td:last-child { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
-
-/* Info Box */
+/* ── Info Boxes ── */
 .info-box {
   background: var(--bg-dark);
   border: 1px solid var(--border);
@@ -326,11 +328,12 @@ input[type="range"]::-moz-range-thumb {
   margin-bottom: 0.75rem;
   overflow: hidden;
 }
+.info-box:last-child { margin-bottom: 0; }
 .info-box-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.85rem 1rem;
+  padding: 0.9rem 1rem;
   cursor: pointer;
   user-select: none;
   transition: background 0.2s;
@@ -343,17 +346,20 @@ input[type="range"]::-moz-range-thumb {
   align-items: center;
   gap: 0.5rem;
 }
-.info-box-header .info-title .info-icon {
-  width: 20px; height: 20px;
-  background: var(--accent);
-  color: #0f0f1a;
+.info-box-header .info-icon {
+  width: 22px; height: 22px;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 0.7rem;
   font-weight: 800;
+  color: #0f0f1a;
+  flex-shrink: 0;
 }
+.info-icon.mdf-icon { background: var(--success); }
+.info-icon.alpha-icon { background: var(--accent); }
+.info-icon.bv-icon { background: var(--danger); }
 .info-box-header .chevron {
   transition: transform 0.25s;
   color: var(--muted);
@@ -373,49 +379,43 @@ input[type="range"]::-moz-range-thumb {
 .info-box-content p {
   font-size: 0.85rem;
   color: var(--text-dim);
-  line-height: 1.65;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
 }
+.info-box-content p:last-child { margin-bottom: 0; }
 .info-box-content .formula {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Courier New', Courier, monospace;
   background: rgba(226,183,20,0.08);
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
   margin: 0.5rem 0;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--accent);
   display: inline-block;
 }
 
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
+/* ── Quick Reference Table ── */
+.ref-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+.ref-table th, .ref-table td {
+  padding: 0.55rem 0.75rem;
+  text-align: center;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+.ref-table th {
+  color: var(--text-dim);
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  background: rgba(15,15,26,0.5);
 }
-.btn-primary {
-  background: var(--gradient);
-  color: #0f0f1a;
-}
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(226,183,20,0.25);
-}
-.btn-secondary {
-  background: var(--bg-card-hover);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-secondary:hover { background: var(--border); }
+.ref-table tr:nth-child(even) { background: rgba(15,15,26,0.3); }
+.ref-table tr:hover { background: rgba(226,183,20,0.05); }
+.ref-table td:first-child { font-weight: 600; color: var(--accent); }
+.ref-table td:last-child { font-weight: 700; }
 
-/* Footer */
+/* ── Footer ── */
 .footer {
   text-align: center;
   padding: 2rem;
@@ -425,32 +425,7 @@ input[type="range"]::-moz-range-thumb {
   margin-top: auto;
 }
 
-/* Two-column layout */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-@media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
-
-/* Formula display */
-.formula-display {
-  font-family: 'JetBrains Mono', monospace;
-  background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1rem 0;
-  font-size: 0.85rem;
-  color: var(--accent);
-  line-height: 1.8;
-}
-
-/* Tooltip / extra */
-.info-note {
-  font-size: 0.8rem;
-  color: var(--muted);
-  margin-top: 0.5rem;
-  font-style: italic;
-}
-
-/* Responsive */
+/* ── Responsive ── */
 @media (max-width: 640px) {
   .container { padding: 1rem; }
   .card { padding: 1.25rem; }
@@ -458,13 +433,13 @@ input[type="range"]::-moz-range-thumb {
   .navbar { padding: 0 1rem; }
   .navbar .nav-links { gap: 0.85rem; }
   .results-grid { grid-template-columns: 1fr; }
-  .result-card .result-value { font-size: 1.5rem; }
+  .result-card .result-value { font-size: 2.2rem; }
 }
 </style>
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- ─── Navbar ─── -->
 <nav class="navbar">
   <a href="/" class="logo">
     <span class="logo-icon">♠</span>
@@ -472,38 +447,36 @@ input[type="range"]::-moz-range-thumb {
   </a>
   <div class="nav-links">
     <a href="/tools/range-viz/">Range Viz</a>
-    <a href="/tools/icm-calc/" class="active">ICM Calc</a>
+    <a href="/tools/icm-calc/">ICM Calc</a>
     <a href="/tools/mdf-calc/" class="active">MDF Calc</a>
   </div>
 </nav>
 
+<!-- ─── Main Content ─── -->
 <div class="container">
 
   <!-- Header -->
   <div class="page-header">
     <h1>MDF Rechner</h1>
-    <p>Minimum Defense Frequency &amp; optimale Bluff-Raten — verstehe, wie viel du verteidigen musst, um nicht ausbeutbar zu sein.</p>
+    <p>Minimum Defense Frequency &amp; optimale Bluff-Raten – verstehe, wie viel du verteidigen musst, um nicht ausbeutbar zu sein.</p>
   </div>
 
-  <!-- Main Card -->
+  <!-- ── Input Card ── -->
   <div class="card">
-    <div class="card-title">
-      <span>📊</span> Konfiguration
-    </div>
+    <div class="card-title"><span>🎯</span> Konfiguration</div>
 
-    <!-- Inputs -->
     <div class="form-row">
-      <div class="form-group" style="flex: 0.8;">
+      <div class="form-group" style="flex:0.8">
         <label>Pot-Größe (€)</label>
         <div class="input-wrapper">
-          <input type="number" id="potSize" value="100" min="1" step="1">
+          <input type="number" id="potInput" value="100" min="1" step="1">
           <span class="unit">€</span>
         </div>
       </div>
-      <div class="form-group" style="flex: 1.2;">
-        <label>Wette / Bet (€)</label>
+      <div class="form-group" style="flex:1.2">
+        <label>Bet-Größe (€)</label>
         <div class="input-wrapper">
-          <input type="number" id="betAmount" value="50" min="0" step="1">
+          <input type="number" id="betInput" value="50" min="0" step="1">
           <span class="unit">€</span>
         </div>
       </div>
@@ -513,344 +486,304 @@ input[type="range"]::-moz-range-thumb {
     <div class="slider-group">
       <div class="slider-header">
         <label>Bet Size (% vom Pot)</label>
-        <span class="slider-value" id="sliderPct">50%</span>
+        <span class="slider-value" id="sliderValue">50%</span>
       </div>
-      <input type="range" id="betSlider" min="5" max="300" value="50" step="1">
-      <div class="slider-labels">
-        <span>5%</span>
-        <span>33%</span>
-        <span>50%</span>
-        <span>66%</span>
-        <span>75%</span>
-        <span>100%</span>
-        <span>150%</span>
-        <span>200%</span>
-        <span>300%</span>
-      </div>
+      <input type="range" id="betSlider" min="0" max="9" value="3" step="1">
+      <div class="slider-ticks" id="sliderTicks"></div>
     </div>
 
-    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem;">
-      <button class="btn btn-secondary" onclick="setBetPct(33)">⅓ Pot</button>
-      <button class="btn btn-secondary" onclick="setBetPct(50)">½ Pot</button>
-      <button class="btn btn-secondary" onclick="setBetPct(66)">⅔ Pot</button>
-      <button class="btn btn-secondary" onclick="setBetPct(75)">¾ Pot</button>
-      <button class="btn btn-secondary" onclick="setBetPct(100)">Pot</button>
-      <button class="btn btn-secondary" onclick="setBetPct(150)">1.5×</button>
-      <button class="btn btn-secondary" onclick="setBetPct(200)">2×</button>
-    </div>
+    <!-- Presets -->
+    <div class="bet-presets" id="betPresets"></div>
   </div>
 
-  <!-- Results -->
-  <div class="results-grid" id="resultsGrid">
+  <!-- ── Results Grid ── -->
+  <div class="results-grid">
     <div class="result-card">
       <div class="result-label">MDF — Minimum Defense Frequency</div>
-      <div class="result-value" id="mdfVal">66.7%</div>
-      <div class="result-sub">Du musst <strong>66.7%</strong> deiner Range verteidigen</div>
+      <div class="result-value mdf-color" id="mdfVal">66.7%</div>
+      <div class="result-sub" id="mdfDesc">Du musst <strong>66.7%</strong> deiner Range verteidigen</div>
     </div>
     <div class="result-card">
       <div class="result-label">Alpha — Minimale Bluff-Frequenz</div>
-      <div class="result-value" id="alphaVal">33.3%</div>
-      <div class="result-sub">Gegner braucht <strong>33.3%</strong> Bluffs für profitables Bet</div>
+      <div class="result-value alpha-color" id="alphaVal">33.3%</div>
+      <div class="result-sub" id="alphaDesc">Der Gegner braucht <strong>33.3%</strong> Bluffs</div>
     </div>
     <div class="result-card">
       <div class="result-label">Bluff-to-Value Ratio</div>
-      <div class="result-value" id="bvVal">2:1</div>
-      <div class="result-sub">Für jede Value-Bet brauchst du <strong>2</strong> Bluffs</div>
+      <div class="result-value bv-color" id="bvVal">2:1</div>
+      <div class="result-sub" id="bvDesc">Für jede Value-Bet brauchst du <strong>2</strong> Bluffs</div>
     </div>
   </div>
 
-  <!-- Progress Bars + Table -->
-  <div class="two-col">
-    <!-- Bars -->
-    <div class="card">
-      <div class="card-title"><span>📈</span> Visuelle Übersicht</div>
+  <!-- ── Progress Bars ── -->
+  <div class="card bars-section">
+    <div class="card-title"><span>📊</span> Visuelle Übersicht</div>
 
-      <div class="bar-container">
-        <div class="bar-label">
-          <span class="bar-name">MDF (Verteidigung)</span>
-          <span class="bar-pct" id="mdfBarPct">66.7%</span>
-        </div>
-        <div class="bar-track">
-          <div class="bar-fill mdf-fill" id="mdfBar" style="width:66.7%"></div>
-        </div>
+    <div class="bar-container">
+      <div class="bar-label">
+        <span class="bar-name">🟢 MDF (Verteidigung)</span>
+        <span class="bar-pct mdf-pct" id="mdfBarPct">66.7%</span>
       </div>
-
-      <div class="bar-container">
-        <div class="bar-label">
-          <span class="bar-name">Alpha (Bluff-Frequenz)</span>
-          <span class="bar-pct" id="alphaBarPct">33.3%</span>
-        </div>
-        <div class="bar-track">
-          <div class="bar-fill alpha-fill" id="alphaBar" style="width:33.3%"></div>
-        </div>
-      </div>
-
-      <div class="bar-container">
-        <div class="bar-label">
-          <span class="bar-name">Bluff-to-Value Ratio</span>
-          <span class="bar-pct" id="bvBarPct">2.0 : 1</span>
-        </div>
-        <div class="bar-track">
-          <div class="bar-fill bv-fill" id="bvBar" style="width:66.7%"></div>
-        </div>
+      <div class="bar-track">
+        <div class="bar-fill mdf-fill" id="mdfBar" style="width:66.7%"></div>
       </div>
     </div>
 
-    <!-- Defense Table -->
-    <div class="card">
-      <div class="card-title"><span>📋</span> Defense-Probability Tabelle</div>
-      <p style="font-size:0.8rem; color:var(--muted); margin-bottom:0.75rem;">
-        Wie oft du gegen verschiedene Bet-Sizes verteidigen musst.
-      </p>
-      <table class="defense-table">
-        <thead>
-          <tr>
-            <th>Bet Size</th>
-            <th>MDF</th>
-            <th>Alpha</th>
-            <th>B:V Ratio</th>
-          </tr>
-        </thead>
-        <tbody id="defenseTableBody"></tbody>
-      </table>
+    <div class="bar-container">
+      <div class="bar-label">
+        <span class="bar-name">🟡 Alpha (Bluff-Frequenz)</span>
+        <span class="bar-pct alpha-pct" id="alphaBarPct">33.3%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill alpha-fill" id="alphaBar" style="width:33.3%"></div>
+      </div>
+    </div>
+
+    <div class="bar-container">
+      <div class="bar-label">
+        <span class="bar-name">🔴 Bluff-to-Value Ratio</span>
+        <span class="bar-pct bv-pct" id="bvBarPct">2.0 : 1</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill bv-fill" id="bvBar" style="width:33.3%"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Info Boxes -->
+  <!-- ── Info Boxes ── -->
   <div class="card">
     <div class="card-title"><span>❓</span> Was bedeuten diese Kennzahlen?</div>
 
+    <!-- MDF Info -->
     <div class="info-box">
       <div class="info-box-header" onclick="toggleInfo(this)">
-        <span class="info-title"><span class="info-icon">M</span> MDF — Minimum Defense Frequency</span>
+        <span class="info-title"><span class="info-icon mdf-icon">M</span> MDF — Minimum Defense Frequency</span>
         <span class="chevron">▼</span>
       </div>
       <div class="info-box-content">
         <p>Die <strong>Minimum Defense Frequency (MDF)</strong> gibt an, wie viel Prozent deiner Range du gegen eine bestimmte Bet-Größe <em>mindestens</em> verteidigen musst (callen oder raisen), damit der Gegner nicht mit <strong>jeder beliebigen Hand</strong> profitabel wetten kann.</p>
         <div class="formula">MDF = Pot / (Pot + Bet) = 1 / (1 + Bet/Pot)</div>
-        <p><strong>Beispiel:</strong> Pot = 100 €, Bet = 50 € → MDF = 100 / 150 = <strong>66.7%</strong>. Du musst also 66.7% deiner Range callen oder raisen, um nicht ausbeutbar zu sein.</p>
-        <p style="margin-top:0.5rem;">⚠️ MDF gilt nur bei <em>polarisierten</em> Bets und ignoriert Range-Advantage und Implied Odds. In der Praxis kannst du oft mehr oder weniger folden, je nach Board und Spot.</p>
+        <p><strong>Beispiel:</strong> Pot = 100 €, Bet = 50 € → MDF = 100 / 150 = <strong>66,7%</strong>. Du musst also 66,7% deiner Range callen oder raisen, um nicht ausbeutbar zu sein.</p>
+        <p>⚠️ MDF gilt nur bei <em>polarisierten</em> Bets und ignoriert Range-Advantage und Implied Odds. In der Praxis kannst du oft mehr oder weniger folden, je nach Board und Spot.</p>
       </div>
     </div>
 
+    <!-- Alpha Info -->
     <div class="info-box">
       <div class="info-box-header" onclick="toggleInfo(this)">
-        <span class="info-title"><span class="info-icon">α</span> Alpha — Minimale Bluff-Frequenz</span>
+        <span class="info-title"><span class="info-icon alpha-icon">α</span> Alpha — Minimale Bluff-Frequenz</span>
         <span class="chevron">▼</span>
       </div>
       <div class="info-box-content">
-        <p><strong>Alpha</strong> ist die minimale Bluff-Frequenz, die der Gegner in seiner Betting-Range haben muss, damit sein Bet profitabel ist — selbst wenn du perfekt callst.</p>
+        <p><strong>Alpha</strong> ist die minimale Bluff-Frequenz, die der Gegner in seiner Betting-Range haben muss, damit sein Bet profitabel ist – selbst wenn du perfekt callst.</p>
         <div class="formula">Alpha = Bet / (Bet + Pot)</div>
-        <p><strong>Beispiel:</strong> Pot = 100 €, Bet = 50 € → Alpha = 50 / 150 = <strong>33.3%</strong>. Der Gegner braucht also mindestens 33.3% Bluffs, damit sein Bet profitabel ist.</p>
-        <p style="margin-top:0.5rem;">💡 Wenn der Gegner weniger blufft als Alpha, kannst du profitabel alle seine Bets folden (außer gegen seine Value-Bets).</p>
+        <p><strong>Beispiel:</strong> Pot = 100 €, Bet = 50 € → Alpha = 50 / 150 = <strong>33,3%</strong>. Der Gegner braucht also mindestens 33,3% Bluffs, damit sein Bet profitabel ist.</p>
+        <p>💡 Wenn der Gegner weniger blufft als Alpha, kannst du profitabel alle seine Bets folden (außer gegen seine Value-Bets).</p>
       </div>
     </div>
 
+    <!-- B:V Info -->
     <div class="info-box">
       <div class="info-box-header" onclick="toggleInfo(this)">
-        <span class="info-title"><span class="info-icon">B</span> Bluff-to-Value Ratio</span>
+        <span class="info-title"><span class="info-icon bv-icon">B</span> Bluff-to-Value Ratio</span>
         <span class="chevron">▼</span>
       </div>
       <div class="info-box-content">
         <p>Das <strong>Bluff-to-Value Ratio (B:V)</strong> sagt dir, wie viele Bluffs du für jede Value-Bet in deiner Range haben solltest, um eine <strong>ausgeglichene, nicht ausbeutbare Betting-Range</strong> zu haben.</p>
-        <div class="formula">B:V = (1 - Alpha) / Alpha = Pot / Bet</div>
-        <p><strong>Beispiel:</strong> Pot = 100 €, Bet = 50 € → B:V = 100 / 50 = <strong>2:1</strong>. Für jede Value-Bet brauchst du 2 Bluffs.</p>
-        <p style="margin-top:0.5rem;">🎯 In der Praxis haben die meisten Spieler <em>zu wenig</em> Bluffs. Ein gutes B:V-Verhältnis macht dich schwer zu lesen.</p>
+        <div class="formula">B:V = (1 − Alpha) / Alpha = Pot / Bet</div>
+        <p><strong>Beispiel:</strong> Pot = 100 €, Bet = 50 € → B:V = 100 / 50 = <strong>2:1</strong>. Für jede Value-Bet brauchst du 2 Bluffs.</p>
+        <p>🎯 In der Praxis haben die meisten Spieler <em>zu wenig</em> Bluffs. Ein gutes B:V-Verhältnis macht dich schwer zu lesen.</p>
       </div>
     </div>
   </div>
 
-  <!-- Quick Reference -->
+  <!-- ── Quick Reference ── -->
   <div class="card">
     <div class="card-title"><span>📖</span> Schnell-Referenz</div>
     <p style="font-size:0.85rem; color:var(--text-dim); margin-bottom:0.75rem;">
       Die wichtigsten Werte für Standard-Bet-Sizes auf einen Blick:
     </p>
-    <table class="defense-table">
+    <table class="ref-table">
       <thead>
-        <tr>
-          <th>Bet Size</th>
-          <th>Beispiel (Pot=100)</th>
-          <th>MDF</th>
-          <th>Alpha</th>
-          <th>B:V</th>
-        </tr>
+        <tr><th>Bet Size</th><th>Beispiel (Pot=100)</th><th>MDF</th><th>Alpha</th><th>B:V</th></tr>
       </thead>
       <tbody>
-        <tr><td>25%</td><td>25 €</td><td>80%</td><td>20%</td><td>4:1</td></tr>
-        <tr><td>33%</td><td>33 €</td><td>75%</td><td>25%</td><td>3:1</td></tr>
-        <tr><td>50%</td><td>50 €</td><td>66.7%</td><td>33.3%</td><td>2:1</td></tr>
-        <tr><td>66%</td><td>66 €</td><td>60%</td><td>40%</td><td>1.5:1</td></tr>
-        <tr><td>75%</td><td>75 €</td><td>57.1%</td><td>42.9%</td><td>1.33:1</td></tr>
-        <tr><td>100%</td><td>100 €</td><td>50%</td><td>50%</td><td>1:1</td></tr>
-        <tr><td>150%</td><td>150 €</td><td>40%</td><td>60%</td><td>0.67:1</td></tr>
-        <tr><td>200%</td><td>200 €</td><td>33.3%</td><td>66.7%</td><td>0.5:1</td></tr>
+        <tr><td>10%</td><td>10 €</td><td>90,9%</td><td>9,1%</td><td>10:1</td></tr>
+        <tr><td>25%</td><td>25 €</td><td>80%</td><td>20%</td><td>4:1</td></tr>
+        <tr><td>33%</td><td>33 €</td><td>75%</td><td>25%</td><td>3:1</td></tr>
+        <tr><td>50%</td><td>50 €</td><td>66,7%</td><td>33,3%</td><td>2:1</td></tr>
+        <tr><td>66%</td><td>66 €</td><td>60%</td><td>40%</td><td>1,5:1</td></tr>
+        <tr><td>75%</td><td>75 €</td><td>57,1%</td><td>42,9%</td><td>1,33:1</td></tr>
+        <tr><td>100%</td><td>100 €</td><td>50%</td><td>50%</td><td>1:1</td></tr>
+        <tr><td>125%</td><td>125 €</td><td>44,4%</td><td>55,6%</td><td>0,8:1</td></tr>
+        <tr><td>150%</td><td>150 €</td><td>40%</td><td>60%</td><td>0,67:1</td></tr>
+        <tr><td>200%</td><td>200 €</td><td>33,3%</td><td>66,7%</td><td>0,5:1</td></tr>
       </tbody>
     </table>
   </div>
 
 </div>
 
-<!-- Footer -->
+<!-- ─── Footer ─── -->
 <footer class="footer">
   Poker Basecamp — Made with ♠ for the grind
 </footer>
 
 <script>
-// --- DOM refs ---
-const potInput = document.getElementById('potSize');
-const betInput = document.getElementById('betAmount');
-const slider = document.getElementById('betSlider');
-const sliderPct = document.getElementById('sliderPct');
+// ─── Discrete bet sizes ───
+const BET_SIZES = [
+  { pct: 10,  label: '10%' },
+  { pct: 25,  label: '25%' },
+  { pct: 33,  label: '33%' },
+  { pct: 50,  label: '50%' },
+  { pct: 66,  label: '66%' },
+  { pct: 75,  label: '75%' },
+  { pct: 100, label: '100%' },
+  { pct: 125, label: '125%' },
+  { pct: 150, label: '150%' },
+  { pct: 200, label: '200%' },
+];
 
+// ─── DOM refs ───
+const potInput = document.getElementById('potInput');
+const betInput = document.getElementById('betInput');
+const betSlider = document.getElementById('betSlider');
+const sliderValue = document.getElementById('sliderValue');
+const sliderTicks = document.getElementById('sliderTicks');
+const betPresets = document.getElementById('betPresets');
 const mdfVal = document.getElementById('mdfVal');
 const alphaVal = document.getElementById('alphaVal');
 const bvVal = document.getElementById('bvVal');
+const mdfDesc = document.getElementById('mdfDesc');
+const alphaDesc = document.getElementById('alphaDesc');
+const bvDesc = document.getElementById('bvDesc');
 const mdfBar = document.getElementById('mdfBar');
 const alphaBar = document.getElementById('alphaBar');
 const bvBar = document.getElementById('bvBar');
 const mdfBarPct = document.getElementById('mdfBarPct');
 const alphaBarPct = document.getElementById('alphaBarPct');
 const bvBarPct = document.getElementById('bvBarPct');
-const tableBody = document.getElementById('defenseTableBody');
 
-// --- State ---
-let pot = 100;
-let bet = 50;
+// ─── Build slider ticks & preset buttons ───
+BET_SIZES.forEach((s, i) => {
+  // Tick mark
+  const tick = document.createElement('span');
+  tick.textContent = s.label;
+  sliderTicks.appendChild(tick);
 
-// --- Set bet percentage ---
-function setBetPct(pct) {
-  slider.value = pct;
-  updateFromSlider();
-}
+  // Preset button
+  const btn = document.createElement('button');
+  btn.className = 'btn-preset';
+  btn.textContent = s.label;
+  btn.dataset.index = i;
+  btn.addEventListener('click', () => {
+    betSlider.value = i;
+    updateFromSlider();
+  });
+  betPresets.appendChild(btn);
+});
 
-// --- Update from slider ---
+// ─── Update functions ───
 function updateFromSlider() {
-  const pct = parseFloat(slider.value);
-  sliderPct.textContent = pct + '%';
-  bet = pot * (pct / 100);
-  bet = Math.round(bet * 100) / 100;
-  betInput.value = bet.toFixed(bet % 1 === 0 ? 0 : 2);
-  calculate();
+  const idx = parseInt(betSlider.value, 10);
+  const pct = BET_SIZES[idx].pct;
+  const pot = parseFloat(potInput.value) || 1;
+  const bet = pot * (pct / 100);
+
+  sliderValue.textContent = BET_SIZES[idx].label;
+  betInput.value = Math.round(bet * 100) / 100;
+
+  // Highlight active tick & preset
+  document.querySelectorAll('.slider-ticks span, .btn-preset').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+
+  calculate(pot, bet);
 }
 
-// --- Update from pot input ---
 function updateFromPot() {
-  pot = parseFloat(potInput.value) || 0;
-  if (pot <= 0) { pot = 1; potInput.value = 1; }
-  // Recalculate bet amount based on slider percentage
-  const pct = parseFloat(slider.value);
-  bet = pot * (pct / 100);
-  bet = Math.round(bet * 100) / 100;
-  betInput.value = bet.toFixed(bet % 1 === 0 ? 0 : 2);
-  calculate();
+  const pot = parseFloat(potInput.value) || 1;
+  if (pot <= 0) { potInput.value = 1; pot = 1; }
+  const idx = parseInt(betSlider.value, 10);
+  const pct = BET_SIZES[idx].pct;
+  const bet = pot * (pct / 100);
+  betInput.value = Math.round(bet * 100) / 100;
+  calculate(pot, bet);
 }
 
-// --- Update from bet input ---
 function updateFromBet() {
-  bet = parseFloat(betInput.value) || 0;
+  const pot = parseFloat(potInput.value) || 1;
+  let bet = parseFloat(betInput.value) || 0;
   if (bet < 0) { bet = 0; betInput.value = 0; }
-  // Update slider percentage
-  if (pot > 0) {
+
+  // Find closest preset
+  if (pot > 0 && bet > 0) {
     const pct = (bet / pot) * 100;
-    const clamped = Math.min(300, Math.max(0, pct));
-    slider.value = clamped;
-    sliderPct.textContent = Math.round(clamped) + '%';
+    let closest = 0;
+    let minDiff = Infinity;
+    BET_SIZES.forEach((s, i) => {
+      const diff = Math.abs(s.pct - pct);
+      if (diff < minDiff) { minDiff = diff; closest = i; }
+    });
+    betSlider.value = closest;
+    sliderValue.textContent = BET_SIZES[closest].label;
+    document.querySelectorAll('.slider-ticks span, .btn-preset').forEach((el, i) => {
+      el.classList.toggle('active', i === closest);
+    });
   }
-  calculate();
+
+  calculate(pot, bet);
 }
 
-// --- Calculate ---
-function calculate() {
-  pot = parseFloat(potInput.value) || 0;
-  bet = parseFloat(betInput.value) || 0;
-  if (pot <= 0) pot = 1;
-  if (bet < 0) bet = 0;
+// ─── Core calculation ───
+function calculate(pot, bet) {
+  if (pot <= 0) { pot = 1; }
+  if (bet < 0) { bet = 0; }
 
-  const betPct = pot > 0 ? (bet / pot) * 100 : 0;
-
-  // MDF = Pot / (Pot + Bet)
   const mdf = pot / (pot + bet);
-  // Alpha = Bet / (Bet + Pot)
   const alpha = bet / (bet + pot);
-  // B:V = Pot / Bet (or (1-Alpha)/Alpha)
   const bv = bet > 0 ? pot / bet : Infinity;
 
-  // Display MDF
-  const mdfPct = (mdf * 100);
+  const mdfPct = mdf * 100;
+  const alphaPct = alpha * 100;
+
+  // ── MDF ──
   mdfVal.textContent = mdfPct.toFixed(1) + '%';
   mdfBar.style.width = Math.min(100, mdfPct) + '%';
   mdfBarPct.textContent = mdfPct.toFixed(1) + '%';
   const foldPct = 100 - mdfPct;
-  document.querySelector('.result-card:nth-child(1) .result-sub').innerHTML =
-    `Du musst <strong>${mdfPct.toFixed(1)}%</strong> deiner Range verteidigen (folden: ${foldPct.toFixed(1)}%)`;
+  mdfDesc.innerHTML = `Du musst <strong>${mdfPct.toFixed(1)}%</strong> deiner Range verteidigen (folden: ${foldPct.toFixed(1)}%)`;
 
-  // Display Alpha
-  const alphaPct = (alpha * 100);
+  // ── Alpha ──
   alphaVal.textContent = alphaPct.toFixed(1) + '%';
   alphaBar.style.width = Math.min(100, alphaPct) + '%';
   alphaBarPct.textContent = alphaPct.toFixed(1) + '%';
-  document.querySelector('.result-card:nth-child(2) .result-sub').innerHTML =
-    `Gegner braucht <strong>${alphaPct.toFixed(1)}%</strong> Bluffs für profitables Bet`;
+  alphaDesc.innerHTML = `Der Gegner braucht <strong>${alphaPct.toFixed(1)}%</strong> Bluffs`;
 
-  // Display B:V
-  if (bet > 0 && bv < 100) {
-    const bvStr = bv >= 1 ? `${bv.toFixed(1)}:1` : `1:${(1/bv).toFixed(1)}`;
+  // ── B:V ──
+  if (bet > 0 && bv < 1000) {
+    let bvStr, barPct;
+    if (bv >= 1) {
+      bvStr = `${bv.toFixed(1)}:1`;
+      barPct = 1 / (1 + bv) * 100; // bluffs fraction for bar
+    } else {
+      bvStr = `1:${(1/bv).toFixed(1)}`;
+      barPct = bv * 100; // bluffs fraction
+    }
     bvVal.textContent = bvStr;
+    bvBar.style.width = Math.min(100, barPct) + '%';
     bvBarPct.textContent = bvStr;
-    // B:V bar shows the ratio as a percentage of the total (bluffs / total)
-    const bvFrac = alpha; // same as bluffs fraction
-    bvBar.style.width = Math.min(100, bvFrac * 100) + '%';
     const bluffCount = bv >= 1 ? bv.toFixed(1) : '1';
-    const valueCount = bv >= 1 ? '1' : (1/bv).toFixed(1);
-    document.querySelector('.result-card:nth-child(3) .result-sub').innerHTML =
-      `Für jede Value-Bet brauchst du <strong>${bluffCount}</strong> Bluffs`;
+    bvDesc.innerHTML = `Für jede Value-Bet brauchst du <strong>${bluffCount}</strong> Bluffs`;
   } else if (bet === 0) {
     bvVal.textContent = '∞';
-    bvBarPct.textContent = '∞';
     bvBar.style.width = '0%';
-    document.querySelector('.result-card:nth-child(3) .result-sub').innerHTML =
-      'Keine Wette — kein Ratio';
+    bvBarPct.textContent = '∞';
+    bvDesc.innerHTML = 'Keine Wette — kein Ratio';
   }
-
-  // Defense table
-  generateDefenseTable();
 }
 
-// --- Generate defense table ---
-function generateDefenseTable() {
-  const sizes = [
-    { label: '25% (¼ Pot)', pct: 25 },
-    { label: '33% (⅓ Pot)', pct: 33 },
-    { label: '50% (½ Pot)', pct: 50 },
-    { label: '66% (⅔ Pot)', pct: 66 },
-    { label: '75% (¾ Pot)', pct: 75 },
-    { label: '100% (Pot)', pct: 100 },
-    { label: '150% (1.5×)', pct: 150 },
-    { label: '200% (2×)', pct: 200 },
-  ];
-
-  let html = '';
-  for (const s of sizes) {
-    const b = pot * (s.pct / 100);
-    const m = pot / (pot + b);
-    const a = b / (b + pot);
-    const r = b > 0 ? pot / b : Infinity;
-    const rStr = r >= 1 ? `${r.toFixed(1)}:1` : `1:${(1/r).toFixed(1)}`;
-    // Highlight current row
-    const currentPct = pot > 0 ? (bet / pot) * 100 : 0;
-    const isCurrent = Math.abs(s.pct - currentPct) < 0.5;
-    html += `<tr${isCurrent ? ' style="background:rgba(226,183,20,0.12); font-weight:600;"' : ''}>
-      <td>${s.label}</td>
-      <td>${(m*100).toFixed(1)}%</td>
-      <td>${(a*100).toFixed(1)}%</td>
-      <td>${rStr}</td>
-    </tr>`;
-  }
-  tableBody.innerHTML = html;
-}
-
-// --- Toggle info boxes ---
+// ─── Toggle info boxes ───
 function toggleInfo(header) {
   const content = header.nextElementSibling;
   const isOpen = content.classList.contains('open');
@@ -858,12 +791,13 @@ function toggleInfo(header) {
   header.classList.toggle('open');
 }
 
-// --- Event listeners ---
+// ─── Event listeners ───
 potInput.addEventListener('input', updateFromPot);
 betInput.addEventListener('input', updateFromBet);
-slider.addEventListener('input', updateFromSlider);
+betSlider.addEventListener('input', updateFromSlider);
 
-// --- Init ---
+// ─── Init ───
+betSlider.value = 3; // 50%
 updateFromSlider();
 </script>
 </body>

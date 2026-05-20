@@ -20,525 +20,597 @@
   --border: #2a2a3e;
   --gradient: linear-gradient(135deg, #e2b714 0%, #f59e0b 100%);
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; scroll-behavior: smooth; }
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-dark);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  line-height: 1.6;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg-dark);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  line-height:1.6;
 }
-a { color: var(--accent); text-decoration: none; }
-a:hover { color: var(--accent-dim); }
+a{color:var(--accent);text-decoration:none;}
+a:hover{color:var(--accent-dim);}
 
 /* Navbar */
-.navbar {
-  background: rgba(15,15,26,0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 2rem;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+.navbar{
+  background:rgba(15,15,26,0.95);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:100;
 }
-.navbar .logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-weight: 800;
-  font-size: 1.25rem;
-  color: var(--text);
+.navbar .logo{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  font-weight:800;
+  font-size:1.25rem;
+  color:var(--text);
 }
-.navbar .logo .logo-icon {
-  width: 32px; height: 32px;
-  background: var(--gradient);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; font-weight: 800; color: #0f0f1a;
+.navbar .logo .logo-icon{
+  width:32px;height:32px;
+  background:var(--gradient);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:800;color:#0f0f1a;
 }
-.navbar .nav-links { display: flex; gap: 1.5rem; align-items: center; }
-.navbar .nav-links a {
-  color: var(--text-dim);
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: color 0.2s;
+.navbar .nav-links{display:flex;gap:1.5rem;align-items:center;}
+.navbar .nav-links a{
+  color:var(--text-dim);
+  font-size:0.875rem;
+  font-weight:500;
+  transition:color 0.2s;
 }
-.navbar .nav-links a:hover, .navbar .nav-links a.active { color: var(--accent); }
-.navbar .nav-links a.active { border-bottom: 2px solid var(--accent); padding-bottom: 2px; }
+.navbar .nav-links a:hover,.navbar .nav-links a.active{color:var(--accent);}
+.navbar .nav-links a.active{border-bottom:2px solid var(--accent);padding-bottom:2px;}
 
 /* Container */
-.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; flex: 1; }
+.container{max-width:1100px;margin:0 auto;padding:2rem 1.5rem;flex:1;}
 
 /* Header */
-.page-header { margin-bottom: 2.5rem; }
-.page-header h1 {
-  font-size: 2.25rem;
-  font-weight: 800;
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.02em;
+.page-header{margin-bottom:2.5rem;}
+.page-header h1{
+  font-size:2.25rem;
+  font-weight:800;
+  background:var(--gradient);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:0.5rem;
+  letter-spacing:-0.02em;
 }
-.page-header p {
-  color: var(--text-dim);
-  font-size: 1.05rem;
-  max-width: 650px;
+.page-header p{
+  color:var(--text-dim);
+  font-size:1.05rem;
+  max-width:650px;
 }
 
 /* Cards */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.75rem;
-  margin-bottom: 1.5rem;
-  transition: border-color 0.2s;
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:1.75rem;
+  margin-bottom:1.5rem;
+  transition:border-color 0.2s;
 }
-.card:hover { border-color: rgba(226,183,20,0.2); }
-.card-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.card:hover{border-color:rgba(226,183,20,0.2);}
+.card-title{
+  font-size:1.15rem;
+  font-weight:700;
+  margin-bottom:1.25rem;
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
 }
-.card-title .badge {
-  font-size: 0.65rem;
-  font-weight: 600;
-  background: var(--accent);
-  color: #0f0f1a;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.card-title .badge{
+  font-size:0.65rem;
+  font-weight:600;
+  background:var(--accent);
+  color:#0f0f1a;
+  padding:0.15rem 0.5rem;
+  border-radius:4px;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
 }
 
 /* Form elements */
-.form-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: end; margin-bottom: 1rem; }
-.form-group { flex: 1; min-width: 140px; }
-.form-group label {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  margin-bottom: 0.35rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.form-row{display:flex;gap:1rem;flex-wrap:wrap;align-items:end;margin-bottom:1rem;}
+.form-group{flex:1;min-width:140px;}
+.form-group label{
+  display:block;
+  font-size:0.75rem;
+  font-weight:600;
+  color:var(--text-dim);
+  margin-bottom:0.35rem;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
 }
-.form-group .input-wrapper { position: relative; }
-.form-group input, .form-group select {
-  width: 100%;
-  padding: 0.55rem 0.8rem;
-  background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 0.9rem;
-  font-family: 'JetBrains Mono', monospace;
-  transition: border-color 0.2s;
-  outline: none;
+.form-group .input-wrapper{position:relative;}
+.form-group input,.form-group select{
+  width:100%;
+  padding:0.55rem 0.8rem;
+  background:var(--bg-dark);
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text);
+  font-size:0.9rem;
+  font-family:'JetBrains Mono',monospace;
+  transition:border-color 0.2s;
+  outline:none;
 }
-.form-group input:focus, .form-group select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(226,183,20,0.1);
+.form-group input:focus,.form-group select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(226,183,20,0.1);
 }
-.form-group .unit {
-  position: absolute;
-  right: 0.8rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 500;
-  pointer-events: none;
+.form-group .unit{
+  position:absolute;
+  right:0.8rem;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--muted);
+  font-size:0.75rem;
+  font-weight:500;
+  pointer-events:none;
 }
-
 .form-group input[type="number"]::-webkit-inner-spin-button,
-.form-group input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.form-group input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+.form-group input[type="number"]{-moz-appearance:textfield;}
+
+/* Player counter */
+.player-counter{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
 }
-.form-group input[type="number"] { -moz-appearance: textfield; }
+.player-counter .pc-value{
+  font-size:1.5rem;
+  font-weight:800;
+  font-family:'JetBrains Mono',monospace;
+  color:var(--accent);
+  min-width:2.2rem;
+  text-align:center;
+}
+.player-counter .pc-btn{
+  width:40px;height:40px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--bg-card-hover);
+  color:var(--text);
+  font-size:1.25rem;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+  font-family:'Inter',sans-serif;
+  line-height:1;
+}
+.player-counter .pc-btn:hover{
+  border-color:var(--accent);
+  background:rgba(226,183,20,0.1);
+}
+.player-counter .pc-btn:disabled{opacity:0.3;cursor:not-allowed;border-color:var(--border);background:var(--bg-card-hover);}
+.player-counter .pc-label{font-size:0.75rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.04em;}
 
 /* Payout table */
-.payout-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
-.payout-table th, .payout-table td {
-  padding: 0.4rem 0.6rem;
-  text-align: center;
-  font-size: 0.8rem;
-  border: 1px solid var(--border);
+.payout-table{width:100%;border-collapse:collapse;margin-top:0.5rem;}
+.payout-table th,.payout-table td{
+  padding:0.4rem 0.6rem;
+  text-align:center;
+  font-size:0.8rem;
+  border:1px solid var(--border);
 }
-.payout-table th {
-  color: var(--text-dim);
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.65rem;
-  letter-spacing: 0.06em;
-  background: rgba(15,15,26,0.5);
+.payout-table th{
+  background:var(--gradient);
+  color:#0f0f1a;
+  font-weight:700;
+  text-transform:uppercase;
+  font-size:0.65rem;
+  letter-spacing:0.06em;
 }
-.payout-table input {
-  width: 80px;
-  padding: 0.3rem 0.5rem;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  color: var(--text);
-  font-size: 0.85rem;
-  font-family: 'JetBrains Mono', monospace;
-  text-align: center;
-  outline: none;
-  transition: border-color 0.2s;
+.payout-table td{background:var(--bg-dark);}
+.payout-table input{
+  width:70px;
+  padding:0.3rem 0.5rem;
+  background:transparent;
+  border:1px solid transparent;
+  border-radius:4px;
+  color:var(--text);
+  font-size:0.85rem;
+  font-family:'JetBrains Mono',monospace;
+  text-align:center;
+  outline:none;
+  transition:border-color 0.2s;
 }
-.payout-table input:focus {
-  border-color: var(--accent);
-  background: rgba(226,183,20,0.05);
+.payout-table input:focus{
+  border-color:var(--accent);
+  background:rgba(226,183,20,0.05);
 }
-.payout-table input:hover { border-color: var(--border); }
-.payout-table .payout-pct-suffix {
-  color: var(--muted);
-  font-size: 0.75rem;
+.payout-table input:hover{border-color:var(--border);}
+.payout-table .payout-pct-suffix{color:var(--muted);font-size:0.75rem;}
+.payout-total{
+  text-align:right;
+  font-size:0.8rem;
+  color:var(--muted);
+  margin-top:0.4rem;
 }
-.payout-total {
-  text-align: right;
-  font-size: 0.8rem;
-  color: var(--muted);
-  margin-top: 0.4rem;
-}
-.payout-total.ok { color: var(--success); }
-.payout-total.err { color: var(--danger); }
+.payout-total.ok{color:var(--success);}
+.payout-total.err{color:var(--danger);}
 
 /* Stack inputs grid */
-.stack-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 0.75rem;
-  margin-top: 0.5rem;
+.stack-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:0.75rem;
+  margin-top:0.5rem;
 }
-.stack-item { }
-.stack-item .stack-label {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--text-dim);
-  margin-bottom: 0.2rem;
+.stack-item .stack-label{
+  font-size:0.75rem;
+  font-weight:500;
+  color:var(--text-dim);
+  margin-bottom:0.2rem;
 }
-.stack-item .stack-label .hero-tag {
-  display: inline-block;
-  font-size: 0.6rem;
-  font-weight: 700;
-  background: var(--accent);
-  color: #0f0f1a;
-  padding: 0.05rem 0.35rem;
-  border-radius: 3px;
-  margin-left: 0.3rem;
-  text-transform: uppercase;
+.stack-item .stack-label .hero-tag{
+  display:inline-block;
+  font-size:0.6rem;
+  font-weight:700;
+  background:var(--accent);
+  color:#0f0f1a;
+  padding:0.05rem 0.35rem;
+  border-radius:3px;
+  margin-left:0.3rem;
+  text-transform:uppercase;
 }
-.stack-item input {
-  width: 100%;
-  padding: 0.5rem 0.7rem;
-  background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 0.9rem;
-  font-family: 'JetBrains Mono', monospace;
-  outline: none;
-  transition: border-color 0.2s;
+.stack-item input{
+  width:100%;
+  padding:0.5rem 0.7rem;
+  background:var(--bg-dark);
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text);
+  font-size:0.9rem;
+  font-family:'JetBrains Mono',monospace;
+  outline:none;
+  transition:border-color 0.2s;
 }
-.stack-item input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(226,183,20,0.1);
+.stack-item input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(226,183,20,0.1);
 }
 
 /* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.65rem 1.5rem;
+  border:none;
+  border-radius:8px;
+  font-size:0.9rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+  font-family:'Inter',sans-serif;
 }
-.btn-primary {
-  background: var(--gradient);
-  color: #0f0f1a;
+.btn-primary{
+  background:var(--gradient);
+  color:#0f0f1a;
 }
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(226,183,20,0.25);
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 20px rgba(226,183,20,0.25);
 }
-.btn-secondary {
-  background: var(--bg-card-hover);
-  color: var(--text);
-  border: 1px solid var(--border);
+.btn-secondary{
+  background:var(--bg-card-hover);
+  color:var(--text);
+  border:1px solid var(--border);
 }
-.btn-secondary:hover { background: var(--border); }
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-}
-.btn-group { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+.btn-secondary:hover{background:var(--border);}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
+.btn-group{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem;}
 
 /* Results */
-.results-section { display: none; }
-.results-section.visible { display: block; }
+.results-section{display:none;}
+.results-section.visible{display:block;}
 
 /* $EV Table */
-.ev-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; }
-.ev-table th, .ev-table td {
-  padding: 0.55rem 0.75rem;
-  text-align: center;
-  font-size: 0.85rem;
-  border-bottom: 1px solid var(--border);
+.ev-table-wrapper{overflow-x:auto;margin:0.75rem 0;border-radius:10px;border:1px solid var(--border);}
+.ev-table{width:100%;border-collapse:collapse;min-width:600px;}
+.ev-table th,.ev-table td{
+  padding:0.55rem 0.75rem;
+  text-align:center;
+  font-size:0.85rem;
+  border-bottom:1px solid var(--border);
 }
-.ev-table th {
-  color: var(--text-dim);
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.7rem;
-  letter-spacing: 0.06em;
-  background: rgba(15,15,26,0.5);
+.ev-table th{
+  background:var(--gradient);
+  color:#0f0f1a;
+  font-weight:700;
+  text-transform:uppercase;
+  font-size:0.7rem;
+  letter-spacing:0.06em;
 }
-.ev-table tr:nth-child(even) { background: rgba(15,15,26,0.3); }
-.ev-table tr:hover { background: rgba(226,183,20,0.05); }
-.ev-table tr.hero-row { background: rgba(226,183,20,0.08); }
-.ev-table tr.hero-row:hover { background: rgba(226,183,20,0.14); }
-.ev-table td:first-child { font-weight: 600; }
-.ev-table .rank-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px; height: 24px;
-  border-radius: 50%;
-  font-size: 0.7rem;
-  font-weight: 700;
+.ev-table tr:last-child td{border-bottom:none;}
+.ev-table tr:nth-child(even){background:rgba(15,15,26,0.3);}
+.ev-table tr:hover{background:rgba(226,183,20,0.05);}
+.ev-table tr.hero-row{background:rgba(226,183,20,0.08);font-weight:600;}
+.ev-table tr.hero-row:hover{background:rgba(226,183,20,0.14);}
+.ev-table td:first-child{font-weight:600;}
+.ev-table .bf-highlight{
+  display:inline-block;
+  padding:0.12rem 0.5rem;
+  border-radius:4px;
+  font-size:0.8rem;
+  font-weight:700;
+  font-family:'JetBrains Mono',monospace;
 }
-.rank-1 { background: #e2b714; color: #0f0f1a; }
-.rank-2 { background: #94a3b8; color: #0f0f1a; }
-.rank-3 { background: #b8940f; color: #0f0f1a; }
+.bf-low{background:rgba(34,197,94,0.15);color:var(--success);}
+.bf-mid{background:rgba(226,183,20,0.15);color:var(--accent);}
+.bf-high{background:rgba(239,68,68,0.15);color:var(--danger);}
+.bf-extreme{background:rgba(239,68,68,0.25);color:#ff6b6b;}
+
+/* Push/Fold recommendation in table */
+.pf-rec{
+  display:inline-block;
+  padding:0.1rem 0.5rem;
+  border-radius:4px;
+  font-size:0.7rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+.pf-push{background:rgba(34,197,94,0.2);color:var(--success);}
+.pf-fold{background:rgba(239,68,68,0.2);color:var(--danger);}
+.pf-neutral{background:rgba(226,183,20,0.15);color:var(--accent);}
 
 /* Bubble Factor display */
-.bubble-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin: 1rem 0;
+.bubble-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1rem;
+  margin:1rem 0;
 }
-.bubble-card {
-  background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem;
-  text-align: center;
+.bubble-card{
+  background:var(--bg-dark);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:1.25rem;
+  text-align:center;
 }
-.bubble-card .bubble-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.3rem;
+.bubble-card .bubble-label{
+  font-size:0.7rem;
+  font-weight:600;
+  color:var(--text-dim);
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  margin-bottom:0.3rem;
 }
-.bubble-card .bubble-value {
-  font-size: 1.75rem;
-  font-weight: 800;
-  font-family: 'JetBrains Mono', monospace;
-  line-height: 1.2;
+.bubble-card .bubble-value{
+  font-size:1.75rem;
+  font-weight:800;
+  font-family:'JetBrains Mono',monospace;
+  line-height:1.2;
 }
-.bubble-card .bubble-value.positive { color: var(--success); }
-.bubble-card .bubble-value.neutral { color: var(--accent); }
-.bubble-card .bubble-value.negative { color: var(--danger); }
-.bubble-card .bubble-sub {
-  font-size: 0.8rem;
-  color: var(--muted);
-  margin-top: 0.2rem;
-}
+.bubble-card .bubble-value.positive{color:var(--success);}
+.bubble-card .bubble-value.neutral{color:var(--accent);}
+.bubble-card .bubble-value.negative{color:var(--danger);}
+.bubble-card .bubble-sub{font-size:0.8rem;color:var(--muted);margin-top:0.2rem;}
 
 /* Equity comparison */
-.eq-comparison {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  padding: 1rem;
-  background: var(--bg-dark);
-  border-radius: 10px;
-  margin: 0.5rem 0;
-  flex-wrap: wrap;
+.eq-comparison{
+  display:flex;
+  align-items:center;
+  gap:2rem;
+  padding:1rem;
+  background:var(--bg-dark);
+  border-radius:10px;
+  margin:0.5rem 0;
+  flex-wrap:wrap;
 }
-.eq-bar-container { flex: 1; min-width: 200px; }
-.eq-bar-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  margin-bottom: 0.25rem;
+.eq-bar-container{flex:1;min-width:200px;}
+.eq-bar-label{
+  display:flex;
+  justify-content:space-between;
+  font-size:0.8rem;
+  margin-bottom:0.25rem;
 }
-.eq-bar-label .eq-name { font-weight: 600; color: var(--text); }
-.eq-bar-label .eq-pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--accent); }
-.eq-track {
-  height: 12px;
-  background: var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
+.eq-bar-label .eq-name{font-weight:600;color:var(--text);}
+.eq-bar-label .eq-pct{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--accent);}
+.eq-track{
+  height:12px;
+  background:var(--border);
+  border-radius:6px;
+  overflow:hidden;
+  position:relative;
 }
-.eq-fill {
-  height: 100%;
-  border-radius: 6px;
-  transition: width 0.3s ease;
+.eq-fill{
+  height:100%;
+  border-radius:6px;
+  transition:width 0.3s ease;
 }
-.eq-fill.icm-fill { background: linear-gradient(90deg, #e2b714, #f59e0b); }
-.eq-fill.cash-fill { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.eq-fill.icm-fill{background:linear-gradient(90deg,#e2b714,#f59e0b);}
+.eq-fill.cash-fill{background:linear-gradient(90deg,#3b82f6,#2563eb);}
 
 /* Recommendation */
-.recommendation {
-  padding: 1rem 1.25rem;
-  border-radius: 10px;
-  margin: 1rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-weight: 600;
+.recommendation{
+  padding:1rem 1.25rem;
+  border-radius:10px;
+  margin:1rem 0;
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  font-weight:600;
 }
-.recommendation.fold { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: var(--danger); }
-.recommendation.call { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: var(--success); }
-.recommendation.neutral { background: rgba(226,183,20,0.1); border: 1px solid rgba(226,183,20,0.2); color: var(--accent); }
-.recommendation .rec-icon { font-size: 1.5rem; }
-.recommendation .rec-text { font-size: 0.95rem; }
-.recommendation .rec-sub { font-weight: 400; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem; }
+.recommendation.fold{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:var(--danger);}
+.recommendation.call{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);color:var(--success);}
+.recommendation.neutral{background:rgba(226,183,20,0.1);border:1px solid rgba(226,183,20,0.2);color:var(--accent);}
+.recommendation .rec-icon{font-size:1.5rem;}
+.recommendation .rec-text{font-size:0.95rem;}
+.recommendation .rec-sub{font-weight:400;font-size:0.8rem;color:var(--text-dim);margin-top:0.2rem;}
+
+/* Push/Fold detail card */
+.pushfold-detail{
+  background:var(--bg-dark);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:1.25rem;
+  margin:1rem 0;
+}
+.pushfold-detail .pf-title{
+  font-size:0.8rem;
+  font-weight:600;
+  color:var(--text-dim);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  margin-bottom:0.75rem;
+}
+.pushfold-detail .pf-player-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0.35rem 0;
+  border-bottom:1px solid rgba(42,42,62,0.5);
+  font-size:0.85rem;
+}
+.pushfold-detail .pf-player-row:last-child{border-bottom:none;}
+.pushfold-detail .pf-player-row .pf-name{font-weight:500;}
+.pushfold-detail .pf-player-row .pf-name.hero{color:var(--accent);}
 
 /* Info Box */
-.info-box {
-  background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  margin-bottom: 0.75rem;
-  overflow: hidden;
+.info-box{
+  background:var(--bg-dark);
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:0.75rem;
+  overflow:hidden;
 }
-.info-box-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.85rem 1rem;
-  cursor: pointer;
-  user-select: none;
-  transition: background 0.2s;
+.info-box-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0.85rem 1rem;
+  cursor:pointer;
+  user-select:none;
+  transition:background 0.2s;
 }
-.info-box-header:hover { background: var(--bg-card-hover); }
-.info-box-header .info-title {
-  font-weight: 600;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.info-box-header:hover{background:var(--bg-card-hover);}
+.info-box-header .info-title{
+  font-weight:600;
+  font-size:0.9rem;
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
 }
-.info-box-header .info-title .info-icon {
-  width: 20px; height: 20px;
-  background: var(--accent);
-  color: #0f0f1a;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.65rem;
-  font-weight: 800;
+.info-box-header .info-title .info-icon{
+  width:20px;height:20px;
+  background:var(--accent);
+  color:#0f0f1a;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:0.65rem;
+  font-weight:800;
 }
-.info-box-header .chevron { transition: transform 0.25s; color: var(--muted); font-size: 0.8rem; }
-.info-box-header.open .chevron { transform: rotate(180deg); }
-.info-box-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
-  padding: 0 1rem;
+.info-box-header .chevron{transition:transform 0.25s;color:var(--muted);font-size:0.8rem;}
+.info-box-header.open .chevron{transform:rotate(180deg);}
+.info-box-content{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.3s ease,padding 0.3s ease;
+  padding:0 1rem;
 }
-.info-box-content.open {
-  max-height: 500px;
-  padding: 0 1rem 1rem;
+.info-box-content.open{
+  max-height:500px;
+  padding:0 1rem 1rem;
 }
-.info-box-content p, .info-box-content li {
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  line-height: 1.65;
+.info-box-content p,.info-box-content li{
+  font-size:0.85rem;
+  color:var(--text-dim);
+  line-height:1.65;
 }
-.info-box-content .formula {
-  font-family: 'JetBrains Mono', monospace;
-  background: rgba(226,183,20,0.08);
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  margin: 0.5rem 0;
-  font-size: 0.8rem;
-  color: var(--accent);
-  display: inline-block;
+.info-box-content .formula{
+  font-family:'JetBrains Mono',monospace;
+  background:rgba(226,183,20,0.08);
+  padding:0.5rem 0.75rem;
+  border-radius:6px;
+  margin:0.5rem 0;
+  font-size:0.8rem;
+  color:var(--accent);
+  display:inline-block;
 }
-.info-box-content ul { padding-left: 1.25rem; }
-.info-box-content ul li { margin-bottom: 0.3rem; }
+.info-box-content ul{padding-left:1.25rem;}
+.info-box-content ul li{margin-bottom:0.3rem;}
 
 /* Footer */
-.footer {
-  text-align: center;
-  padding: 2rem;
-  color: var(--muted);
-  font-size: 0.8rem;
-  border-top: 1px solid var(--border);
-  margin-top: auto;
+.footer{
+  text-align:center;
+  padding:2rem;
+  color:var(--muted);
+  font-size:0.8rem;
+  border-top:1px solid var(--border);
+  margin-top:auto;
 }
 
 /* Decision Inputs */
-.decision-inputs {
-  background: var(--bg-dark);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem 1.25rem;
-  margin: 1rem 0;
+.decision-inputs{
+  background:var(--bg-dark);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:1rem 1.25rem;
+  margin:1rem 0;
 }
-.decision-inputs .di-title {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.75rem;
+.decision-inputs .di-title{
+  font-size:0.8rem;
+  font-weight:600;
+  color:var(--text-dim);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  margin-bottom:0.75rem;
 }
 
-/* Warning / note */
-.note {
-  font-size: 0.8rem;
-  color: var(--muted);
-  padding: 0.5rem;
-  border-left: 3px solid var(--accent);
-  background: rgba(226,183,20,0.04);
-  border-radius: 0 6px 6px 0;
-  margin: 0.5rem 0;
+/* Note */
+.note{
+  font-size:0.8rem;
+  color:var(--muted);
+  padding:0.5rem;
+  border-left:3px solid var(--accent);
+  background:rgba(226,183,20,0.04);
+  border-radius:0 6px 6px 0;
+  margin:0.5rem 0;
 }
 
 /* Two column */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-@media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
 
 /* Responsive */
-@media (max-width: 640px) {
-  .container { padding: 1rem; }
-  .card { padding: 1.25rem; }
-  .page-header h1 { font-size: 1.75rem; }
-  .navbar { padding: 0 1rem; }
-  .navbar .nav-links { gap: 0.85rem; }
-  .stack-grid { grid-template-columns: 1fr 1fr; }
-  .bubble-grid { grid-template-columns: 1fr; }
-  .payout-table input { width: 60px; }
+@media(max-width:900px){
+  .container{padding:1.5rem;}
+  .card{padding:1.25rem;}
+  .page-header h1{font-size:1.75rem;}
+  .navbar{padding:0 1rem;}
+  .navbar .nav-links{gap:0.85rem;}
+  .stack-grid{grid-template-columns:1fr 1fr;}
+  .bubble-grid{grid-template-columns:1fr;}
+  .payout-table input{width:60px;}
+  .two-col{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .stack-grid{grid-template-columns:1fr;}
+  .player-counter .pc-btn{width:36px;height:36px;}
+  .form-row{flex-direction:column;}
+  .form-group{min-width:100%;}
+  .ev-table th,.ev-table td{padding:0.4rem 0.5rem;font-size:0.75rem;}
 }
 </style>
 </head>
@@ -562,7 +634,7 @@ a:hover { color: var(--accent-dim); }
   <!-- Header -->
   <div class="page-header">
     <h1>ICM Rechner</h1>
-    <p>Independent Chip Model — berechne den genauen Turnier-$EV jedes Spielers, den Bubble Factor und die benötigte Equity für profitable Calls.</p>
+    <p>Independent Chip Model — exakte rekursive ICM-Berechnung für 3–10 Spieler mit $EV, Bubble Factor und Push/Fold-Empfehlung.</p>
   </div>
 
   <!-- Card: Configuration -->
@@ -572,25 +644,16 @@ a:hover { color: var(--accent-dim); }
       <span class="badge">Input</span>
     </div>
 
-    <!-- Row 1: Players + Buy-in -->
+    <!-- Row: Player count + Buy-in -->
     <div class="form-row">
-      <div class="form-group" style="flex:0.8;">
+      <div class="form-group" style="flex:0.8;min-width:200px;">
         <label>Anzahl Spieler</label>
-        <select id="playerCount" onchange="onPlayerCountChange()">
-          <option value="3">3 Spieler</option>
-          <option value="4">4 Spieler</option>
-          <option value="5">5 Spieler</option>
-          <option value="6" selected>6 Spieler</option>
-          <option value="7">7 Spieler</option>
-          <option value="8">8 Spieler</option>
-          <option value="9">9 Spieler</option>
-          <option value="10">10 Spieler</option>
-          <option value="custom">Benutzerdefiniert (&gt;10)</option>
-        </select>
-      </div>
-      <div class="form-group" id="customCountGroup" style="flex:0.5; display:none;">
-        <label>Anzahl (max 200)</label>
-        <input type="number" id="customCount" value="12" min="11" max="200" onchange="onPlayerCountChange()">
+        <div class="player-counter">
+          <button class="pc-btn" id="decPlayerBtn" onclick="changePlayerCount(-1)" title="Spieler entfernen">−</button>
+          <span class="pc-value" id="playerCountDisplay">6</span>
+          <button class="pc-btn" id="incPlayerBtn" onclick="changePlayerCount(1)" title="Spieler hinzufügen">+</button>
+          <span class="pc-label" style="margin-left:0.75rem;">Spieler</span>
+        </div>
       </div>
       <div class="form-group" style="flex:0.6;">
         <label>Buy-In (€)</label>
@@ -603,7 +666,7 @@ a:hover { color: var(--accent-dim); }
 
     <!-- Payout Structure -->
     <div style="margin-top:0.5rem;">
-      <label style="font-size:0.75rem; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.35rem; display:block;">
+      <label style="font-size:0.75rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.35rem;display:block;">
         Payout-Struktur (%)
       </label>
       <div style="overflow-x:auto;">
@@ -617,13 +680,13 @@ a:hover { color: var(--accent-dim); }
 
     <!-- Stack inputs -->
     <div style="margin-top:1.25rem;">
-      <label style="font-size:0.75rem; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.5rem; display:block;">
+      <label style="font-size:0.75rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.5rem;display:block;">
         Chip-Stacks
       </label>
       <div class="stack-grid" id="stackGrid"></div>
     </div>
 
-    <!-- Calculate button -->
+    <!-- Buttons -->
     <div class="btn-group">
       <button class="btn btn-primary" onclick="calculateICM()">💰 ICM berechnen</button>
       <button class="btn btn-secondary" onclick="resetDefaults()">Standard zurücksetzen</button>
@@ -638,27 +701,32 @@ a:hover { color: var(--accent-dim); }
     </div>
 
     <!-- $EV Table -->
-    <div class="card-title" style="font-size:1rem; margin-top:0.5rem;">$EV Tabelle</div>
-    <div style="overflow-x:auto;">
+    <div class="card-title" style="font-size:1rem;margin-top:0.5rem;">$EV Tabelle</div>
+    <div class="ev-table-wrapper">
       <table class="ev-table" id="evTable">
         <thead>
           <tr>
             <th>Spieler</th>
             <th>Stack</th>
-            <th>Chips %</th>
             <th>$EV</th>
-            <th>Equity %</th>
-            <th>Erwarteter Rang</th>
+            <th>Equity%</th>
+            <th>Bubble Factor</th>
+            <th>Empfehlung</th>
           </tr>
         </thead>
         <tbody id="evTableBody"></tbody>
       </table>
     </div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem;">
+      <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(34,197,94,0.4);margin-right:0.3rem;"></span> BF &lt; 1 — loosen
+      <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(226,183,20,0.4);margin-left:1rem;margin-right:0.3rem;"></span> BF ≈ 1 — neutral
+      <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(239,68,68,0.4);margin-left:1rem;margin-right:0.3rem;"></span> BF &gt; 1 — tighten
+    </div>
 
     <!-- Analysis -->
     <div style="margin-top:1.5rem;">
       <div class="card-title" style="font-size:1rem;">📐 Decision Analysis (Hero)</div>
-      <p style="font-size:0.85rem; color:var(--text-dim); margin-bottom:0.75rem;">
+      <p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:0.75rem;">
         Gib die aktuelle Hand-Situation ein, um den Bubble Factor und die benötigte Equity zu berechnen.
       </p>
 
@@ -680,8 +748,8 @@ a:hover { color: var(--accent-dim); }
               <span class="unit">€</span>
             </div>
           </div>
-          <div class="form-group" style="flex:0.5; display:flex; align-items:end;">
-            <button class="btn btn-secondary" onclick="updateDecisionAnalysis()" style="padding:0.55rem 1rem; font-size:0.85rem;">Aktualisieren</button>
+          <div class="form-group" style="flex:0.5;display:flex;align-items:end;">
+            <button class="btn btn-secondary" onclick="updateDecisionAnalysis()" style="padding:0.55rem 1rem;font-size:0.85rem;">Aktualisieren</button>
           </div>
         </div>
       </div>
@@ -729,6 +797,12 @@ a:hover { color: var(--accent-dim); }
 
       <!-- Recommendation -->
       <div id="recommendationBox"></div>
+
+      <!-- Push/Fold Detail Table -->
+      <div class="pushfold-detail" id="pushfoldDetail">
+        <div class="pf-title">🔄 Push/Fold-Analyse pro Spieler</div>
+        <div id="pushfoldBody"></div>
+      </div>
 
       <div class="note">
         💡 <strong>Bubble Factor &gt; 1</strong> = du brauchst mehr Equity als im Cash-Game (tighten).
@@ -781,12 +855,11 @@ a:hover { color: var(--accent-dim); }
 
     <div class="info-box">
       <div class="info-box-header" onclick="toggleInfo(this)">
-        <span class="info-title"><span class="info-icon">≈</span> Genauigkeit &amp; Approximation</span>
+        <span class="info-title"><span class="info-icon">≈</span> Genauigkeit &amp; Hinweise</span>
         <span class="chevron">▼</span>
       </div>
       <div class="info-box-content">
-        <p>Für <strong>≤ 10 Spieler</strong> wird der exakte ICM-Wert durch rekursive Berechnung aller möglichen Turnier-Ausgänge ermittelt (memoized DP).</p>
-        <p>Für <strong>&gt; 10 Spieler</strong> wird eine <strong>Monte-Carlo-Simulation</strong> mit 50.000 Durchläufen verwendet. Die Ergebnisse sind approximativ, für die Praxis aber ausreichend genau (±0.5% $EV).</p>
+        <p>Für <strong>3–10 Spieler</strong> wird der exakte ICM-Wert durch rekursive Berechnung aller möglichen Turnier-Ausgänge ermittelt (memoized DP).</p>
         <p style="margin-top:0.5rem;">⚠️ ICM ignoriert:</p>
         <ul>
           <li>Position am Tisch</li>
@@ -811,7 +884,6 @@ a:hover { color: var(--accent-dim); }
 let numPlayers = 6;
 let payouts = [];
 let stacks = [];
-let heroIdx = 0;
 let currentEV = [];
 
 // ======================== PRESETS ========================
@@ -827,20 +899,28 @@ const PAYOUT_PRESETS = {
 };
 
 function getDefaultStacks(n) {
+  // Total chips 10000, Hero gets 30%, rest distributed with decreasing shares
   const total = 10000;
   const s = [];
   let remaining = total;
   for (let i = 0; i < n; i++) {
     if (i === n - 1) {
       s.push(remaining);
+    } else if (i === 0) {
+      const heroStack = Math.round(total * 0.30);
+      s.push(heroStack);
+      remaining -= heroStack;
     } else {
-      // Hero gets 30%, rest decreasing
-      const share = i === 0 ? Math.round(total * 0.3) : Math.round((remaining) / (n - i) * (i === 1 ? 1.0 : 0.9));
-      const val = Math.min(remaining - (n - i - 1), Math.max(100, share));
-      s.push(val);
-      remaining -= val;
+      // Opponents: decreasing from ~25% to fair share
+      const fairShare = remaining / (n - i);
+      const weight = 1.0 - (i - 1) / (n - 1) * 0.5; // 1.0 down to 0.5
+      const val = Math.max(200, Math.round(fairShare * weight));
+      const clamped = Math.min(remaining - (n - i - 1) * 100, val);
+      s.push(clamped);
+      remaining -= clamped;
     }
   }
+  // Sanity: sort by size descending, hero first
   return s;
 }
 
@@ -896,7 +976,7 @@ function buildStackInputs() {
   const grid = document.getElementById('stackGrid');
   grid.innerHTML = '';
   for (let i = 0; i < numPlayers; i++) {
-    const label = i === 0 ? 'Hero (Du)' : `Spieler ${i + 1}`;
+    const label = i === 0 ? 'Hero (Du)' : `Gegner ${i}`;
     const tag = i === 0 ? '<span class="hero-tag">Hero</span>' : '';
     const val = stacks[i] || 1000;
     const div = document.createElement('div');
@@ -917,138 +997,171 @@ function onStackChange() {
   });
 }
 
-function onPlayerCountChange() {
-  const sel = document.getElementById('playerCount');
-  const customGroup = document.getElementById('customCountGroup');
-  let n;
-  if (sel.value === 'custom') {
-    customGroup.style.display = 'block';
-    n = parseInt(document.getElementById('customCount').value) || 12;
-  } else {
-    customGroup.style.display = 'none';
-    n = parseInt(sel.value);
-  }
-  numPlayers = n;
+// ======================== PLAYER COUNT ========================
+function changePlayerCount(delta) {
+  const newCount = Math.min(10, Math.max(3, numPlayers + delta));
+  if (newCount === numPlayers) return;
+  numPlayers = newCount;
+
+  // Update display
+  document.getElementById('playerCountDisplay').textContent = numPlayers;
+  document.getElementById('decPlayerBtn').disabled = (numPlayers <= 3);
+  document.getElementById('incPlayerBtn').disabled = (numPlayers >= 10);
 
   // Set payouts
-  if (PAYOUT_PRESETS[n]) {
-    payouts = [...PAYOUT_PRESETS[n]];
+  if (PAYOUT_PRESETS[numPlayers]) {
+    payouts = [...PAYOUT_PRESETS[numPlayers]];
   } else {
-    // Generate a reasonable payout structure for custom counts
     payouts = [];
-    const totalPct = 100;
-    const paid = Math.min(n, Math.max(3, Math.floor(n / 2)));
-    let remaining = totalPct;
+    const paid = Math.min(numPlayers, Math.max(3, Math.floor(numPlayers / 2)));
+    let remaining = 100;
     for (let i = 0; i < paid; i++) {
       if (i === paid - 1) {
         payouts.push(Math.round(remaining * 10) / 10);
       } else {
-        const share = totalPct * (0.5 - i * 0.08);
+        const share = 100 * (0.5 - i * 0.08);
         const val = Math.min(remaining - (paid - i - 1) * 2, Math.max(2, Math.round(share * 10) / 10));
         payouts.push(val);
         remaining -= val;
       }
     }
-    // Fill rest with 0
-    while (payouts.length < n) payouts.push(0);
+    while (payouts.length < numPlayers) payouts.push(0);
   }
 
-  // Set stacks
-  stacks = getDefaultStacks(n);
+  // Adjust stacks: if adding a player, insert mid-range stack; if removing, redistribute
+  if (delta > 0) {
+    // Adding: insert new opponent with average-like stack, preserving hero
+    const avg = Math.round(stacks.reduce((a,b) => a + b, 0) / stacks.length * 0.8);
+    stacks.push(avg);
+  } else {
+    // Removing: just drop last (opponent with smallest stack)
+    stacks.pop();
+  }
+  // Ensure length matches
+  while (stacks.length < numPlayers) stacks.push(1000);
+  while (stacks.length > numPlayers) stacks.pop();
 
   buildPayoutTable();
   buildStackInputs();
+
+  // Hide results
   document.getElementById('resultsSection').classList.remove('visible');
 }
 
-function resetDefaults() {
-  onPlayerCountChange();
-}
-
 // ======================== ICM ALGORITHM ========================
+// Exact recursive ICM with memoization (DP over subsets)
 function computeICM(stacks, payouts) {
   const n = stacks.length;
-  const totalChips = stacks.reduce((a, b) => a + b, 0);
   const memo = new Map();
   const allMask = (1 << n) - 1;
 
   function solve(mask) {
-    // Return array of $EV for each player given remaining set in mask,
-    // for the positions remaining.
+    // Collect remaining player indices
     const remaining = [];
     for (let i = 0; i < n; i++) {
       if (mask & (1 << i)) remaining.push(i);
     }
-    const rank = n - remaining.length; // 0-indexed current position
+    const rank = n - remaining.length; // 0-indexed rank being awarded
     if (rank >= payouts.length || remaining.length === 0) {
       return new Array(n).fill(0);
     }
-    if (memo.has(mask)) return memo.get(mask);
+    const key = mask;
+    if (memo.has(key)) return memo.get(key);
 
     const result = new Array(n).fill(0);
-    const total = remaining.reduce((s, i) => s + stacks[i], 0);
+    const totalChips = remaining.reduce((s, i) => s + stacks[i], 0);
 
     if (remaining.length === 1) {
       result[remaining[0]] = payouts[rank];
-      memo.set(mask, result);
+      memo.set(key, result);
       return result;
     }
 
-    for (const i of remaining) {
-      const p = stacks[i] / total;
-      const newMask = mask & ~(1 << i);
-      const sub = solve(newMask);
+    for (const winner of remaining) {
+      const p = stacks[winner] / totalChips;
+      const newMask = mask & ~(1 << winner);
+      const subResults = solve(newMask);
 
-      result[i] += p * (payouts[rank] + sub[i]); // sub[i] is 0 since i removed
+      // Winner gets the payout for this rank + continues for future ranks
+      result[winner] += p * (payouts[rank] + subResults[winner]);
+      // Other players carry forward their sub-results
       for (const j of remaining) {
-        if (j !== i) {
-          result[j] += p * sub[j];
+        if (j !== winner) {
+          result[j] += p * subResults[j];
         }
       }
     }
 
-    memo.set(mask, result);
+    memo.set(key, result);
     return result;
   }
 
   return solve(allMask);
 }
 
-// ======================== MONTE CARLO APPROXIMATION ========================
-function monteCarloICM(stacks, payouts, iterations) {
-  iterations = iterations || 50000;
+// ======================== BUBBLE FACTOR PER PLAYER ========================
+function computeBubbleFactorForPlayer(playerIdx, stacks, payouts, payoutInEuro) {
   const n = stacks.length;
-  const posCounts = new Array(n).fill(0).map(() => new Array(n).fill(0));
+  const heroStack = stacks[playerIdx];
+  if (heroStack <= 0) return { bf: Infinity, reqEq: 1, evFold: 0, evWin: 0, evLose: 0 };
 
-  for (let iter = 0; iter < iterations; iter++) {
-    let remaining = [...Array(n).keys()];
-    let s = [...stacks];
-    for (let pos = 0; pos < n; pos++) {
-      if (remaining.length === 1) {
-        posCounts[remaining[0]][pos]++;
-        break;
-      }
-      const total = remaining.reduce((sum, idx) => sum + s[idx], 0);
-      let r = Math.random() * total;
-      let winnerIdx = -1;
-      for (let j = 0; j < remaining.length; j++) {
-        r -= s[remaining[j]];
-        if (r <= 0) { winnerIdx = j; break; }
-      }
-      if (winnerIdx === -1) winnerIdx = remaining.length - 1;
-      const winner = remaining[winnerIdx];
-      posCounts[winner][pos]++;
-      remaining.splice(winnerIdx, 1);
-    }
+  // For push/fold: assume shove with effective stack = hero's stack
+  // EV if fold: current ICM value
+  const evFold = computeICM(stacks, payoutInEuro)[playerIdx];
+
+  // EV if win heads-up showdown against a random opponent (average of all opponents)
+  // Simplified: assume hero doubles up against a single opponent (takes their stack)
+  // We compute vs each opponent and average
+  let totalEvWin = 0;
+  let totalEvLose = 0;
+  let count = 0;
+
+  for (let opp = 0; opp < n; opp++) {
+    if (opp === playerIdx) continue;
+    const oppStack = stacks[opp];
+    if (oppStack <= 0) continue;
+
+    // Win: hero takes opponent's chips
+    const winStacks = [...stacks];
+    winStacks[playerIdx] += oppStack;
+    winStacks[opp] = 0;
+    const evWin = computeICM(winStacks, payoutInEuro)[playerIdx];
+
+    // Lose: hero loses to opponent (hero busts)
+    const loseStacks = [...stacks];
+    loseStacks[playerIdx] = 0;
+    loseStacks[opp] += heroStack;
+    const evLose = computeICM(loseStacks, payoutInEuro)[playerIdx];
+
+    totalEvWin += evWin;
+    totalEvLose += evLose;
+    count++;
   }
 
-  const ev = new Array(n).fill(0);
-  for (let i = 0; i < n; i++) {
-    for (let k = 0; k < Math.min(n, payouts.length); k++) {
-      ev[i] += (posCounts[i][k] / iterations) * payouts[k];
-    }
+  const avgEvWin = count > 0 ? totalEvWin / count : evFold;
+  const avgEvLose = count > 0 ? totalEvLose / count : 0;
+
+  // Bubble Factor = Risk / Reward
+  const risk = evFold - avgEvLose;
+  const reward = avgEvWin - evFold;
+  let bf;
+  if (reward <= 0) {
+    bf = risk > 0 ? Infinity : 1;
+  } else {
+    bf = risk / reward;
   }
-  return ev;
+
+  // Required equity = BF / (1 + BF)
+  let reqEq;
+  if (bf === Infinity) {
+    reqEq = 1;
+  } else if (isNaN(bf)) {
+    reqEq = 0.5;
+  } else {
+    reqEq = bf / (1 + bf);
+  }
+
+  return { bf, reqEq, evFold, evWin: avgEvWin, evLose: avgEvLose };
 }
 
 // ======================== CALCULATE ========================
@@ -1063,43 +1176,79 @@ function calculateICM() {
 
   const n = stacks.length;
 
-  // Compute ICM
-  let ev, isExact;
-  if (n <= 10) {
-    ev = computeICM(stacks, payoutInEuro);
-    isExact = true;
-    document.getElementById('resultBadge').textContent = 'Exakt';
-  } else {
-    ev = monteCarloICM(stacks, payoutInEuro, 50000);
-    isExact = false;
-    document.getElementById('resultBadge').textContent = '≈ Approximativ (MC)';
-  }
+  // Compute ICM (exact for 3-10 players)
+  let ev;
+  ev = computeICM(stacks, payoutInEuro);
+  document.getElementById('resultBadge').textContent = 'Exakt (rekursiv)';
+
   currentEV = ev;
 
   // Build $EV table
   const totalChips = stacks.reduce((a, b) => a + b, 0);
-  const sortedIndices = stacks.map((_, i) => i).sort((a, b) => stacks[b] - stacks[a]);
-  const rankMap = {};
-  sortedIndices.forEach((idx, pos) => { rankMap[idx] = pos + 1; });
 
   let tbody = document.getElementById('evTableBody');
   tbody.innerHTML = '';
+
+  // Compute per-player bubble factors
+  const bfData = [];
   for (let i = 0; i < n; i++) {
-    const chipPct = (stacks[i] / totalChips * 100);
+    bfData.push(computeBubbleFactorForPlayer(i, stacks, payouts, payoutInEuro));
+  }
+
+  for (let i = 0; i < n; i++) {
     const evEuro = ev[i];
-    const equityPct = (evEuro / (buyIn)) * 100; // ROI in % of buy-in
-    const avgRank = rankMap[i];
+    const equityPct = totalPrize > 0 ? (evEuro / totalPrize) * 100 : 0;
 
     const isHero = i === 0;
     const tr = document.createElement('tr');
     if (isHero) tr.className = 'hero-row';
+
+    // Bubble Factor display
+    const bf = bfData[i].bf;
+    let bfClass, bfText;
+    if (bf === Infinity) {
+      bfClass = 'bf-extreme';
+      bfText = '∞';
+    } else if (isNaN(bf)) {
+      bfClass = 'bf-mid';
+      bfText = '—';
+    } else if (bf > 1.5) {
+      bfClass = 'bf-high';
+      bfText = bf.toFixed(2);
+    } else if (bf > 1.05) {
+      bfClass = 'bf-mid';
+      bfText = bf.toFixed(2);
+    } else if (bf < 0.67) {
+      bfClass = 'bf-low';
+      bfText = bf.toFixed(2);
+    } else if (bf < 0.95) {
+      bfClass = 'bf-low';
+      bfText = bf.toFixed(2);
+    } else {
+      bfClass = 'bf-mid';
+      bfText = bf.toFixed(2);
+    }
+
+    // Push/Fold recommendation based on bubble factor
+    let pfClass, pfText;
+    if (bf === Infinity || bf > 1.2) {
+      pfClass = 'pf-fold';
+      pfText = 'Fold';
+    } else if (bf < 0.8) {
+      pfClass = 'pf-push';
+      pfText = 'Push';
+    } else {
+      pfClass = 'pf-neutral';
+      pfText = '—';
+    }
+
     tr.innerHTML = `
-      <td>${isHero ? '⭐ Hero (Du)' : `Spieler ${i + 1}`}</td>
+      <td>${isHero ? '⭐ Hero (Du)' : `Gegner ${i}`}</td>
       <td>${stacks[i].toLocaleString()}</td>
-      <td>${chipPct.toFixed(1)}%</td>
       <td><strong>${evEuro.toFixed(2)} €</strong></td>
-      <td>${(evEuro / buyIn * 100).toFixed(1)}%</td>
-      <td>${avgRank}. Platz</td>
+      <td>${equityPct.toFixed(2)}%</td>
+      <td><span class="bf-highlight ${bfClass}">${bfText}</span></td>
+      <td><span class="pf-rec ${pfClass}">${pfText}</span></td>
     `;
     tbody.appendChild(tr);
   }
@@ -1108,16 +1257,151 @@ function calculateICM() {
   document.getElementById('resultsSection').classList.add('visible');
 
   // Run decision analysis
-  updateDecisionAnalysis();
+  updateDecisionAnalysis(bfData);
+
+  // Build push/fold detail table
+  buildPushFoldDetail(bfData);
 
   // Scroll to results
   document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+// ======================== PUSH/FOLD DETAIL TABLE ========================
+function buildPushFoldDetail(bfData) {
+  const container = document.getElementById('pushfoldBody');
+  container.innerHTML = '';
+
+  for (let i = 0; i < bfData.length; i++) {
+    const isHero = i === 0;
+    const label = isHero ? '⭐ Hero (Du)' : `Gegner ${i}`;
+    const bf = bfData[i].bf;
+    const reqEq = bfData[i].reqEq;
+
+    let bfDesc, action, actionClass;
+    if (bf === Infinity) {
+      bfDesc = 'Maximaler Druck';
+      action = '🛑 Fold';
+      actionClass = 'pf-fold';
+    } else if (isNaN(bf)) {
+      bfDesc = '—';
+      action = '—';
+      actionClass = 'pf-neutral';
+    } else if (bf > 1.2) {
+      bfDesc = `Hoch (${bf.toFixed(2)}) — tighten`;
+      action = '🛑 Eher folden';
+      actionClass = 'pf-fold';
+    } else if (bf > 0.8) {
+      bfDesc = `Neutral (${bf.toFixed(2)})`;
+      action = '⚖️ Nach eq entscheiden';
+      actionClass = 'pf-neutral';
+    } else {
+      bfDesc = `Niedrig (${bf.toFixed(2)}) — loosen`;
+      action = '✅ Eher pushen';
+      actionClass = 'pf-push';
+    }
+
+    const row = document.createElement('div');
+    row.className = 'pf-player-row';
+    row.innerHTML = `
+      <span class="pf-name ${isHero ? 'hero' : ''}">${label}</span>
+      <span>BF: ${bf === Infinity ? '∞' : bf.toFixed(2)}</span>
+      <span>Ben. Eq: ${reqEq === 1 ? '100%' : (reqEq * 100).toFixed(1) + '%'}</span>
+      <span class="pf-rec ${actionClass}">${action}</span>
+    `;
+    container.appendChild(row);
+  }
+}
+
 // ======================== DECISION ANALYSIS ========================
-function updateDecisionAnalysis() {
+function updateDecisionAnalysis(bfData) {
   if (currentEV.length === 0) return;
 
+  // Use hero's bubble factor from precomputed data if available
+  if (bfData && bfData[0]) {
+    const heroBf = bfData[0];
+    const bfVal = heroBf.bf;
+    const reqEqIcm = heroBf.reqEq;
+
+    // Cash required equity (pot odds) from user inputs
+    const pot = parseFloat(document.getElementById('potSize').value) || 0;
+    const call = parseFloat(document.getElementById('callAmount').value) || 0;
+    const reqEqCash = (pot + call) > 0 ? call / (pot + call) : 0;
+
+    // Display Bubble Factor
+    const bfEl = document.getElementById('bfVal');
+    if (bfVal === Infinity) {
+      bfEl.textContent = '∞';
+      bfEl.className = 'bubble-value negative';
+    } else if (isNaN(bfVal)) {
+      bfEl.textContent = '—';
+      bfEl.className = 'bubble-value neutral';
+    } else {
+      bfEl.textContent = bfVal.toFixed(2);
+      bfEl.className = 'bubble-value ' + (bfVal > 1.05 ? 'negative' : bfVal < 0.95 ? 'positive' : 'neutral');
+    }
+
+    // Display Required Equity ICM
+    const reqIcmEl = document.getElementById('reqEqIcm');
+    if (isNaN(reqEqIcm) || reqEqIcm === 1) {
+      reqIcmEl.textContent = reqEqIcm === 1 ? '100%' : '—';
+      reqIcmEl.className = 'bubble-value negative';
+    } else {
+      reqIcmEl.textContent = (reqEqIcm * 100).toFixed(1) + '%';
+      reqIcmEl.className = 'bubble-value ' + (reqEqIcm > 0.4 ? 'negative' : reqEqIcm < 0.2 ? 'positive' : 'neutral');
+    }
+
+    // Display Required Equity Cash
+    const cashEl = document.getElementById('reqEqCash');
+    cashEl.textContent = (reqEqCash * 100).toFixed(1) + '%';
+    cashEl.className = 'bubble-value neutral';
+
+    // Update bars
+    const icmPct = Math.min(100, (reqEqIcm * 100));
+    const cashPct = Math.min(100, (reqEqCash * 100));
+    document.getElementById('icmEqLabel').textContent = (reqEqIcm * 100).toFixed(1) + '%';
+    document.getElementById('icmEqBar').style.width = icmPct + '%';
+    document.getElementById('cashEqLabel').textContent = (reqEqCash * 100).toFixed(1) + '%';
+    document.getElementById('cashEqBar').style.width = cashPct + '%';
+
+    // Recommendation
+    const recBox = document.getElementById('recommendationBox');
+    if (isNaN(reqEqIcm) || isNaN(reqEqCash) || pot <= 0) {
+      recBox.innerHTML = '<div class="recommendation neutral"><div class="rec-icon">ℹ️</div><div><div class="rec-text">Gib Pot und Call-Betrag ein, um eine Empfehlung zu erhalten.</div></div></div>';
+      return;
+    }
+
+    const diff = reqEqIcm - reqEqCash;
+    let recClass, recIcon, recText, recSub;
+    if (diff > 0.05) {
+      recClass = 'fold';
+      recIcon = '🛑';
+      recText = `ICM sagt: Eher folden (BF = ${bfVal.toFixed(2)})`;
+      recSub = `Du brauchst ${(reqEqIcm * 100).toFixed(1)}% Equity — das ist ${(diff * 100).toFixed(1)}% mehr als die reinen Pot-Odds. Der Bubble-Druck zwingt dich zum Tighten.`;
+    } else if (diff < -0.05) {
+      recClass = 'call';
+      recIcon = '✅';
+      recText = `ICM sagt: Eher callen (BF = ${bfVal.toFixed(2)})`;
+      recSub = `Du brauchst nur ${(reqEqIcm * 100).toFixed(1)}% Equity — ${(Math.abs(diff) * 100).toFixed(1)}% weniger als die reinen Pot-Odds. Der ICM-Druck erlaubt dir zu Loosen.`;
+    } else {
+      recClass = 'neutral';
+      recIcon = '⚖️';
+      recText = `ICM ist neutral (BF ≈ ${bfVal.toFixed(2)})`;
+      recSub = `Die benötigte Equity (${(reqEqIcm * 100).toFixed(1)}%) entspricht etwa den Pot-Odds. Kein signifikanter ICM-Druck.`;
+    }
+
+    recBox.innerHTML = `
+      <div class="recommendation ${recClass}">
+        <div class="rec-icon">${recIcon}</div>
+        <div>
+          <div class="rec-text">${recText}</div>
+          <div class="rec-sub">${recSub}</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Fallback: manual calculation from inputs (no precomputed bfData)
   const pot = parseFloat(document.getElementById('potSize').value) || 0;
   const call = parseFloat(document.getElementById('callAmount').value) || 0;
 
@@ -1126,29 +1410,23 @@ function updateDecisionAnalysis() {
   const totalPrize = buyIn * numPlayers;
   const payoutInEuro = payouts.map(p => (p / 100) * totalPrize);
 
-  // Compute ICM values
   const evFold = currentEV[0];
 
   // Stack after winning the pot
   const winStacks = [...stacks];
   winStacks[0] += pot;
-  const evWin = numPlayers <= 10
-    ? computeICM(winStacks, payoutInEuro)[0]
-    : monteCarloICM(winStacks, payoutInEuro, 20000)[0];
+  const evWin = computeICM(winStacks, payoutInEuro)[0];
 
   // Stack after losing the call
   const loseStacks = [...stacks];
   loseStacks[0] = Math.max(0, heroStack - call);
   let evLose;
   if (loseStacks[0] <= 0) {
-    evLose = 0; // Busted
+    evLose = 0;
   } else {
-    evLose = numPlayers <= 10
-      ? computeICM(loseStacks, payoutInEuro)[0]
-      : monteCarloICM(loseStacks, payoutInEuro, 20000)[0];
+    evLose = computeICM(loseStacks, payoutInEuro)[0];
   }
 
-  // Bubble Factor = Risk / Reward
   const risk = evFold - evLose;
   const reward = evWin - evFold;
   let bubbleFactor;
@@ -1158,7 +1436,6 @@ function updateDecisionAnalysis() {
     bubbleFactor = risk / reward;
   }
 
-  // Required Equity (ICM) = risk / (risk + reward) = BF / (1 + BF)
   let reqEqIcm;
   if (risk + reward <= 0) {
     reqEqIcm = 0.5;
@@ -1166,7 +1443,6 @@ function updateDecisionAnalysis() {
     reqEqIcm = risk / (risk + reward);
   }
 
-  // Required Equity (Cash) = call / (pot + call)
   const reqEqCash = (pot + call) > 0 ? call / (pot + call) : 0;
 
   // Display Bubble Factor
@@ -1182,7 +1458,6 @@ function updateDecisionAnalysis() {
     bfEl.className = 'bubble-value ' + (bubbleFactor > 1.05 ? 'negative' : bubbleFactor < 0.95 ? 'positive' : 'neutral');
   }
 
-  // Display Required Equity ICM
   const reqIcmEl = document.getElementById('reqEqIcm');
   if (isNaN(reqEqIcm)) {
     reqIcmEl.textContent = '—';
@@ -1192,12 +1467,10 @@ function updateDecisionAnalysis() {
     reqIcmEl.className = 'bubble-value ' + (reqEqIcm > 0.4 ? 'negative' : reqEqIcm < 0.2 ? 'positive' : 'neutral');
   }
 
-  // Display Required Equity Cash
   const cashEl = document.getElementById('reqEqCash');
   cashEl.textContent = (reqEqCash * 100).toFixed(1) + '%';
   cashEl.className = 'bubble-value neutral';
 
-  // Update bars
   const icmPct = Math.min(100, (reqEqIcm * 100));
   const cashPct = Math.min(100, (reqEqCash * 100));
   document.getElementById('icmEqLabel').textContent = (reqEqIcm * 100).toFixed(1) + '%';
@@ -1205,10 +1478,9 @@ function updateDecisionAnalysis() {
   document.getElementById('cashEqLabel').textContent = (reqEqCash * 100).toFixed(1) + '%';
   document.getElementById('cashEqBar').style.width = cashPct + '%';
 
-  // Recommendation
   const recBox = document.getElementById('recommendationBox');
   if (isNaN(reqEqIcm) || isNaN(reqEqCash) || pot <= 0) {
-    recBox.innerHTML = '';
+    recBox.innerHTML = '<div class="recommendation neutral"><div class="rec-icon">ℹ️</div><div><div class="rec-text">Gib Pot und Call-Betrag ein, um eine Empfehlung zu erhalten.</div></div></div>';
     return;
   }
 
@@ -1218,17 +1490,17 @@ function updateDecisionAnalysis() {
     recClass = 'fold';
     recIcon = '🛑';
     recText = `ICM sagt: Eher folden (BF = ${bubbleFactor.toFixed(2)})`;
-    recSub = `Du brauchst ${(reqEqIcm * 100).toFixed(1)}% Equity — das ist ${(diff * 100).toFixed(1)}% mehr als die reinen Pot-Odds. Der Bubble-Druck zwingt dich zum Tighten.`;
+    recSub = `Du brauchst ${(reqEqIcm * 100).toFixed(1)}% Equity — das ist ${(diff * 100).toFixed(1)}% mehr als die reinen Pot-Odds.`;
   } else if (diff < -0.05) {
     recClass = 'call';
     recIcon = '✅';
     recText = `ICM sagt: Eher callen (BF = ${bubbleFactor.toFixed(2)})`;
-    recSub = `Du brauchst nur ${(reqEqIcm * 100).toFixed(1)}% Equity — ${(Math.abs(diff) * 100).toFixed(1)}% weniger als die reinen Pot-Odds. Der ICM-Druck erlaubt dir zu Loosen.`;
+    recSub = `Du brauchst nur ${(reqEqIcm * 100).toFixed(1)}% Equity — ${(Math.abs(diff) * 100).toFixed(1)}% weniger als die reinen Pot-Odds.`;
   } else {
     recClass = 'neutral';
     recIcon = '⚖️';
     recText = `ICM ist neutral (BF ≈ ${bubbleFactor.toFixed(2)})`;
-    recSub = `Die benötigte Equity (${(reqEqIcm * 100).toFixed(1)}%) entspricht etwa den Pot-Odds. Kein signifikanter ICM-Druck.`;
+    recSub = `Die benötigte Equity (${(reqEqIcm * 100).toFixed(1)}%) entspricht etwa den Pot-Odds.`;
   }
 
   recBox.innerHTML = `
@@ -1245,15 +1517,29 @@ function updateDecisionAnalysis() {
 // ======================== INFO TOGGLE ========================
 function toggleInfo(header) {
   const content = header.nextElementSibling;
-  const isOpen = content.classList.contains('open');
   content.classList.toggle('open');
   header.classList.toggle('open');
 }
 
+// ======================== RESET ========================
+function resetDefaults() {
+  numPlayers = 6;
+  document.getElementById('playerCountDisplay').textContent = '6';
+  document.getElementById('decPlayerBtn').disabled = false;
+  document.getElementById('incPlayerBtn').disabled = false;
+  document.getElementById('buyIn').value = 10;
+
+  payouts = [...PAYOUT_PRESETS[6]];
+  stacks = getDefaultStacks(6);
+  currentEV = [];
+
+  buildPayoutTable();
+  buildStackInputs();
+  document.getElementById('resultsSection').classList.remove('visible');
+}
+
 // ======================== INIT ========================
-// Set default player count
-document.getElementById('playerCount').value = '6';
-onPlayerCountChange();
+resetDefaults();
 </script>
 </body>
 </html>

@@ -16,6 +16,7 @@ const articles = defineCollection({
       'Engine',
       'Dashboard',
       'DevOps',
+      'Academy',
     ]),
     tags: z.array(z.string()).optional(),
     draft: z.boolean().optional().default(false),

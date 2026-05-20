@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Range Visualizer — Poker Hand Matrix</title>
+<style>
+:root {
+  --bg-dark: #0f0f1a;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #22223a;
+  --accent: #e2b714;
+  --accent-dim: #b8940f;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --muted: #64748b;
+  --border: #2a2a3e;
+  --gradient: linear-gradient(135deg, #e2b714 0%, #f59e0b 100%);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+.container { max-width: 860px; width: 100%; }
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 20px 0 16px;
+}
+.header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+.header p { color: var(--text-dim); font-size: 0.9rem; }
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+.controls label {
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 2px;
+}
+.preset-group, .filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+}
+
+.btn {
+  padding: 5px 12px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg-card);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+.btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-dim);
+}
+.btn.active {
+  background: var(--accent) !important;
+  color: #000 !important;
+  border-color: var(--accent) !important;
+  font-weight: 700;
+}
+.btn-filter.active {
+  background: var(--accent-dim);
+  color: #000;
+  border-color: var(--accent-dim);
+}
+.btn-danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.btn-danger:hover {
+  background: var(--danger) !important;
+  color: #fff !important;
+}
+.btn-sm { padding: 3px 10px; font-size: 0.7rem; }
+.icon-btn {
+  width: 32px; height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 1rem;
+}
+
+/* Grid wrapper */
+.grid-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  overflow-x: auto;
+  margin-bottom: 14px;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: 36px repeat(13, 40px);
+  grid-template-rows: 32px repeat(13, 40px);
+  gap: 2px;
+  width: fit-content;
+  margin: 0 auto;
+}
+.grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  border-radius: 4px;
+}
+.grid-header.corner { font-size: 0.7rem; }
+.grid-cell {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.63rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.12s;
+  user-select: none;
+  position: relative;
+  background: var(--bg-dark);
+  color: var(--text-dim);
+  border: 1px solid transparent;
+}
+.grid-cell:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border);
+  transform: scale(1.08);
+  z-index: 2;
+}
+.grid-cell.selected {
+  background: var(--accent) !important;
+  color: #000 !important;
+  border-color: var(--accent) !important;
+  font-weight: 700;
+}
+.grid-cell.partial {
+  background: rgba(226, 183, 20, 0.30) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent-dim);
+  border-style: dashed;
+}
+.grid-cell.filtered-out {
+  opacity: 0.08;
+  pointer-events: none;
+}
+.grid-cell.pair { font-weight: 700; }
+.grid-cell.suited { font-style: italic; }
+
+/* Heatmap colors — green→yellow→orange→red */
+.grid-cell.hm00 { background: #14532d; }
+.grid-cell.hm01 { background: #166534; }
+.grid-cell.hm02 { background: #15803d; }
+.grid-cell.hm03 { background: #16a34a; }
+.grid-cell.hm04 { background: #65a30d; }
+.grid-cell.hm05 { background: #a3e635; }
+.grid-cell.hm06 { background: #facc15; }
+.grid-cell.hm07 { background: #f59e0b; }
+.grid-cell.hm08 { background: #ea580c; }
+.grid-cell.hm09 { background: #dc2626; }
+.grid-cell.hm10 { background: #b91c1c; }
+
+.grid-cell.hm00, .grid-cell.hm01, .grid-cell.hm02,
+.grid-cell.hm03, .grid-cell.hm04, .grid-cell.hm05 { color: #e2e8f0; }
+.grid-cell.hm06, .grid-cell.hm07, .grid-cell.hm08,
+.grid-cell.hm09, .grid-cell.hm10 { color: #0f0f1a; }
+
+/* Stats */
+.stats-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+}
+.stat-item {
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  text-align: center;
+  min-width: 62px;
+}
+.stat-item .stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.stat-item .stat-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.stats-text {
+  flex: 1;
+  min-width: 200px;
+}
+.stats-text textarea {
+  width: 100%;
+  height: 64px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  padding: 8px;
+  resize: vertical;
+}
+.stats-text textarea:focus {
+  outline: none;
+  border-color: var(--accent-dim);
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 10px;
+  flex-wrap: wrap;
+}
+.legend-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-right: 4px;
+}
+.legend-bar {
+  display: flex;
+  height: 14px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex: 1;
+  max-width: 240px;
+}
+.legend-bar span { flex: 1; }
+.legend-caption {
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--accent-dim);
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  color: var(--text);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 100;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; }
+
+/* Info text */
+.info-hint {
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 4px;
+}
+.info-hint kbd {
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 0.65rem;
+  font-family: inherit;
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .container { padding: 0; }
+  .grid-container { gap: 1px; }
+  .grid-cell { width: 32px; height: 32px; font-size: 0.55rem; }
+  .grid-container { grid-template-columns: 28px repeat(13, 32px); grid-template-rows: 26px repeat(13, 32px); }
+  .grid-header { font-size: 0.65rem; }
+  .stats-row { flex-direction: column; }
+}
+@media (max-width: 520px) {
+  .grid-cell { width: 26px; height: 26px; font-size: 0.48rem; border-radius: 4px; }
+  .grid-container { grid-template-columns: 22px repeat(13, 26px); grid-template-rows: 22px repeat(13, 26px); }
+  .btn { font-size: 0.66rem; padding: 3px 7px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+  <h1>♠ Range Visualizer ♥</h1>
+  <p>Poker Hand Matrix — Klicke Zellen zum Markieren (3-fach: voll → teilweise → aus)</p>
+</div>
+
+<div class="controls">
+  <label>Presets:</label>
+  <div class="preset-group">
+    <button class="btn btn-sm" data-preset="premium">Premium</button>
+    <button class="btn btn-sm" data-preset="utg">UTG 15%</button>
+    <button class="btn btn-sm" data-preset="mp">MP 20%</button>
+    <button class="btn btn-sm" data-preset="co">CO 25%</button>
+    <button class="btn btn-sm" data-preset="btn">BTN 40%</button>
+    <button class="btn btn-sm" data-preset="sb">SB 50%</button>
+    <button class="btn btn-sm" data-preset="bb">BB 70%</button>
+    <button class="btn btn-sm" data-preset="allin">All-in</button>
+    <button class="btn btn-sm btn-danger" data-preset="clear">✕</button>
+  </div>
+</div>
+
+<div class="controls">
+  <label>Filter:</label>
+  <div class="filter-group">
+    <button class="btn btn-sm btn-filter active" data-filter="all">Alle</button>
+    <button class="btn btn-sm btn-filter" data-filter="suited">Suited</button>
+    <button class="btn btn-sm btn-filter" data-filter="offsuit">Offsuit</button>
+    <button class="btn btn-sm btn-filter" data-filter="pairs">Pairs</button>
+  </div>
+  <span style="flex:1"></span>
+  <label>Heatmap:</label>
+  <button class="btn btn-sm" id="toggleHeatmap" style="border-color:var(--accent-dim);min-width:44px;">An</button>
+  <button class="btn icon-btn" id="shareBtn" title="Permalink in Zwischenablage kopieren">🔗</button>
+</div>
+
+<div class="legend" id="legend">
+  <span class="legend-label">schwach</span>
+  <div class="legend-bar">
+    <span style="background:#14532d"></span>
+    <span style="background:#166534"></span>
+    <span style="background:#15803d"></span>
+    <span style="background:#16a34a"></span>
+    <span style="background:#65a30d"></span>
+    <span style="background:#a3e635"></span>
+    <span style="background:#facc15"></span>
+    <span style="background:#f59e0b"></span>
+    <span style="background:#ea580c"></span>
+    <span style="background:#dc2626"></span>
+    <span style="background:#b91c1c"></span>
+  </div>
+  <span class="legend-caption">stark</span>
+</div>
+
+<div class="grid-wrapper">
+  <div class="grid-container" id="grid"></div>
+  <div class="info-hint">Shift+Klick: Rechteck-Auswahl · Taste <kbd>C</kbd>: Alles löschen</div>
+</div>
+
+<div class="stats-panel">
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-value" id="statPercent">0%</div><div class="stat-label">Range</div></div>
+    <div class="stat-item"><div class="stat-value" id="statCombos">0</div><div class="stat-label">Combos</div></div>
+    <div class="stat-item"><div class="stat-value" id="statPairs">0</div><div class="stat-label">Pairs</div></div>
+    <div class="stat-item"><div class="stat-value" id="statSuited">0</div><div class="stat-label">Suited</div></div>
+    <div class="stat-item"><div class="stat-value" id="statOffsuit">0</div><div class="stat-label">Offsuit</div></div>
+  </div>
+  <div class="stats-text" style="margin-top:10px;">
+    <label style="font-size:0.7rem;color:var(--text-dim);display:block;margin-bottom:4px;">Range als Text (Comma-separated):</label>
+    <textarea id="rangeText" readonly placeholder="Markierte Hände erscheinen hier..."></textarea>
+  </div>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── Constants ───
+const RANKS = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
+const N = 13;
+const TOTAL_COMBOS = 1326;
+
+function comboCount(row, col) {
+  if (row === col) return 6;
+  if (row < col) return 4;
+  return 12;
+}
+
+function handName(row, col) {
+  const r1 = RANKS[row], r2 = RANKS[col];
+  if (row === col) return r1 + r2;
+  if (row < col) return r1 + r2 + 's';
+  return r2 + r1 + 'o';
+}
+
+function handType(row, col) {
+  if (row === col) return 'pair';
+  if (row < col) return 'suited';
+  return 'offsuit';
+}
+
+// ─── Heatmap ───
+function heatmapValue(row, col) {
+  const val = i => 13 - i;
+  const v1 = val(row), v2 = val(col);
+  const hi = Math.max(v1, v2);
+  const lo = Math.min(v1, v2);
+  const gap = hi - lo;
+  let hv;
+  if (row === col) {
+    hv = (hi / 13) * 0.75 + 0.25;
+  } else {
+    hv = (hi / 13) * 0.38 + (lo / 13) * 0.08;
+    if (row < col) hv += 0.06;
+    if (gap === 1) hv += 0.08;
+    else if (gap === 2) hv += 0.05;
+    else if (gap <= 4) hv += 0.02;
+    if (hi >= 11 && lo >= 11) hv += 0.06;
+    else if (hi >= 11) hv += 0.03;
+  }
+  return Math.min(1, Math.max(0.02, hv));
+}
+
+function heatmapClass(value) {
+  return 'hm' + String(Math.round(value * 10)).padStart(2, '0');
+}
+
+// ─── State ───
+let gridState = Array.from({length: N}, () => Array(N).fill(0));
+let heatmapEnabled = true;
+let currentFilter = 'all';
+let lastSelected = null;
+
+// ─── Presets ───
+const PRESETS = {
+  premium: ['AA','KK','QQ','JJ','AKs','AKo'],
+  utg: [
+    'AA','KK','QQ','JJ','TT','99','88','77',
+    'AKs','AQs','AJs','ATs','A9s','A5s','A4s',
+    'AKo','AQo',
+    'KQs','KJs','KTs',
+    'QJs','QTs',
+    'JTs',
+    'T9s','98s'
+  ],
+  mp: [
+    'AA','KK','QQ','JJ','TT','99','88','77','66','55',
+    'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+    'AKo','AQo','AJo',
+    'KQs','KJs','KTs','K9s',
+    'KQo',
+    'QJs','QTs','Q9s',
+    'JTs','J9s',
+    'T9s','T8s',
+    '98s','97s',
+    '87s','86s',
+    '76s'
+  ],
+  co: [
+    'AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
+    'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+    'AKo','AQo','AJo','ATo',
+    'KQs','KJs','KTs','K9s','K8s',
+    'KQo','KJo',
+    'QJs','QTs','Q9s','Q8s',
+    'QJo',
+    'JTs','J9s','J8s',
+    'JTo',
+    'T9s','T8s','T7s',
+    '98s','97s','96s',
+    '87s','86s',
+    '76s','75s',
+    '65s','64s',
+    '54s'
+  ],
+  btn: [
+    'AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
+    'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+    'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o','A2o',
+    'KQs','KJs','KTs','K9s','K8s','K7s','K6s','K5s','K4s','K3s','K2s',
+    'KQo','KJo','KTo',
+    'QJs','QTs','Q9s','Q8s','Q7s','Q6s','Q5s','Q4s','Q3s','Q2s',
+    'QJo','QTo',
+    'JTs','J9s','J8s','J7s','J6s','J5s','J4s','J3s','J2s',
+    'JTo','J9o',
+    'T9s','T8s','T7s','T6s','T5s','T4s','T3s','T2s',
+    'T9o',
+    '98s','97s','96s','95s','94s',
+    '87s','86s','85s',
+    '76s','75s','74s',
+    '65s','64s',
+    '54s','53s',
+    '43s'
+  ],
+  sb: [
+    'AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
+    'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+    'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o','A2o',
+    'KQs','KJs','KTs','K9s','K8s','K7s','K6s','K5s','K4s','K3s','K2s',
+    'KQo','KJo','KTo','K9o','K8o','K7o','K6o','K5o','K4o','K3o','K2o',
+    'QJs','QTs','Q9s','Q8s','Q7s','Q6s','Q5s','Q4s','Q3s','Q2s',
+    'QJo','QTo','Q9o','Q8o','Q7o','Q6o','Q5o','Q4o','Q3o','Q2o',
+    'JTs','J9s','J8s','J7s','J6s','J5s','J4s','J3s','J2s',
+    'JTo','J9o','J8o','J7o','J6o','J5o','J4o','J3o','J2o',
+    'T9s','T8s','T7s','T6s','T5s','T4s','T3s','T2s',
+    'T9o','T8o','T7o','T6o','T5o','T4o','T3o','T2o',
+    '98s','97s','96s','95s',
+    '98o','97o','96o',
+    '87s','86s','85s',
+    '87o','86o',
+    '76s','75s',
+    '76o','75o',
+    '65s','64s',
+    '65o',
+    '54s',
+    '54o'
+  ],
+  bb: [
+    'AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
+    'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+    'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o','A2o',
+    'KQs','KJs','KTs','K9s','K8s','K7s','K6s','K5s','K4s','K3s','K2s',
+    'KQo','KJo','KTo','K9o','K8o','K7o','K6o','K5o','K4o','K3o','K2o',
+    'QJs','QTs','Q9s','Q8s','Q7s','Q6s','Q5s','Q4s','Q3s','Q2s',
+    'QJo','QTo','Q9o','Q8o','Q7o','Q6o','Q5o','Q4o','Q3o','Q2o',
+    'JTs','J9s','J8s','J7s','J6s','J5s','J4s','J3s','J2s',
+    'JTo','J9o','J8o','J7o','J6o','J5o','J4o','J3o','J2o',
+    'T9s','T8s','T7s','T6s','T5s','T4s','T3s','T2s',
+    'T9o','T8o','T7o','T6o','T5o','T4o','T3o','T2o',
+    '98s','97s','96s','95s','94s','93s','92s',
+    '98o','97o','96o','95o','94o',
+    '87s','86s','85s','84s','83s','82s',
+    '87o','86o','85o','84o',
+    '76s','75s','74s','73s','72s',
+    '76o','75o','74o',
+    '65s','64s','63s','62s',
+    '65o','64o',
+    '54s','53s','52s',
+    '54o','53o',
+    '43s','42s',
+    '43o',
+    '32s','32o'
+  ],
+  allin: [
+    'AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
+    'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+    'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o','A2o',
+    'KQs','KJs','KTs','K9s','K8s','K7s','K6s','K5s','K4s','K3s','K2s',
+    'KQo','KJo','KTo','K9o','K8o','K7o','K6o','K5o','K4o','K3o','K2o',
+    'QJs','QTs','Q9s','Q8s','Q7s','Q6s','Q5s','Q4s','Q3s','Q2s',
+    'QJo','QTo','Q9o','Q8o','Q7o','Q6o','Q5o','Q4o','Q3o','Q2o',
+    'JTs','J9s','J8s','J7s','J6s','J5s','J4s','J3s','J2s',
+    'JTo','J9o','J8o','J7o','J6o','J5o','J4o','J3o','J2o',
+    'T9s','T8s','T7s','T6s','T5s','T4s','T3s','T2s',
+    'T9o','T8o','T7o','T6o','T5o','T4o','T3o','T2o',
+    '98s','97s','96s','95s','94s','93s','92s',
+    '98o','97o','96o','95o','94o','93o','92o',
+    '87s','86s','85s','84s','83s','82s',
+    '87o','86o','85o','84o','83o','82o',
+    '76s','75s','74s','73s','72s',
+    '76o','75o','74o','73o','72o',
+    '65s','64s','63s','62s',
+    '65o','64o','63o','62o',
+    '54s','53s','52s',
+    '54o','53o','52o',
+    '43s','42s',
+    '43o','42o',
+    '32s','32o'
+  ]
+};
+
+function parseHandId(id) {
+  if (id.length < 2) return null;
+  const suit = id.endsWith('s') ? 's' : id.endsWith('o') ? 'o' : '';
+  const base = suit ? id.slice(0, -1) : id;
+  const r1 = RANKS.indexOf(base[0]);
+  const r2 = RANKS.indexOf(base[1]);
+  if (r1 === -1 || r2 === -1) return null;
+  if (base[0] === base[1]) return { row: r1, col: r2 };
+  if (suit === 's') return { row: Math.min(r1, r2), col: Math.max(r1, r2) };
+  return { row: Math.max(r1, r2), col: Math.min(r1, r2) };
+}
+
+function applyPreset(name) {
+  clearAll();
+  if (name === 'clear') { update(); return; }
+  const hands = PRESETS[name];
+  if (!hands) return;
+  for (const h of hands) {
+    const pos = parseHandId(h);
+    if (pos) gridState[pos.row][pos.col] = 1;
+  }
+  update();
+}
+
+// ─── Grid Rendering ───
+function render() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  // Corner
+  const corner = document.createElement('div');
+  corner.className = 'grid-header corner';
+  corner.textContent = '♠';
+  grid.appendChild(corner);
+
+  // Column headers
+  for (let c = 0; c < N; c++) {
+    const h = document.createElement('div');
+    h.className = 'grid-header';
+    h.textContent = RANKS[c];
+    grid.appendChild(h);
+  }
+
+  // Rows
+  for (let r = 0; r < N; r++) {
+    const rh = document.createElement('div');
+    rh.className = 'grid-header';
+    rh.textContent = RANKS[r];
+    grid.appendChild(rh);
+
+    for (let c = 0; c < N; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'grid-cell';
+      cell.dataset.row = r;
+      cell.dataset.col = c;
+
+      const name = handName(r, c);
+      cell.textContent = name;
+      cell.title = name + ' — ' + comboCount(r, c) + ' Combos';
+
+      const type = handType(r, c);
+      cell.classList.add(type);
+
+      // State
+      const state = gridState[r][c];
+      if (state === 1) cell.classList.add('selected');
+      else if (state === 2) cell.classList.add('partial');
+
+      // Heatmap (only for non-selected cells)
+      if (heatmapEnabled && state === 0) {
+        cell.classList.add(heatmapClass(heatmapValue(r, c)));
+      }
+
+      // Filter (use low opacity to preserve grid structure)
+      if (currentFilter !== 'all') {
+        if ((currentFilter === 'suited' && type !== 'suited') ||
+            (currentFilter === 'offsuit' && type !== 'offsuit') ||
+            (currentFilter === 'pairs' && type !== 'pair')) {
+          cell.classList.add('filtered-out');
+        }
+      }
+
+      cell.addEventListener('click', (e) => {
+        if (e.shiftKey && lastSelected) {
+          rectSelect(lastSelected.row, lastSelected.col, r, c);
+          lastSelected = { row: r, col: c };
+        } else {
+          cycleCell(r, c);
+          lastSelected = { row: r, col: c };
+        }
+      });
+
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function cycleCell(r, c) {
+  gridState[r][c] = (gridState[r][c] + 1) % 3;
+  update();
+}
+
+function rectSelect(r1, c1, r2, c2) {
+  const minR = Math.min(r1, r2), maxR = Math.max(r1, r2);
+  const minC = Math.min(c1, c2), maxC = Math.max(c1, c2);
+  for (let r = minR; r <= maxR; r++)
+    for (let c = minC; c <= maxC; c++)
+      gridState[r][c] = 1;
+  update();
+}
+
+function clearAll() {
+  for (let r = 0; r < N; r++)
+    for (let c = 0; c < N; c++)
+      gridState[r][c] = 0;
+}
+
+// ─── Stats ───
+function updateStats() {
+  let totalCombos = 0;
+  let pairCombos = 0, suitedCombos = 0, offsuitCombos = 0;
+  let selectedHands = [];
+
+  for (let r = 0; r < N; r++) {
+    for (let c = 0; c < N; c++) {
+      const s = gridState[r][c];
+      if (s === 0) continue;
+      const cc = comboCount(r, c);
+      const weight = s === 2 ? 0.5 : 1;
+      totalCombos += cc * weight;
+      selectedHands.push(handName(r, c));
+      const type = handType(r, c);
+      if (type === 'pair') pairCombos += cc * weight;
+      else if (type === 'suited') suitedCombos += cc * weight;
+      else offsuitCombos += cc * weight;
+    }
+  }
+
+  const percent = totalCombos / TOTAL_COMBOS * 100;
+  document.getElementById('statPercent').textContent = percent.toFixed(1) + '%';
+  document.getElementById('statCombos').textContent = Math.round(totalCombos);
+  document.getElementById('statPairs').textContent = Math.round(pairCombos);
+  document.getElementById('statSuited').textContent = Math.round(suitedCombos);
+  document.getElementById('statOffsuit').textContent = Math.round(offsuitCombos);
+
+  // Text output: sort pairs first (by rank descending), then suited, then offsuit
+  const rankOrder = {'A':0,'K':1,'Q':2,'J':3,'T':4,'9':5,'8':6,'7':7,'6':8,'5':9,'4':10,'3':11,'2':12};
+  selectedHands.sort((a, b) => {
+    const aP = a.length === 2, bP = b.length === 2;
+    if (aP && !bP) return -1;
+    if (!aP && bP) return 1;
+    const aS = a.endsWith('s'), bS = b.endsWith('s');
+    if (aS && !bS) return -1;
+    if (!aS && bS) return 1;
+    // Same type: sort by rank
+    const ra = rankOrder[a[0]] || 99;
+    const rb = rankOrder[b[0]] || 99;
+    if (ra !== rb) return ra - rb;
+    const ra2 = rankOrder[a[1]] || 99;
+    const rb2 = rankOrder[b[1]] || 99;
+    return ra2 - rb2;
+  });
+  document.getElementById('rangeText').value = selectedHands.join(', ');
+}
+
+// ─── URL Hash (Permalink) ───
+function encodeState() {
+  let bits = '';
+  for (let r = 0; r < N; r++)
+    for (let c = 0; c < N; c++)
+      bits += gridState[r][c].toString(2).padStart(2, '0');
+  while (bits.length % 8 !== 0) bits += '0';
+  const bytes = [];
+  for (let i = 0; i < bits.length; i += 8)
+    bytes.push(parseInt(bits.substr(i, 8), 2));
+  return btoa(String.fromCharCode(...bytes));
+}
+
+function decodeState(hash) {
+  try {
+    const binary = atob(hash);
+    let bits = '';
+    for (let i = 0; i < binary.length; i++)
+      bits += binary.charCodeAt(i).toString(2).padStart(8, '0');
+    let idx = 0;
+    for (let r = 0; r < N; r++)
+      for (let c = 0; c < N; c++)
+        if (idx + 2 <= bits.length) {
+          gridState[r][c] = parseInt(bits.substr(idx, 2), 2);
+          idx += 2;
+        }
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+function updatePermalink() {
+  const encoded = encodeState();
+  const newHash = '#' + encoded;
+  if (window.location.hash !== newHash)
+    history.replaceState(null, '', newHash);
+}
+
+function loadFromHash() {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return false;
+  return decodeState(hash);
+}
+
+// ─── Toast ───
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ─── Update ───
+function update() {
+  render();
+  updateStats();
+  updatePermalink();
+}
+
+// ─── Init ───
+document.addEventListener('DOMContentLoaded', () => {
+  const loaded = loadFromHash();
+  render();
+  updateStats();
+
+  // Preset buttons
+  document.querySelectorAll('[data-preset]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-preset]').forEach(b => b.classList.remove('active'));
+      if (btn.dataset.preset !== 'clear') btn.classList.add('active');
+      applyPreset(btn.dataset.preset);
+    });
+  });
+
+  // Filter buttons
+  document.querySelectorAll('[data-filter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      render();
+    });
+  });
+
+  // Heatmap toggle
+  const hmBtn = document.getElementById('toggleHeatmap');
+  hmBtn.addEventListener('click', () => {
+    heatmapEnabled = !heatmapEnabled;
+    hmBtn.textContent = heatmapEnabled ? 'An' : 'Aus';
+    hmBtn.classList.toggle('active', heatmapEnabled);
+    render();
+  });
+  hmBtn.classList.add('active');
+
+  // Share button
+  document.getElementById('shareBtn').addEventListener('click', () => {
+    updatePermalink();
+    const url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => showToast('🔗 Permalink kopiert!'));
+    } else {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('🔗 Permalink kopiert!');
+    }
+  });
+
+  // Keyboard: C to clear
+  document.addEventListener('keydown', (e) => {
+    if ((e.key === 'c' || e.key === 'C') && !e.ctrlKey && !e.metaKey && !e.target.closest('textarea')) {
+      clearAll();
+      update();
+      showToast('🧹 Alle Markierungen gelöscht');
+    }
+  });
+});
+</script>
+</body>
+</html>

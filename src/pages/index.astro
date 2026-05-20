@@ -1,11 +1,170 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const articles = await getCollection('articles', ({ data }) => !data.draft);
+const recentArticles = articles.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
+const featured = articles.find(a => a.slug === 'warum-ich-einen-poker-bot-gebaut-habe');
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout currentPath="/" title="Poker Basecamp" description="Bot Development & GTO Tools — Die einzige Plattform die Poker Bot Development + interaktive GTO-Tools + Human-vs-Machine Content vereint.">
+  <div class="hero">
+    <div class="hero-eyebrow">✦ Bot Development &amp; GTO Tools</div>
+    <h1>
+      <span class="gold">Poker Bot</span><br />
+      <span class="pink">Development</span><br />
+      <span class="mauve">+ GTO Engine</span>
+    </h1>
+    <div class="hero-quote">
+      We had two bags of grass, seventy-five pellets of mescaline,
+      five sheets of high-powered blotter acid... and a poker bot.
+    </div>
+    <div class="hero-btns">
+      <a href="/blog" class="btn-wash primary">📖 Read the Diary</a>
+      <a href="/tools" class="btn-wash secondary">🧮 Try the Tools</a>
+    </div>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="ks-item">
+      <div class="ks-val pink">156</div>
+      <div class="ks-lbl">Tests ✓</div>
+    </div>
+    <div class="ks-item">
+      <div class="ks-val green">+€4.20</div>
+      <div class="ks-lbl">Session Net</div>
+    </div>
+    <div class="ks-item">
+      <div class="ks-val gold">62.4%</div>
+      <div class="ks-lbl">Live Equity</div>
+    </div>
+    <div class="ks-item">
+      <div class="ks-val pink">36</div>
+      <div class="ks-lbl">Bugs Fixed</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="max-width:1000px;margin:0 auto;padding:0 2rem 60px;">
+    <div>
+      <div class="section-header">
+        <div class="sh-sigil">★</div>
+        <h2>Platform</h2>
+      </div>
+      <div class="art-list">
+        <a href="/blog" class="art-item">
+          <span class="ai-icon">📖</span>
+          <div class="ai-text">
+            <h3>Bot-Blog — Dev Diary</h3>
+            <p>{articles.length} Artikel · {articles.filter(a => a.data.category === 'Bug-Jagd').length} Bugs · Der komplette Bau</p>
+          </div>
+          <span class="ai-arrow">→</span>
+        </a>
+        <a href="/tools" class="art-item">
+          <span class="ai-icon">🛠️</span>
+          <div class="ai-text">
+            <h3>GTO Tools</h3>
+            <p>Equity · Range Viz · ICM · MDF</p>
+          </div>
+          <span class="ai-arrow">→</span>
+        </a>
+        <a href="/bot-vs-human" class="art-item">
+          <span class="ai-icon">⚔️</span>
+          <div class="ai-text">
+            <h3>Bot vs Mensch</h3>
+            <p>100 Hands · Live · Postmortems</p>
+          </div>
+          <span class="ai-arrow">→</span>
+        </a>
+        <a href="/academy" class="art-item">
+          <span class="ai-icon">🧠</span>
+          <div class="ai-text">
+            <h3>GTO Academy</h3>
+            <p>6 Kurse · MDF · ICM · Blockers</p>
+          </div>
+          <span class="ai-arrow">→</span>
+        </a>
+        <a href="/bot-baukasten" class="art-item">
+          <span class="ai-icon">🔧</span>
+          <div class="ai-text">
+            <h3>Bot-Baukasten</h3>
+            <p>6 Module · €99–299 · Early Bird</p>
+          </div>
+          <span class="ai-arrow">→</span>
+        </a>
+        <a href="/live" class="art-item">
+          <span class="ai-icon">📊</span>
+          <div class="ai-text">
+            <h3>Live-Daten</h3>
+            <p>Echtzeit · Bot-Status · Sessions</p>
+          </div>
+          <span class="ai-arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-header">
+        <div class="sh-sigil" style="background:var(--green-dim);">✦</div>
+        <h2>Live am Tisch</h2>
+      </div>
+
+      <div class="live-card">
+        <div class="lc-left">
+          <div class="lc-dot"></div>
+          <span>Bot spielt <strong>Hand #47</strong> · NL50</span>
+        </div>
+        <div class="lc-right">
+          <div class="lc-stat">Equity <span class="lc-val">62.4%</span></div>
+          <div class="lc-stat">Pot <span style="color:var(--text-dim);">€2.85</span></div>
+        </div>
+      </div>
+
+      <div class="live-card" style="border-color:var(--gold-dim);margin-top:8px;">
+        <div class="lc-left">
+          <span style="font-size:1rem;">🃏</span>
+          <span>Board: <strong>J♠ T♥ 8♥</strong> · A♠ K♥</span>
+        </div>
+        <div class="lc-right">
+          <div class="lc-stat">Decision <span style="color:var(--gold);font-weight:600;">RAISE €1.20</span></div>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top:28px;">
+        <div class="sh-sigil" style="background:var(--gold-dim);color:#0e0a14;">⚙</div>
+        <h2>Engine Specs</h2>
+      </div>
+
+      <div class="engine-grid">
+        <div class="engine-item">
+          <span class="ei-icon">⚙️</span>
+          <div class="ei-text">
+            <h3>3-Stage Decision Engine</h3>
+            <p>Push/Fold → ICM → Standard (MDF + Mixed Strategy)</p>
+          </div>
+        </div>
+        <div class="engine-item">
+          <span class="ei-icon">🧠</span>
+          <div class="ei-text">
+            <h3>Mixed Strategy via MD5</h3>
+            <p>Deterministische Coin-Flips für GTO-Randomisierung</p>
+          </div>
+        </div>
+        <div class="engine-item">
+          <span class="ei-icon">🛡️</span>
+          <div class="ei-text">
+            <h3>MDF + Bet Sizing</h3>
+            <p>7 Board-Kategorien · SPR 5-Tier · Position-Faktor</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-banner">
+    <div class="cta-inner">
+      ✦ <strong>156 Tests passed</strong> · 36 Bugs gefixt ·
+      <a href="/bot-vs-human">⚔️ Watch the Challenge →</a> ✦
+    </div>
+  </div>
+</BaseLayout>

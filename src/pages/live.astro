@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout currentPath="/live" title="📊 Live-Daten" description="Echtzeit · Bot-Status · Sessions — Der Bot spielt gerade. Sieh zu.">
+  <div class="page-header">
+    <h1>📊 Live-Daten</h1>
+    <p class="intro">Echtzeit-Bot-Status, aktuelle Session-Daten und archivierte Ergebnisse. Der Bot spielt gerade — sieh zu, wie er entscheidet.</p>
+  </div>
+
+  <section class="section">
+    <div style="border:1px solid var(--green-dim);background:rgba(122,184,122,0.04);padding:24px;border-radius:12px;margin-bottom:30px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="lc-dot" style="width:10px;height:10px;"></div>
+          <span style="font-size:1rem;font-weight:600;">Bot ist <strong style="color:var(--green);">aktiv</strong></span>
+        </div>
+        <div style="display:flex;gap:20px;font-size:0.78rem;color:var(--text-dim);">
+          <span>Session: <strong style="color:var(--gold);">#47</strong></span>
+          <span>Tisch: <strong>NL50 · 6-max</strong></span>
+          <span>Dauer: <strong>34 min</strong></span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div style="text-align:center;padding:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;">
+          <div style="font-size:0.6rem;color:var(--muted);text-transform:uppercase;">Hände</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--pink);">47</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;">
+          <div style="font-size:0.6rem;color:var(--muted);text-transform:uppercase;">Gewonnen</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--green);">24</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;">
+          <div style="font-size:0.6rem;color:var(--muted);text-transform:uppercase;">Net</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--gold);">+€4.20</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;">
+          <div style="font-size:0.6rem;color:var(--muted);text-transform:uppercase;">Equity</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--mauve);">62.4%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="section-header">
+          <div class="sh-sigil" style="background:var(--gold-dim);">📋</div>
+          <h2>Letzte Hände</h2>
+        </div>
+        <div class="art-list">
+          <div class="art-item" style="cursor:default;">
+            <span class="ai-icon">🃏</span>
+            <div class="ai-text">
+              <h3>Hand #47 — RAISE €1.20</h3>
+              <p>Board: J♠ T♥ 8♥ · A♠ K♥ · Equity: 62.4% · Pot: €2.85</p>
+            </div>
+            <span style="color:var(--green);font-size:0.65rem;">+€0.85</span>
+          </div>
+          <div class="art-item" style="cursor:default;">
+            <span class="ai-icon">🃏</span>
+            <div class="ai-text">
+              <h3>Hand #46 — FOLD</h3>
+              <p>Board: 3♣ 7♦ Q♠ · 9♥ 2♠ · Equity: 18.2% · Villain bet €0.70</p>
+            </div>
+            <span style="color:var(--muted);font-size:0.65rem;">-€0.30</span>
+          </div>
+          <div class="art-item" style="cursor:default;">
+            <span class="ai-icon">🃏</span>
+            <div class="ai-text">
+              <h3>Hand #45 — CALL €0.50</h3>
+              <p>Board: A♥ K♦ 7♠ 2♥ · A♠ Q♠ · Turn-Wert-Call</p>
+            </div>
+            <span style="color:var(--green);font-size:0.65rem;">+€1.20</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-header">
+          <div class="sh-sigil">📊</div>
+          <h2>Session-Archiv</h2>
+        </div>
+        <div class="art-list">
+          <a href="#" class="art-item">
+            <span class="ai-icon">📂</span>
+            <div class="ai-text">
+              <h3>Session #46 — 19. Mai 2026</h3>
+              <p>82 Hände · Net: +€2.10 · Bot Win Rate: 51.2%</p>
+            </div>
+            <span class="ai-arrow">→</span>
+          </a>
+          <a href="#" class="art-item">
+            <span class="ai-icon">📂</span>
+            <div class="ai-text">
+              <h3>Session #45 — 18. Mai 2026</h3>
+              <p>64 Hände · Net: -€1.80 · Bot Win Rate: 48.4%</p>
+            </div>
+            <span class="ai-arrow">→</span>
+          </a>
+          <a href="#" class="art-item">
+            <span class="ai-icon">📂</span>
+            <div class="ai-text">
+              <h3>Session #44 — 17. Mai 2026</h3>
+              <p>110 Hände · Net: +€5.60 · Bot Win Rate: 54.5%</p>
+            </div>
+            <span class="ai-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

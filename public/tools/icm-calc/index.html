@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICM Calculator — Poker Basecamp</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-dark: #0f0f1a;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #22223a;
+  --accent: #e2b714;
+  --accent-dim: #b8940f;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --muted: #64748b;
+  --border: #2a2a3e;
+  --gradient: linear-gradient(135deg, #e2b714 0%, #f59e0b 100%);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.6;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-dim); }
+
+/* Navbar */
+.navbar {
+  background: rgba(15,15,26,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.navbar .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--text);
+}
+.navbar .logo .logo-icon {
+  width: 32px; height: 32px;
+  background: var(--gradient);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 800; color: #0f0f1a;
+}
+.navbar .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+.navbar .nav-links a {
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navbar .nav-links a:hover, .navbar .nav-links a.active { color: var(--accent); }
+.navbar .nav-links a.active { border-bottom: 2px solid var(--accent); padding-bottom: 2px; }
+
+/* Container */
+.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; flex: 1; }
+
+/* Header */
+.page-header { margin-bottom: 2.5rem; }
+.page-header h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+.page-header p {
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  max-width: 650px;
+}
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: rgba(226,183,20,0.2); }
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.card-title .badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: var(--accent);
+  color: #0f0f1a;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Form elements */
+.form-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: end; margin-bottom: 1rem; }
+.form-group { flex: 1; min-width: 140px; }
+.form-group label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.form-group .input-wrapper { position: relative; }
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 0.55rem 0.8rem;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: 'JetBrains Mono', monospace;
+  transition: border-color 0.2s;
+  outline: none;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(226,183,20,0.1);
+}
+.form-group .unit {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.form-group input[type="number"]::-webkit-inner-spin-button,
+.form-group input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.form-group input[type="number"] { -moz-appearance: textfield; }
+
+/* Payout table */
+.payout-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+.payout-table th, .payout-table td {
+  padding: 0.4rem 0.6rem;
+  text-align: center;
+  font-size: 0.8rem;
+  border: 1px solid var(--border);
+}
+.payout-table th {
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  background: rgba(15,15,26,0.5);
+}
+.payout-table input {
+  width: 80px;
+  padding: 0.3rem 0.5rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.payout-table input:focus {
+  border-color: var(--accent);
+  background: rgba(226,183,20,0.05);
+}
+.payout-table input:hover { border-color: var(--border); }
+.payout-table .payout-pct-suffix {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.payout-total {
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+.payout-total.ok { color: var(--success); }
+.payout-total.err { color: var(--danger); }
+
+/* Stack inputs grid */
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+.stack-item { }
+.stack-item .stack-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  margin-bottom: 0.2rem;
+}
+.stack-item .stack-label .hero-tag {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  background: var(--accent);
+  color: #0f0f1a;
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  margin-left: 0.3rem;
+  text-transform: uppercase;
+}
+.stack-item input {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.stack-item input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(226,183,20,0.1);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-primary {
+  background: var(--gradient);
+  color: #0f0f1a;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(226,183,20,0.25);
+}
+.btn-secondary {
+  background: var(--bg-card-hover);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--border); }
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+.btn-group { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+
+/* Results */
+.results-section { display: none; }
+.results-section.visible { display: block; }
+
+/* $EV Table */
+.ev-table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; }
+.ev-table th, .ev-table td {
+  padding: 0.55rem 0.75rem;
+  text-align: center;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+.ev-table th {
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  background: rgba(15,15,26,0.5);
+}
+.ev-table tr:nth-child(even) { background: rgba(15,15,26,0.3); }
+.ev-table tr:hover { background: rgba(226,183,20,0.05); }
+.ev-table tr.hero-row { background: rgba(226,183,20,0.08); }
+.ev-table tr.hero-row:hover { background: rgba(226,183,20,0.14); }
+.ev-table td:first-child { font-weight: 600; }
+.ev-table .rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.rank-1 { background: #e2b714; color: #0f0f1a; }
+.rank-2 { background: #94a3b8; color: #0f0f1a; }
+.rank-3 { background: #b8940f; color: #0f0f1a; }
+
+/* Bubble Factor display */
+.bubble-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.bubble-card {
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+}
+.bubble-card .bubble-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3rem;
+}
+.bubble-card .bubble-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.2;
+}
+.bubble-card .bubble-value.positive { color: var(--success); }
+.bubble-card .bubble-value.neutral { color: var(--accent); }
+.bubble-card .bubble-value.negative { color: var(--danger); }
+.bubble-card .bubble-sub {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+/* Equity comparison */
+.eq-comparison {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+  background: var(--bg-dark);
+  border-radius: 10px;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
+}
+.eq-bar-container { flex: 1; min-width: 200px; }
+.eq-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+.eq-bar-label .eq-name { font-weight: 600; color: var(--text); }
+.eq-bar-label .eq-pct { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--accent); }
+.eq-track {
+  height: 12px;
+  background: var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.eq-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+.eq-fill.icm-fill { background: linear-gradient(90deg, #e2b714, #f59e0b); }
+.eq-fill.cash-fill { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+
+/* Recommendation */
+.recommendation {
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+.recommendation.fold { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: var(--danger); }
+.recommendation.call { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: var(--success); }
+.recommendation.neutral { background: rgba(226,183,20,0.1); border: 1px solid rgba(226,183,20,0.2); color: var(--accent); }
+.recommendation .rec-icon { font-size: 1.5rem; }
+.recommendation .rec-text { font-size: 0.95rem; }
+.recommendation .rec-sub { font-weight: 400; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem; }
+
+/* Info Box */
+.info-box {
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+.info-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+.info-box-header:hover { background: var(--bg-card-hover); }
+.info-box-header .info-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.info-box-header .info-title .info-icon {
+  width: 20px; height: 20px;
+  background: var(--accent);
+  color: #0f0f1a;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+.info-box-header .chevron { transition: transform 0.25s; color: var(--muted); font-size: 0.8rem; }
+.info-box-header.open .chevron { transform: rotate(180deg); }
+.info-box-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 1rem;
+}
+.info-box-content.open {
+  max-height: 500px;
+  padding: 0 1rem 1rem;
+}
+.info-box-content p, .info-box-content li {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+.info-box-content .formula {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(226,183,20,0.08);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  font-size: 0.8rem;
+  color: var(--accent);
+  display: inline-block;
+}
+.info-box-content ul { padding-left: 1.25rem; }
+.info-box-content ul li { margin-bottom: 0.3rem; }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+/* Decision Inputs */
+.decision-inputs {
+  background: var(--bg-dark);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+}
+.decision-inputs .di-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+}
+
+/* Warning / note */
+.note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding: 0.5rem;
+  border-left: 3px solid var(--accent);
+  background: rgba(226,183,20,0.04);
+  border-radius: 0 6px 6px 0;
+  margin: 0.5rem 0;
+}
+
+/* Two column */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .container { padding: 1rem; }
+  .card { padding: 1.25rem; }
+  .page-header h1 { font-size: 1.75rem; }
+  .navbar { padding: 0 1rem; }
+  .navbar .nav-links { gap: 0.85rem; }
+  .stack-grid { grid-template-columns: 1fr 1fr; }
+  .bubble-grid { grid-template-columns: 1fr; }
+  .payout-table input { width: 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="/" class="logo">
+    <span class="logo-icon">♠</span>
+    Poker Basecamp
+  </a>
+  <div class="nav-links">
+    <a href="/tools/range-viz/">Range Viz</a>
+    <a href="/tools/icm-calc/" class="active">ICM Calc</a>
+    <a href="/tools/mdf-calc/">MDF Calc</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1>ICM Rechner</h1>
+    <p>Independent Chip Model — berechne den genauen Turnier-$EV jedes Spielers, den Bubble Factor und die benötigte Equity für profitable Calls.</p>
+  </div>
+
+  <!-- Card: Configuration -->
+  <div class="card">
+    <div class="card-title">
+      <span>⚙️</span> Konfiguration
+      <span class="badge">Input</span>
+    </div>
+
+    <!-- Row 1: Players + Buy-in -->
+    <div class="form-row">
+      <div class="form-group" style="flex:0.8;">
+        <label>Anzahl Spieler</label>
+        <select id="playerCount" onchange="onPlayerCountChange()">
+          <option value="3">3 Spieler</option>
+          <option value="4">4 Spieler</option>
+          <option value="5">5 Spieler</option>
+          <option value="6" selected>6 Spieler</option>
+          <option value="7">7 Spieler</option>
+          <option value="8">8 Spieler</option>
+          <option value="9">9 Spieler</option>
+          <option value="10">10 Spieler</option>
+          <option value="custom">Benutzerdefiniert (&gt;10)</option>
+        </select>
+      </div>
+      <div class="form-group" id="customCountGroup" style="flex:0.5; display:none;">
+        <label>Anzahl (max 200)</label>
+        <input type="number" id="customCount" value="12" min="11" max="200" onchange="onPlayerCountChange()">
+      </div>
+      <div class="form-group" style="flex:0.6;">
+        <label>Buy-In (€)</label>
+        <div class="input-wrapper">
+          <input type="number" id="buyIn" value="10" min="0.01" step="0.01">
+          <span class="unit">€</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payout Structure -->
+    <div style="margin-top:0.5rem;">
+      <label style="font-size:0.75rem; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.35rem; display:block;">
+        Payout-Struktur (%)
+      </label>
+      <div style="overflow-x:auto;">
+        <table class="payout-table" id="payoutTable">
+          <thead><tr id="payoutHeader"></tr></thead>
+          <tbody><tr id="payoutBody"></tr></tbody>
+        </table>
+      </div>
+      <div class="payout-total" id="payoutTotal">Summe: 100% ✓</div>
+    </div>
+
+    <!-- Stack inputs -->
+    <div style="margin-top:1.25rem;">
+      <label style="font-size:0.75rem; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.5rem; display:block;">
+        Chip-Stacks
+      </label>
+      <div class="stack-grid" id="stackGrid"></div>
+    </div>
+
+    <!-- Calculate button -->
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="calculateICM()">💰 ICM berechnen</button>
+      <button class="btn btn-secondary" onclick="resetDefaults()">Standard zurücksetzen</button>
+    </div>
+  </div>
+
+  <!-- Card: Results -->
+  <div class="card results-section" id="resultsSection">
+    <div class="card-title">
+      <span>📊</span> Ergebnisse
+      <span class="badge" id="resultBadge">Exakt</span>
+    </div>
+
+    <!-- $EV Table -->
+    <div class="card-title" style="font-size:1rem; margin-top:0.5rem;">$EV Tabelle</div>
+    <div style="overflow-x:auto;">
+      <table class="ev-table" id="evTable">
+        <thead>
+          <tr>
+            <th>Spieler</th>
+            <th>Stack</th>
+            <th>Chips %</th>
+            <th>$EV</th>
+            <th>Equity %</th>
+            <th>Erwarteter Rang</th>
+          </tr>
+        </thead>
+        <tbody id="evTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Analysis -->
+    <div style="margin-top:1.5rem;">
+      <div class="card-title" style="font-size:1rem;">📐 Decision Analysis (Hero)</div>
+      <p style="font-size:0.85rem; color:var(--text-dim); margin-bottom:0.75rem;">
+        Gib die aktuelle Hand-Situation ein, um den Bubble Factor und die benötigte Equity zu berechnen.
+      </p>
+
+      <!-- Decision inputs -->
+      <div class="decision-inputs">
+        <div class="di-title">Hand-Situation</div>
+        <div class="form-row">
+          <div class="form-group" style="flex:1;">
+            <label>Pot (€) vor Call</label>
+            <div class="input-wrapper">
+              <input type="number" id="potSize" value="100" min="0" step="1">
+              <span class="unit">€</span>
+            </div>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Call-Betrag (€)</label>
+            <div class="input-wrapper">
+              <input type="number" id="callAmount" value="50" min="0" step="1">
+              <span class="unit">€</span>
+            </div>
+          </div>
+          <div class="form-group" style="flex:0.5; display:flex; align-items:end;">
+            <button class="btn btn-secondary" onclick="updateDecisionAnalysis()" style="padding:0.55rem 1rem; font-size:0.85rem;">Aktualisieren</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bubble Factor Grid -->
+      <div class="bubble-grid" id="bubbleGrid">
+        <div class="bubble-card">
+          <div class="bubble-label">Bubble Factor</div>
+          <div class="bubble-value neutral" id="bfVal">—</div>
+          <div class="bubble-sub">Risiko / Reward in $EV</div>
+        </div>
+        <div class="bubble-card">
+          <div class="bubble-label">Benötigte Equity (ICM)</div>
+          <div class="bubble-value neutral" id="reqEqIcm">—</div>
+          <div class="bubble-sub">Mindest-Gewinnwahrscheinlichkeit</div>
+        </div>
+        <div class="bubble-card">
+          <div class="bubble-label">Benötigte Equity (Cash)</div>
+          <div class="bubble-value neutral" id="reqEqCash">—</div>
+          <div class="bubble-sub">Reine Pot-Odds</div>
+        </div>
+      </div>
+
+      <!-- Equity comparison bars -->
+      <div style="margin:1rem 0;">
+        <div class="eq-bar-container">
+          <div class="eq-bar-label">
+            <span class="eq-name">Benötigte Equity (ICM)</span>
+            <span class="eq-pct" id="icmEqLabel">—</span>
+          </div>
+          <div class="eq-track">
+            <div class="eq-fill icm-fill" id="icmEqBar" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="eq-bar-container" style="margin-top:0.5rem;">
+          <div class="eq-bar-label">
+            <span class="eq-name">Benötigte Equity (Cash / Pot-Odds)</span>
+            <span class="eq-pct" id="cashEqLabel">—</span>
+          </div>
+          <div class="eq-track">
+            <div class="eq-fill cash-fill" id="cashEqBar" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendation -->
+      <div id="recommendationBox"></div>
+
+      <div class="note">
+        💡 <strong>Bubble Factor &gt; 1</strong> = du brauchst mehr Equity als im Cash-Game (tighten).
+        <strong>Bubble Factor &lt; 1</strong> = du brauchst weniger Equity (loosen). Bei Faktor 1 ist ICM neutral.
+      </div>
+    </div>
+  </div>
+
+  <!-- Card: Info -->
+  <div class="card">
+    <div class="card-title"><span>❓</span> Was ist ICM?</div>
+
+    <div class="info-box">
+      <div class="info-box-header" onclick="toggleInfo(this)">
+        <span class="info-title"><span class="info-icon">i</span> Independent Chip Model (ICM)</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="info-box-content">
+        <p>Das <strong>Independent Chip Model (ICM)</strong> wandelt Chip-Stacks in Turnier-Geldwerte ($EV) um. Es basiert auf der Annahme, dass jeder Chip die gleiche Wahrscheinlichkeit hat, den nächsten Platz zu gewinnen — unabhängig von Skill oder Position.</p>
+        <p style="margin-top:0.5rem;"><strong>Kernformel:</strong></p>
+        <div class="formula">P(Spieler i gewinnt) = Stack_i / Total_Chips</div>
+        <div class="formula">P(Spieler i wird Zweiter) = Σ (P(j gewinnt) × Stack_i / (Total − Stack_j))</div>
+        <p style="margin-top:0.5rem;"><strong>$EV =</strong> Summe über alle Plätze (P(Platz k) × Payout[k])</p>
+        <p style="margin-top:0.5rem;">ICM wird hauptsächlich verwendet für:</p>
+        <ul>
+          <li><strong>Bubble-Entscheidungen:</strong> Soll ich callen oder folden?</li>
+          <li><strong>Deal-Making:</strong> Faire Aufteilung des Preisgelds</li>
+          <li><strong>Push/Fold Ranges:</strong> Optimale Strategie im Short-Stack</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box-header" onclick="toggleInfo(this)">
+        <span class="info-title"><span class="info-icon">B</span> Bubble Factor</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="info-box-content">
+        <p>Der <strong>Bubble Factor</strong> misst, wie viel mehr Equity du im Turnier brauchst, verglichen mit einem Cash Game. Er quantifiziert den "ICM-Druck".</p>
+        <div class="formula">Bubble Factor = (EV_fold − EV_lose) / (EV_win − EV_fold)</div>
+        <p><strong>Interpretation:</strong></p>
+        <ul>
+          <li><strong>BF = 1:</strong> Gleiche Risiko/Reward wie Cash Game</li>
+          <li><strong>BF &gt; 1:</strong> Du riskierst mehr $EV als du gewinnst → tighter spielen (Bubble-Situation)</li>
+          <li><strong>BF &lt; 1:</strong> Du gewinnst mehr $EV als du riskierst → loser spielen</li>
+        </ul>
+        <p style="margin-top:0.5rem;"><strong>Benötigte Equity:</strong> eq* = BF / (1 + BF)</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box-header" onclick="toggleInfo(this)">
+        <span class="info-title"><span class="info-icon">≈</span> Genauigkeit &amp; Approximation</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="info-box-content">
+        <p>Für <strong>≤ 10 Spieler</strong> wird der exakte ICM-Wert durch rekursive Berechnung aller möglichen Turnier-Ausgänge ermittelt (memoized DP).</p>
+        <p>Für <strong>&gt; 10 Spieler</strong> wird eine <strong>Monte-Carlo-Simulation</strong> mit 50.000 Durchläufen verwendet. Die Ergebnisse sind approximativ, für die Praxis aber ausreichend genau (±0.5% $EV).</p>
+        <p style="margin-top:0.5rem;">⚠️ ICM ignoriert:</p>
+        <ul>
+          <li>Position am Tisch</li>
+          <li>Blind-Strukturen</li>
+          <li>Spieler-Skill</li>
+          <li>Range-Advantages</li>
+        </ul>
+        <p style="margin-top:0.5rem;">Es ist ein <strong>vereinfachtes Modell</strong>, aber für Bubble-Entscheidungen und Deal-Making extrem nützlich.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  Poker Basecamp — Made with ♠ for the grind
+</footer>
+
+<script>
+// ======================== STATE ========================
+let numPlayers = 6;
+let payouts = [];
+let stacks = [];
+let heroIdx = 0;
+let currentEV = [];
+
+// ======================== PRESETS ========================
+const PAYOUT_PRESETS = {
+  3: [50, 30, 20],
+  4: [40, 30, 20, 10],
+  5: [35, 25, 20, 12, 8],
+  6: [30, 25, 20, 12, 8, 5],
+  7: [28, 22, 18, 13, 9, 6, 4],
+  8: [26, 20, 16, 12, 10, 7, 5, 4],
+  9: [24, 18, 14, 11, 9, 8, 7, 5, 4],
+  10: [22, 16, 13, 11, 9, 8, 7, 6, 5, 3],
+};
+
+function getDefaultStacks(n) {
+  const total = 10000;
+  const s = [];
+  let remaining = total;
+  for (let i = 0; i < n; i++) {
+    if (i === n - 1) {
+      s.push(remaining);
+    } else {
+      // Hero gets 30%, rest decreasing
+      const share = i === 0 ? Math.round(total * 0.3) : Math.round((remaining) / (n - i) * (i === 1 ? 1.0 : 0.9));
+      const val = Math.min(remaining - (n - i - 1), Math.max(100, share));
+      s.push(val);
+      remaining -= val;
+    }
+  }
+  return s;
+}
+
+// ======================== UI BUILDERS ========================
+function buildPayoutTable() {
+  const header = document.getElementById('payoutHeader');
+  const body = document.getElementById('payoutBody');
+  header.innerHTML = '';
+  body.innerHTML = '';
+
+  let hRow = '<th>Rang</th>';
+  let bRow = '';
+  for (let i = 0; i < numPlayers; i++) {
+    const rank = i + 1;
+    const suffix = rank === 1 ? '🏆' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
+    hRow += `<th>${rank}. ${suffix}</th>`;
+    const val = payouts[i] || 0;
+    bRow += `<td>
+      <input type="number" class="payout-input" data-idx="${i}" value="${val}" min="0" max="100" step="0.5"
+        onchange="onPayoutChange()" onfocus="this.select()">
+      <span class="payout-pct-suffix">%</span>
+    </td>`;
+  }
+  header.innerHTML = hRow;
+  body.innerHTML = bRow;
+  updatePayoutTotal();
+}
+
+function updatePayoutTotal() {
+  const inputs = document.querySelectorAll('.payout-input');
+  let sum = 0;
+  inputs.forEach(inp => { sum += parseFloat(inp.value) || 0; });
+  const el = document.getElementById('payoutTotal');
+  const diff = Math.abs(sum - 100);
+  if (diff < 0.1) {
+    el.textContent = `Summe: ${sum.toFixed(1)}% ✓`;
+    el.className = 'payout-total ok';
+  } else {
+    el.textContent = `Summe: ${sum.toFixed(1)}% — soll 100% sein ⚠️`;
+    el.className = 'payout-total err';
+  }
+}
+
+function onPayoutChange() {
+  const inputs = document.querySelectorAll('.payout-input');
+  inputs.forEach((inp, i) => {
+    payouts[i] = parseFloat(inp.value) || 0;
+  });
+  updatePayoutTotal();
+}
+
+function buildStackInputs() {
+  const grid = document.getElementById('stackGrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < numPlayers; i++) {
+    const label = i === 0 ? 'Hero (Du)' : `Spieler ${i + 1}`;
+    const tag = i === 0 ? '<span class="hero-tag">Hero</span>' : '';
+    const val = stacks[i] || 1000;
+    const div = document.createElement('div');
+    div.className = 'stack-item';
+    div.innerHTML = `
+      <div class="stack-label">${label} ${tag}</div>
+      <input type="number" class="stack-input" data-idx="${i}" value="${val}" min="1" step="1"
+        onchange="onStackChange()" onfocus="this.select()">
+    `;
+    grid.appendChild(div);
+  }
+}
+
+function onStackChange() {
+  const inputs = document.querySelectorAll('.stack-input');
+  inputs.forEach((inp, i) => {
+    stacks[i] = parseInt(inp.value) || 1000;
+  });
+}
+
+function onPlayerCountChange() {
+  const sel = document.getElementById('playerCount');
+  const customGroup = document.getElementById('customCountGroup');
+  let n;
+  if (sel.value === 'custom') {
+    customGroup.style.display = 'block';
+    n = parseInt(document.getElementById('customCount').value) || 12;
+  } else {
+    customGroup.style.display = 'none';
+    n = parseInt(sel.value);
+  }
+  numPlayers = n;
+
+  // Set payouts
+  if (PAYOUT_PRESETS[n]) {
+    payouts = [...PAYOUT_PRESETS[n]];
+  } else {
+    // Generate a reasonable payout structure for custom counts
+    payouts = [];
+    const totalPct = 100;
+    const paid = Math.min(n, Math.max(3, Math.floor(n / 2)));
+    let remaining = totalPct;
+    for (let i = 0; i < paid; i++) {
+      if (i === paid - 1) {
+        payouts.push(Math.round(remaining * 10) / 10);
+      } else {
+        const share = totalPct * (0.5 - i * 0.08);
+        const val = Math.min(remaining - (paid - i - 1) * 2, Math.max(2, Math.round(share * 10) / 10));
+        payouts.push(val);
+        remaining -= val;
+      }
+    }
+    // Fill rest with 0
+    while (payouts.length < n) payouts.push(0);
+  }
+
+  // Set stacks
+  stacks = getDefaultStacks(n);
+
+  buildPayoutTable();
+  buildStackInputs();
+  document.getElementById('resultsSection').classList.remove('visible');
+}
+
+function resetDefaults() {
+  onPlayerCountChange();
+}
+
+// ======================== ICM ALGORITHM ========================
+function computeICM(stacks, payouts) {
+  const n = stacks.length;
+  const totalChips = stacks.reduce((a, b) => a + b, 0);
+  const memo = new Map();
+  const allMask = (1 << n) - 1;
+
+  function solve(mask) {
+    // Return array of $EV for each player given remaining set in mask,
+    // for the positions remaining.
+    const remaining = [];
+    for (let i = 0; i < n; i++) {
+      if (mask & (1 << i)) remaining.push(i);
+    }
+    const rank = n - remaining.length; // 0-indexed current position
+    if (rank >= payouts.length || remaining.length === 0) {
+      return new Array(n).fill(0);
+    }
+    if (memo.has(mask)) return memo.get(mask);
+
+    const result = new Array(n).fill(0);
+    const total = remaining.reduce((s, i) => s + stacks[i], 0);
+
+    if (remaining.length === 1) {
+      result[remaining[0]] = payouts[rank];
+      memo.set(mask, result);
+      return result;
+    }
+
+    for (const i of remaining) {
+      const p = stacks[i] / total;
+      const newMask = mask & ~(1 << i);
+      const sub = solve(newMask);
+
+      result[i] += p * (payouts[rank] + sub[i]); // sub[i] is 0 since i removed
+      for (const j of remaining) {
+        if (j !== i) {
+          result[j] += p * sub[j];
+        }
+      }
+    }
+
+    memo.set(mask, result);
+    return result;
+  }
+
+  return solve(allMask);
+}
+
+// ======================== MONTE CARLO APPROXIMATION ========================
+function monteCarloICM(stacks, payouts, iterations) {
+  iterations = iterations || 50000;
+  const n = stacks.length;
+  const posCounts = new Array(n).fill(0).map(() => new Array(n).fill(0));
+
+  for (let iter = 0; iter < iterations; iter++) {
+    let remaining = [...Array(n).keys()];
+    let s = [...stacks];
+    for (let pos = 0; pos < n; pos++) {
+      if (remaining.length === 1) {
+        posCounts[remaining[0]][pos]++;
+        break;
+      }
+      const total = remaining.reduce((sum, idx) => sum + s[idx], 0);
+      let r = Math.random() * total;
+      let winnerIdx = -1;
+      for (let j = 0; j < remaining.length; j++) {
+        r -= s[remaining[j]];
+        if (r <= 0) { winnerIdx = j; break; }
+      }
+      if (winnerIdx === -1) winnerIdx = remaining.length - 1;
+      const winner = remaining[winnerIdx];
+      posCounts[winner][pos]++;
+      remaining.splice(winnerIdx, 1);
+    }
+  }
+
+  const ev = new Array(n).fill(0);
+  for (let i = 0; i < n; i++) {
+    for (let k = 0; k < Math.min(n, payouts.length); k++) {
+      ev[i] += (posCounts[i][k] / iterations) * payouts[k];
+    }
+  }
+  return ev;
+}
+
+// ======================== CALCULATE ========================
+function calculateICM() {
+  // Read current values
+  onStackChange();
+  onPayoutChange();
+
+  const buyIn = parseFloat(document.getElementById('buyIn').value) || 10;
+  const totalPrize = buyIn * numPlayers;
+  const payoutInEuro = payouts.map(p => (p / 100) * totalPrize);
+
+  const n = stacks.length;
+
+  // Compute ICM
+  let ev, isExact;
+  if (n <= 10) {
+    ev = computeICM(stacks, payoutInEuro);
+    isExact = true;
+    document.getElementById('resultBadge').textContent = 'Exakt';
+  } else {
+    ev = monteCarloICM(stacks, payoutInEuro, 50000);
+    isExact = false;
+    document.getElementById('resultBadge').textContent = '≈ Approximativ (MC)';
+  }
+  currentEV = ev;
+
+  // Build $EV table
+  const totalChips = stacks.reduce((a, b) => a + b, 0);
+  const sortedIndices = stacks.map((_, i) => i).sort((a, b) => stacks[b] - stacks[a]);
+  const rankMap = {};
+  sortedIndices.forEach((idx, pos) => { rankMap[idx] = pos + 1; });
+
+  let tbody = document.getElementById('evTableBody');
+  tbody.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const chipPct = (stacks[i] / totalChips * 100);
+    const evEuro = ev[i];
+    const equityPct = (evEuro / (buyIn)) * 100; // ROI in % of buy-in
+    const avgRank = rankMap[i];
+
+    const isHero = i === 0;
+    const tr = document.createElement('tr');
+    if (isHero) tr.className = 'hero-row';
+    tr.innerHTML = `
+      <td>${isHero ? '⭐ Hero (Du)' : `Spieler ${i + 1}`}</td>
+      <td>${stacks[i].toLocaleString()}</td>
+      <td>${chipPct.toFixed(1)}%</td>
+      <td><strong>${evEuro.toFixed(2)} €</strong></td>
+      <td>${(evEuro / buyIn * 100).toFixed(1)}%</td>
+      <td>${avgRank}. Platz</td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  // Show results section
+  document.getElementById('resultsSection').classList.add('visible');
+
+  // Run decision analysis
+  updateDecisionAnalysis();
+
+  // Scroll to results
+  document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ======================== DECISION ANALYSIS ========================
+function updateDecisionAnalysis() {
+  if (currentEV.length === 0) return;
+
+  const pot = parseFloat(document.getElementById('potSize').value) || 0;
+  const call = parseFloat(document.getElementById('callAmount').value) || 0;
+
+  const heroStack = stacks[0];
+  const buyIn = parseFloat(document.getElementById('buyIn').value) || 10;
+  const totalPrize = buyIn * numPlayers;
+  const payoutInEuro = payouts.map(p => (p / 100) * totalPrize);
+
+  // Compute ICM values
+  const evFold = currentEV[0];
+
+  // Stack after winning the pot
+  const winStacks = [...stacks];
+  winStacks[0] += pot;
+  const evWin = numPlayers <= 10
+    ? computeICM(winStacks, payoutInEuro)[0]
+    : monteCarloICM(winStacks, payoutInEuro, 20000)[0];
+
+  // Stack after losing the call
+  const loseStacks = [...stacks];
+  loseStacks[0] = Math.max(0, heroStack - call);
+  let evLose;
+  if (loseStacks[0] <= 0) {
+    evLose = 0; // Busted
+  } else {
+    evLose = numPlayers <= 10
+      ? computeICM(loseStacks, payoutInEuro)[0]
+      : monteCarloICM(loseStacks, payoutInEuro, 20000)[0];
+  }
+
+  // Bubble Factor = Risk / Reward
+  const risk = evFold - evLose;
+  const reward = evWin - evFold;
+  let bubbleFactor;
+  if (reward <= 0) {
+    bubbleFactor = risk > 0 ? Infinity : 1;
+  } else {
+    bubbleFactor = risk / reward;
+  }
+
+  // Required Equity (ICM) = risk / (risk + reward) = BF / (1 + BF)
+  let reqEqIcm;
+  if (risk + reward <= 0) {
+    reqEqIcm = 0.5;
+  } else {
+    reqEqIcm = risk / (risk + reward);
+  }
+
+  // Required Equity (Cash) = call / (pot + call)
+  const reqEqCash = (pot + call) > 0 ? call / (pot + call) : 0;
+
+  // Display Bubble Factor
+  const bfEl = document.getElementById('bfVal');
+  if (bubbleFactor === Infinity) {
+    bfEl.textContent = '∞';
+    bfEl.className = 'bubble-value negative';
+  } else if (isNaN(bubbleFactor)) {
+    bfEl.textContent = '—';
+    bfEl.className = 'bubble-value neutral';
+  } else {
+    bfEl.textContent = bubbleFactor.toFixed(2);
+    bfEl.className = 'bubble-value ' + (bubbleFactor > 1.05 ? 'negative' : bubbleFactor < 0.95 ? 'positive' : 'neutral');
+  }
+
+  // Display Required Equity ICM
+  const reqIcmEl = document.getElementById('reqEqIcm');
+  if (isNaN(reqEqIcm)) {
+    reqIcmEl.textContent = '—';
+    reqIcmEl.className = 'bubble-value neutral';
+  } else {
+    reqIcmEl.textContent = (reqEqIcm * 100).toFixed(1) + '%';
+    reqIcmEl.className = 'bubble-value ' + (reqEqIcm > 0.4 ? 'negative' : reqEqIcm < 0.2 ? 'positive' : 'neutral');
+  }
+
+  // Display Required Equity Cash
+  const cashEl = document.getElementById('reqEqCash');
+  cashEl.textContent = (reqEqCash * 100).toFixed(1) + '%';
+  cashEl.className = 'bubble-value neutral';
+
+  // Update bars
+  const icmPct = Math.min(100, (reqEqIcm * 100));
+  const cashPct = Math.min(100, (reqEqCash * 100));
+  document.getElementById('icmEqLabel').textContent = (reqEqIcm * 100).toFixed(1) + '%';
+  document.getElementById('icmEqBar').style.width = icmPct + '%';
+  document.getElementById('cashEqLabel').textContent = (reqEqCash * 100).toFixed(1) + '%';
+  document.getElementById('cashEqBar').style.width = cashPct + '%';
+
+  // Recommendation
+  const recBox = document.getElementById('recommendationBox');
+  if (isNaN(reqEqIcm) || isNaN(reqEqCash) || pot <= 0) {
+    recBox.innerHTML = '';
+    return;
+  }
+
+  const diff = reqEqIcm - reqEqCash;
+  let recClass, recIcon, recText, recSub;
+  if (diff > 0.05) {
+    recClass = 'fold';
+    recIcon = '🛑';
+    recText = `ICM sagt: Eher folden (BF = ${bubbleFactor.toFixed(2)})`;
+    recSub = `Du brauchst ${(reqEqIcm * 100).toFixed(1)}% Equity — das ist ${(diff * 100).toFixed(1)}% mehr als die reinen Pot-Odds. Der Bubble-Druck zwingt dich zum Tighten.`;
+  } else if (diff < -0.05) {
+    recClass = 'call';
+    recIcon = '✅';
+    recText = `ICM sagt: Eher callen (BF = ${bubbleFactor.toFixed(2)})`;
+    recSub = `Du brauchst nur ${(reqEqIcm * 100).toFixed(1)}% Equity — ${(Math.abs(diff) * 100).toFixed(1)}% weniger als die reinen Pot-Odds. Der ICM-Druck erlaubt dir zu Loosen.`;
+  } else {
+    recClass = 'neutral';
+    recIcon = '⚖️';
+    recText = `ICM ist neutral (BF ≈ ${bubbleFactor.toFixed(2)})`;
+    recSub = `Die benötigte Equity (${(reqEqIcm * 100).toFixed(1)}%) entspricht etwa den Pot-Odds. Kein signifikanter ICM-Druck.`;
+  }
+
+  recBox.innerHTML = `
+    <div class="recommendation ${recClass}">
+      <div class="rec-icon">${recIcon}</div>
+      <div>
+        <div class="rec-text">${recText}</div>
+        <div class="rec-sub">${recSub}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ======================== INFO TOGGLE ========================
+function toggleInfo(header) {
+  const content = header.nextElementSibling;
+  const isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  header.classList.toggle('open');
+}
+
+// ======================== INIT ========================
+// Set default player count
+document.getElementById('playerCount').value = '6';
+onPlayerCountChange();
+</script>
+</body>
+</html>

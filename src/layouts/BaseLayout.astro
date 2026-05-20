@@ -1,0 +1,52 @@
+---
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  currentPath?: string;
+  canonical?: string;
+}
+
+const { title = 'Poker Basecamp', description = 'Bot Development & GTO Tools — Die einzige Plattform die Poker Bot Development + interaktive GTO-Tools + Human-vs-Machine Content vereint.', currentPath = '', canonical } = Astro.props;
+
+const fullTitle = title === 'Poker Basecamp' ? title : `${title} — Poker Basecamp`;
+---
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  {canonical && <link rel="canonical" href={canonical} />}
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+  <!-- Warhol Background -->
+  <div class="warhol-bg" aria-hidden="true">
+    <span>♠</span><span>♥</span><span>♦</span><span>♣</span>
+    <span>♠</span><span>♥</span><span>♦</span><span>♣</span>
+    <span>♠</span><span>♥</span><span>♦</span><span>♣</span>
+  </div>
+
+  <Navbar currentPath={currentPath} />
+
+  <div class="page-wrap">
+    <main class="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </div>
+</body>
+</html>

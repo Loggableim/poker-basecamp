@@ -1,0 +1,52 @@
+---
+export interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '' } = Astro.props;
+const isActive = (path: string) => currentPath === path || currentPath.startsWith(path + '/') ? 'active' : '';
+
+const links = [
+  { href: '/', label: 'Home', icon: '♠' },
+  { href: '/blog', label: 'Blog', icon: '📖' },
+  { href: '/tools', label: 'Tools', icon: '🛠️' },
+  { href: '/bot-vs-human', label: 'Bot vs Mensch', icon: '⚔️' },
+  { href: '/academy', label: 'Academy', icon: '🧠' },
+  { href: '/bot-baukasten', label: 'Baukasten', icon: '🔧' },
+  { href: '/live', label: 'Live', icon: '📊' },
+];
+---
+
+<nav class="navbar">
+  <a href="/" class="navbar-logo">✦ Poker Basecamp</a>
+  <div style="display:flex;align-items:center;">
+    <ul class="navbar-links">
+      {links.map(link => (
+        <li>
+          <a href={link.href} class={isActive(link.href)}>
+            {link.icon && <span>{link.icon} </span>}{link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <div class="navbar-live">
+      <div class="navbar-dot"></div>
+      <span>Bot aktiv</span>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .navbar-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.45rem 0.65rem;
+    border-radius: 8px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .navbar-links a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .navbar-links a.active { color: var(--pink); background: rgba(212,134,184,0.08); }
+</style>

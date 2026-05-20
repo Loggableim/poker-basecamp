@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout currentPath="/tools" title="🛠️ GTO-Tools" description="Interaktive Poker-Rechner — direkt aus der Bot-Engine. Equity, Ranges, ICM, MDF, Push/Fold.">
+  <div class="page-header">
+    <h1>🛠️ GTO-Tools</h1>
+    <p class="intro">Interaktive Poker-Rechner — direkt aus der Bot-Engine. Equity, Ranges, ICM, MDF, Push/Fold. Keine generischen Rechner, sondern echte Implementierung aus unserer Decision Engine.</p>
+  </div>
+
+  <section class="section">
+    <div class="tool-grid">
+      <a href="#" class="tool-card">
+        <div class="tool-card-header">
+          <div class="tool-icon">🧮</div>
+          <span class="tool-badge live">🟢 Live</span>
+        </div>
+        <h3>Equity Calculator 🔥</h3>
+        <p>Monte-Carlo-basierter Equity-Rechner. Hero-Hand + Gegner-Range + Board → Equity, Win/Tie/Lose + Bot-Vergleich.</p>
+        <div class="tool-features">
+          <span>Range Grid 13×13</span>
+          <span>Bot-Vergleich</span>
+          <span>10k Simulationen</span>
+          <span>Presets</span>
+        </div>
+      </a>
+
+      <div class="tool-card" style="opacity:0.6;cursor:not-allowed;">
+        <div class="tool-card-header">
+          <div class="tool-icon">📊</div>
+          <span class="tool-badge soon">⚡ Bald</span>
+        </div>
+        <h3>Range Visualizer</h3>
+        <p>13×13 Grid mit Heatmap. Vordefinierte Ranges (UTG, MP, CO, BTN, SB, BB) + Custom Range Builder mit Drag &amp; Select.</p>
+        <div class="tool-features">
+          <span>Heatmap</span>
+          <span>Presets</span>
+          <span>Permalink</span>
+          <span>Share</span>
+        </div>
+      </div>
+
+      <div class="tool-card" style="opacity:0.6;cursor:not-allowed;">
+        <div class="tool-card-header">
+          <div class="tool-icon">🧮</div>
+          <span class="tool-badge soon">⚡ Bald</span>
+        </div>
+        <h3>ICM Calculator</h3>
+        <p>Bubble Factor, $EV, nötige Equity für Calls. Wie ICMIZER — aber gratis und benutzerfreundlicher.</p>
+        <div class="tool-features">
+          <span>Bubble Factor</span>
+          <span>$EV</span>
+          <span>Payouts</span>
+          <span>Push/Fold</span>
+        </div>
+      </div>
+
+      <div class="tool-card" style="opacity:0.6;cursor:not-allowed;">
+        <div class="tool-card-header">
+          <div class="tool-icon">🎯</div>
+          <span class="tool-badge soon">⚡ Bald</span>
+        </div>
+        <h3>Push/Fold Nash Tables</h3>
+        <p>3-20bb Nash-Equilibria für jede Position. Push-Range + Call-Range visualisiert als 13×13 Grid.</p>
+        <div class="tool-features">
+          <span>3-20bb</span>
+          <span>Nash EQ</span>
+          <span>Positionen</span>
+          <span>Grid</span>
+        </div>
+      </div>
+
+      <div class="tool-card" style="opacity:0.6;cursor:not-allowed;">
+        <div class="tool-card-header">
+          <div class="tool-icon">🛡️</div>
+          <span class="tool-badge soon">⚡ Bald</span>
+        </div>
+        <h3>MDF Calculator</h3>
+        <p>Pot Odds → MDF → Alpha → Bluff-to-Value Ratio. Slider für Bet Size: 33%–150%.</p>
+        <div class="tool-features">
+          <span>MDF</span>
+          <span>Alpha</span>
+          <span>B:V Ratio</span>
+          <span>Slider</span>
+        </div>
+      </div>
+
+      <div class="tool-card" style="opacity:0.6;cursor:not-allowed;">
+        <div class="tool-card-header">
+          <div class="tool-icon">🤖</div>
+          <span class="tool-badge hot">🔥 Kommt</span>
+        </div>
+        <h3>Bot Simulator 🎯</h3>
+        <p>Bot vs Bot, Bot vs User, Hand-Analyse: "Was hätte der Bot gemacht?" — Schritt-für-Schritt-Replay.</p>
+        <div class="tool-features">
+          <span>Bot vs Bot</span>
+          <span>Bot vs User</span>
+          <span>Replay</span>
+          <span>Analyse</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px;">Warum unsere Tools anders sind</h2>
+    <p style="color:var(--text-dim);margin-bottom:28px;">Nicht generisch, nicht nachgebaut — direkt aus der Bot-Engine</p>
+
+    <div class="comparison-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>PBC Tools</th>
+            <th>Generische Rechner</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Engine-Quelle</td>
+            <td>Echte Bot-Engine (MDF, ICM, Push/Fold, Mixed Strategy)</td>
+            <td>Oberflächliche Näherungen</td>
+          </tr>
+          <tr>
+            <td>Bot-Vergleich</td>
+            <td><span class="check">✅</span> "Was sagt der Bot?" direkt im Tool</td>
+            <td><span class="cross">✗</span> Nicht vorhanden</td>
+          </tr>
+          <tr>
+            <td>Board-Texture</td>
+            <td><span class="check">✅</span> 7 Kategorien, SPR-basiertes Sizing</td>
+            <td><span class="cross">✗</span> Ignoriert</td>
+          </tr>
+          <tr>
+            <td>Mixed Strategy</td>
+            <td><span class="check">✅</span> Deterministische Coin-Flips via MD5</td>
+            <td><span class="cross">✗</span> Rein deterministisch</td>
+          </tr>
+          <tr>
+            <td>Blocker-Analyse</td>
+            <td><span class="check">✅</span> Flush/Straight/Pair-Blocker inkludiert</td>
+            <td><span class="cross">✗</span> Nicht vorhanden</td>
+          </tr>
+          <tr>
+            <td>Transparenz</td>
+            <td>Open Source Engine + Bug-Historie</td>
+            <td>Black Box</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</BaseLayout>

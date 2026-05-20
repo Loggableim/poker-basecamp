@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 — Seite nicht gefunden" description="Die angeforderte Seite existiert nicht.">
+  <div class="page-404">
+    <h1>404</h1>
+    <h2>Seite nicht gefunden</h2>
+    <p>Die angeforderte Seite existiert nicht oder wurde verschoben. Vielleicht war der Bot hier zu schnell?</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <a href="/" class="btn-wash primary">← Zurück zur Startseite</a>
+      <a href="/blog" class="btn-wash secondary">📖 Zum Blog</a>
+    </div>
+  </div>
+</BaseLayout>

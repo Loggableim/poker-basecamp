@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout currentPath="/academy" title="🧠 GTO Academy" description="6 Kurse · MDF · ICM · Blockers · GTO verstehen (ohne Mathestudium)">
+  <div class="page-header">
+    <h1>🧠 GTO Academy</h1>
+    <p class="intro">GTO verstehen — ohne Mathestudium. 6 Kurse von den Basics bis zur fortgeschrittenen Mixed Strategy. Direkt aus der Bot-Engine abgeleitet.</p>
+  </div>
+
+  <section class="section">
+    <div class="tool-grid">
+      <a href="#" class="tool-card">
+        <div class="tool-card-header">
+          <div class="tool-icon">🎯</div>
+          <span class="tool-badge live">🟢 Live</span>
+        </div>
+        <h3>GTO Basics</h3>
+        <p>Was ist Game Theory Optimal? Warum ist Poker nicht "gelöst"? Und wie denkt ein GTO-Bot? Der Einstieg für Nicht-Mathematiker.</p>
+        <div class="tool-features">
+          <span>Anfänger</span>
+          <span>30 min</span>
+          <span>4 Lektionen</span>
+        </div>
+      </a>
+
+      <a href="#" class="tool-card">
+        <div class="tool-card-header">
+          <div class="tool-icon">🧩</div>
+          <span class="tool-badge live">🟢 Live</span>
+        </div>
+        <h3>Range-Konstruktion</h3>
+        <p>Polarized vs Merged, Value vs Bluffs, RFI vs 3-Bet vs 4-Bet Ranges. Wie baut man eine kohärente Range?</p>
+        <div class="tool-features">
+          <span>Mittel</span>
+          <span>45 min</span>
+          <span>5 Lektionen</span>
+        </div>
+      </a>
+
+      <div class="tool-card" style="opacity:0.6;cursor:not-allowed;">
+        <div class="tool-card-header">
+          <div class="tool-icon">🛡️</div>
+          <span class="tool-badge soon">⚡ Bald</span>
+        </div>
+        <h3>Minimum Defense Frequency</h3>
+        <p>Wie viel muss ich verteidigen? MDF, Alpha, Bluff-to-Value Ratio — und warum die meisten Spieler zu viel folden.</p>
+        <div class="tool-features">
+          <span>Mittel</span>
+          <span>40 min</span>
+          <span>4 Lektionen</span>
+        </div>
+      </div>
+
+      <div class="tool-card" style="opacity:0.6;cursor:not-allowed;">
+        <div class="tool-card-header">
+          <div class="tool-icon">🧮</div>
+          <span class="tool-badge soon">⚡ Bald</span>
+        </div>
+        <h3>ICM — Independent Chip Model</h3>
+        <p>Bubble Factor, $EV, Push/Fold in Turnieren. Wie der Bot in Final-Table-Situationen entscheidet.</p>
+        <div class="tool-features">
+          <span>Fortgeschritten</span>
+          <span>50 min</span>
+          <span>6 Lektionen</span>
+        </div>
+      </div>
+
+      <div class="tool-card" style="opacity:0.6;cursor:not-allowed;">
+        <div class="tool-card-header">
+          <div class="tool-icon">🚫</div>
+          <span class="tool-badge soon">⚡ Bald</span>
+        </div>
+        <h3>Blocker Theory</h3>
+        <p>Warum A♥ K♥ auf 9♥ 7♥ 2♠ ein besserer Bluff ist als 3♣ 2♦. Block-Effekte verstehen und nutzen.</p>
+        <div class="tool-features">
+          <span>Fortgeschritten</span>
+          <span>35 min</span>
+          <span>3 Lektionen</span>
+        </div>
+      </div>
+
+      <div class="tool-card" style="opacity:0.6;cursor:not-allowed;">
+        <div class="tool-card-header">
+          <div class="tool-icon">📋</div>
+          <span class="tool-badge soon">⚡ Bald</span>
+        </div>
+        <h3>Board Texture &amp; Bet Sizing</h3>
+        <p>7 Board-Kategorien, SPR 5-Tier, Position-Faktor. Wie die Engine Bet Sizing wählt — und was du daraus lernen kannst.</p>
+        <div class="tool-features">
+          <span>Fortgeschritten</span>
+          <span>45 min</span>
+          <span>5 Lektionen</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div style="border:1px solid var(--gold-dim);background:rgba(212,168,68,0.03);padding:24px 30px;border-radius:12px;text-align:center;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:6px;">Von der Engine gelernt</h3>
+      <p style="color:var(--text-dim);margin-bottom:14px;">Alle Kurse basieren auf der echten Bot-Decision-Engine. Keine trockene Theorie — sondern Code, der wirklich spielt.</p>
+      <a href="/blog" class="btn-wash primary">📖 Blog lesen</a>
+    </div>
+  </section>
+</BaseLayout>

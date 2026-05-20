@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equity Calculator — Poker Monte Carlo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== Washed Warhol Design System ===== */
+    :root {
+      --bg-dark: #0f0f1a;
+      --bg-card: #1a1a2e;
+      --bg-card-hover: #22223a;
+      --accent: #e2b714;
+      --accent-dim: #b8940f;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --muted: #64748b;
+      --border: #2a2a3e;
+      --gradient: linear-gradient(135deg, #e2b714 0%, #f59e0b 100%);
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-dark);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-top: 70px;
+    }
+
+    /* ===== Navbar ===== */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(15,15,26,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .navbar .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .navbar .logo span { -webkit-text-fill-color: var(--text-dim); }
+    .navbar .links { display: flex; gap: 20px; }
+    .navbar .links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .navbar .links a:hover { color: var(--accent); }
+
+    /* ===== Container & Layout ===== */
+    .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 899px) {
+      .grid-2col { grid-template-columns: 1fr; }
+    }
+
+    /* ===== Tool Cards ===== */
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .tool-card:hover { border-color: rgba(226, 183, 20, 0.3); }
+    .tool-card h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tool-card h2 .badge {
+      font-size: 0.65rem;
+      font-weight: 500;
+      background: rgba(226, 183, 20, 0.15);
+      color: var(--accent-dim);
+      padding: 2px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== Card Inputs ===== */
+    .card-inputs { display: flex; gap: 16px; flex-wrap: wrap; }
+    .card-slot {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .card-slot .label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .card-visual {
+      width: 52px; height: 70px;
+      background: var(--bg-card-hover);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .card-visual.has-card {
+      background: #1e1e36;
+      border-color: var(--accent-dim);
+    }
+    .card-visual .suit { font-size: 0.9rem; line-height: 1; }
+    .card-visual .placeholder {
+      font-size: 0.65rem; color: var(--muted); font-weight: 400;
+    }
+    .card-visual.suit-h { color: #ef4444; }
+    .card-visual.suit-d { color: #ef4444; }
+    .card-visual.suit-s { color: var(--text); }
+    .card-visual.suit-c { color: var(--text); }
+    .card-visual:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(226,183,20,0.2); }
+
+    .rank-selector {
+      display: flex; gap: 3px; flex-wrap: wrap; justify-content: center;
+    }
+    .rank-btn {
+      width: 28px; height: 32px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .rank-btn:hover { background: var(--bg-card-hover); color: var(--text); }
+    .rank-btn.active { background: var(--accent); color: #0f0f1a; border-color: var(--accent); }
+
+    .suit-selector {
+      display: flex; gap: 6px;
+    }
+    .suit-btn {
+      width: 36px; height: 36px;
+      background: var(--bg-card-hover);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .suit-btn:hover { background: var(--bg-card); }
+    .suit-btn.active { border-color: var(--accent); background: rgba(226,183,20,0.12); }
+    .suit-btn.suit-h, .suit-btn.suit-d { color: #ef4444; }
+    .suit-btn.suit-s, .suit-btn.suit-c { color: var(--text); }
+
+    /* ===== Board Slots ===== */
+    .board-area { margin-top: 16px; }
+    .board-slots {
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    }
+    .board-slot {
+      width: 48px; height: 64px;
+      background: var(--bg-card-hover);
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      position: relative;
+    }
+    .board-slot.has-card {
+      border-style: solid;
+      border-color: var(--accent-dim);
+      background: #1e1e36;
+    }
+    .board-slot .rank { font-size: 1rem; }
+    .board-slot .suit { font-size: 0.85rem; line-height: 1; }
+    .board-slot.suit-h, .board-slot.suit-d { color: #ef4444; }
+    .board-slot.suit-s, .board-slot.suit-c { color: var(--text); }
+    .board-slot .slot-label {
+      font-size: 0.6rem; color: var(--muted);
+    }
+    .board-slot:hover { border-color: var(--muted); }
+    .board-slot.focused { border-color: var(--accent); }
+    .board-slot .remove-btn {
+      position: absolute; top: -6px; right: -6px;
+      width: 18px; height: 18px;
+      background: var(--danger); color: white;
+      border: none; border-radius: 50%;
+      font-size: 0.7rem; cursor: pointer;
+      display: none; align-items: center; justify-content: center;
+      line-height: 1;
+    }
+    .board-slot.has-card .remove-btn { display: flex; }
+
+    .board-controls {
+      display: flex; gap: 8px; align-items: center; margin-top: 8px;
+    }
+    .board-controls select, .board-controls button {
+      padding: 6px 12px;
+      background: var(--bg-card-hover);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .board-controls button:hover { background: var(--bg-card); }
+
+    /* ===== Range Grid ===== */
+    .range-grid-wrapper { overflow-x: auto; }
+    .range-grid {
+      display: inline-grid;
+      grid-template-columns: 28px repeat(13, minmax(28px, 1fr));
+      gap: 2px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      user-select: none;
+    }
+    .range-grid .rg-label {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 0.65rem;
+      height: 28px;
+    }
+    .range-grid .rg-cell {
+      width: 100%; aspect-ratio: 1;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.1s;
+      font-size: 0.55rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      background: var(--bg-card-hover);
+      border: 1px solid transparent;
+      min-width: 24px;
+      min-height: 24px;
+    }
+    .range-grid .rg-cell:hover { background: var(--bg-card); border-color: var(--muted); }
+    .range-grid .rg-cell.selected-suited {
+      background: rgba(34, 197, 94, 0.25);
+      border-color: var(--success);
+      color: var(--success);
+    }
+    .range-grid .rg-cell.selected-offsuit {
+      background: rgba(59, 130, 246, 0.25);
+      border-color: #3b82f6;
+      color: #60a5fa;
+    }
+    .range-grid .rg-cell.selected-pair {
+      background: rgba(226, 183, 20, 0.25);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ===== Range Controls ===== */
+    .range-controls { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .range-controls .preset-btn {
+      padding: 5px 12px;
+      background: var(--bg-card-hover);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .range-controls .preset-btn:hover { background: var(--bg-card); color: var(--accent); }
+    .range-controls .preset-btn.active { background: rgba(226,183,20,0.12); color: var(--accent); border-color: var(--accent-dim); }
+
+    .range-text-input {
+      margin-top: 12px;
+    }
+    .range-text-input textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg-card-hover);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      resize: vertical;
+      min-height: 40px;
+      transition: border-color 0.2s;
+    }
+    .range-text-input textarea:focus { outline: none; border-color: var(--accent); }
+    .range-text-input .range-info {
+      font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;
+    }
+
+    /* ===== Calculate Button ===== */
+    .calc-area { margin-top: 24px; }
+    .calc-btn {
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--gradient);
+      border: none;
+      border-radius: 12px;
+      color: #0f0f1a;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .calc-btn:hover { opacity: 0.9; }
+    .calc-btn:active { transform: scale(0.98); }
+    .calc-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ===== Results ===== */
+    .results-area { margin-top: 24px; }
+
+    .equity-bar-wrapper {
+      display: flex; height: 36px; border-radius: 10px; overflow: hidden;
+      background: var(--bg-card-hover);
+      border: 1px solid var(--border);
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .equity-bar-wrapper .bar-segment {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600;
+      transition: width 0.4s ease;
+      min-width: 0;
+    }
+    .equity-bar-wrapper .bar-win { background: var(--success); color: #0f0f1a; }
+    .equity-bar-wrapper .bar-tie { background: var(--accent); color: #0f0f1a; }
+    .equity-bar-wrapper .bar-lose { background: var(--danger); color: white; }
+    .equity-bar-wrapper .bar-empty {
+      background: var(--bg-card-hover);
+      color: var(--text-dim);
+    }
+
+    .equity-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .equity-stat {
+      background: var(--bg-card-hover);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+    .equity-stat .stat-value {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .equity-stat .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+    .equity-stat.stat-win .stat-value { color: var(--success); }
+    .equity-stat.stat-tie .stat-value { color: var(--accent); }
+    .equity-stat.stat-lose .stat-value { color: var(--danger); }
+
+    .equity-detail {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    /* ===== Bot Comparison ===== */
+    .bot-comparison {
+      background: var(--bg-card-hover);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+    .bot-comparison h3 {
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .bot-action {
+      display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+    }
+    .bot-action .action-badge {
+      padding: 4px 14px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .bot-action .action-badge.fold { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .bot-action .action-badge.call { background: rgba(34,197,94,0.15); color: var(--success); }
+    .bot-action .action-badge.raise { background: rgba(226,183,20,0.15); color: var(--accent); }
+    .bot-action .action-desc {
+      font-size: 0.8rem; color: var(--text-dim);
+    }
+    .bot-action .hand-strength {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* ===== States ===== */
+    .state-empty, .state-error {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+    .state-error { color: var(--danger); }
+    .state-loading {
+      text-align: center;
+      padding: 24px;
+    }
+    .spinner {
+      display: inline-block;
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== Utilities ===== */
+    .hidden { display: none !important; }
+    .mt-8 { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+    .text-center { text-align: center; }
+    .text-dim { color: var(--text-dim); }
+    .gap-8 { gap: 8px; }
+    .flex { display: flex; }
+    .flex-wrap { flex-wrap: wrap; }
+    .items-center { align-items: center; }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .container { padding: 12px; }
+      .tool-card { padding: 16px; }
+      .equity-stats { grid-template-columns: 1fr; }
+      .rank-btn { width: 24px; height: 28px; font-size: 0.6rem; }
+      .suit-btn { width: 32px; height: 32px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== Navbar ===== -->
+<nav class="navbar">
+  <div class="logo">♠ Equity Calc <span>| Poker Tools</span></div>
+  <div class="links">
+    <a href="#">Calculator</a>
+    <a href="#" class="text-dim">About</a>
+  </div>
+</nav>
+
+<!-- ===== Main ===== -->
+<div class="container">
+
+  <div style="margin-bottom: 20px;">
+    <h1 style="font-size:1.4rem; font-weight:700;">Equity Calculator</h1>
+    <p style="color:var(--text-dim); font-size:0.85rem; margin-top:4px;">
+      Monte-Carlo-Simulation — Berechne deine Gewinnwahrscheinlichkeit gegen eine gegnerische Range
+    </p>
+  </div>
+
+  <div class="grid-2col">
+
+    <!-- ===== LEFT COLUMN ===== -->
+    <div>
+
+      <!-- HERO HAND -->
+      <div class="tool-card" id="hero-card">
+        <h2>🃏 Hero Hand <span class="badge">Deine Karten</span></h2>
+        <div class="card-inputs" id="hero-inputs">
+          <!-- Card 1 -->
+          <div class="card-slot" data-slot="0">
+            <div class="label">Karte 1</div>
+            <div class="card-visual" id="hero-card-0" tabindex="0" onclick="openCardPicker(0)">
+              <span class="placeholder">Karte</span>
+            </div>
+            <div class="suit-selector" id="hero-suits-0">
+              <button class="suit-btn suit-s" data-suit="s" onclick="setHeroSuit(0,'s')">♠</button>
+              <button class="suit-btn suit-h" data-suit="h" onclick="setHeroSuit(0,'h')">♥</button>
+              <button class="suit-btn suit-d" data-suit="d" onclick="setHeroSuit(0,'d')">♦</button>
+              <button class="suit-btn suit-c" data-suit="c" onclick="setHeroSuit(0,'c')">♣</button>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="card-slot" data-slot="1">
+            <div class="label">Karte 2</div>
+            <div class="card-visual" id="hero-card-1" tabindex="0" onclick="openCardPicker(1)">
+              <span class="placeholder">Karte</span>
+            </div>
+            <div class="suit-selector" id="hero-suits-1">
+              <button class="suit-btn suit-s" data-suit="s" onclick="setHeroSuit(1,'s')">♠</button>
+              <button class="suit-btn suit-h" data-suit="h" onclick="setHeroSuit(1,'h')">♥</button>
+              <button class="suit-btn suit-d" data-suit="d" onclick="setHeroSuit(1,'d')">♦</button>
+              <button class="suit-btn suit-c" data-suit="c" onclick="setHeroSuit(1,'c')">♣</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rank Picker Modal (inline) -->
+        <div id="rank-picker" class="tool-card hidden" style="margin-top:12px; padding:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:0.85rem; font-weight:600;">Wähle Rang für Karte <span id="picker-slot-label">1</span></span>
+            <button onclick="closeCardPicker()" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1.2rem;">✕</button>
+          </div>
+          <div class="rank-selector" id="picker-ranks">
+            <button class="rank-btn" onclick="pickHeroRank('2')">2</button>
+            <button class="rank-btn" onclick="pickHeroRank('3')">3</button>
+            <button class="rank-btn" onclick="pickHeroRank('4')">4</button>
+            <button class="rank-btn" onclick="pickHeroRank('5')">5</button>
+            <button class="rank-btn" onclick="pickHeroRank('6')">6</button>
+            <button class="rank-btn" onclick="pickHeroRank('7')">7</button>
+            <button class="rank-btn" onclick="pickHeroRank('8')">8</button>
+            <button class="rank-btn" onclick="pickHeroRank('9')">9</button>
+            <button class="rank-btn" onclick="pickHeroRank('T')">T</button>
+            <button class="rank-btn" onclick="pickHeroRank('J')">J</button>
+            <button class="rank-btn" onclick="pickHeroRank('Q')">Q</button>
+            <button class="rank-btn" onclick="pickHeroRank('K')">K</button>
+            <button class="rank-btn" onclick="pickHeroRank('A')">A</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOARD -->
+      <div class="tool-card mt-16" id="board-card">
+        <h2>📋 Board <span class="badge">Community</span></h2>
+        <div class="board-slots" id="board-slots">
+          <div class="board-slot" data-index="0" onclick="openBoardPicker(0)">
+            <span class="slot-label">Flop 1</span>
+          </div>
+          <div class="board-slot" data-index="1" onclick="openBoardPicker(1)">
+            <span class="slot-label">Flop 2</span>
+          </div>
+          <div class="board-slot" data-index="2" onclick="openBoardPicker(2)">
+            <span class="slot-label">Flop 3</span>
+          </div>
+          <div class="board-slot" data-index="3" onclick="openBoardPicker(3)">
+            <span class="slot-label">Turn</span>
+          </div>
+          <div class="board-slot" data-index="4" onclick="openBoardPicker(4)">
+            <span class="slot-label">River</span>
+          </div>
+        </div>
+
+        <!-- Board Rank Picker -->
+        <div id="board-picker" class="hidden" style="margin-top:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:0.8rem; color:var(--text-dim);">Wähle Karte für Slot <span id="board-slot-label">0</span></span>
+            <div style="display:flex; gap:6px;">
+              <button onclick="clearBoardSlot()" style="padding:3px 10px; background:var(--bg-card-hover); border:1px solid var(--border); border-radius:4px; color:var(--text-dim); font-size:0.7rem; cursor:pointer;">Leeren</button>
+              <button onclick="closeBoardPicker()" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1rem;">✕</button>
+            </div>
+          </div>
+          <div class="rank-selector" id="board-rank-btns">
+            <button class="rank-btn" onclick="setBoardRank('2')">2</button>
+            <button class="rank-btn" onclick="setBoardRank('3')">3</button>
+            <button class="rank-btn" onclick="setBoardRank('4')">4</button>
+            <button class="rank-btn" onclick="setBoardRank('5')">5</button>
+            <button class="rank-btn" onclick="setBoardRank('6')">6</button>
+            <button class="rank-btn" onclick="setBoardRank('7')">7</button>
+            <button class="rank-btn" onclick="setBoardRank('8')">8</button>
+            <button class="rank-btn" onclick="setBoardRank('9')">9</button>
+            <button class="rank-btn" onclick="setBoardRank('T')">T</button>
+            <button class="rank-btn" onclick="setBoardRank('J')">J</button>
+            <button class="rank-btn" onclick="setBoardRank('Q')">Q</button>
+            <button class="rank-btn" onclick="setBoardRank('K')">K</button>
+            <button class="rank-btn" onclick="setBoardRank('A')">A</button>
+          </div>
+          <div class="suit-selector" style="margin-top:6px;" id="board-suit-btns">
+            <button class="suit-btn suit-s" data-suit="s" onclick="setBoardSuit('s')">♠</button>
+            <button class="suit-btn suit-h" data-suit="h" onclick="setBoardSuit('h')">♥</button>
+            <button class="suit-btn suit-d" data-suit="d" onclick="setBoardSuit('d')">♦</button>
+            <button class="suit-btn suit-c" data-suit="c" onclick="setBoardSuit('c')">♣</button>
+          </div>
+          <div style="margin-top:6px; display:flex; gap:6px;">
+            <button onclick="confirmBoardCard()" style="padding:4px 16px; background:var(--accent); color:#0f0f1a; border:none; border-radius:6px; font-weight:600; font-size:0.8rem; cursor:pointer;">Bestätigen</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALCULATE -->
+      <div class="calc-area">
+        <button class="calc-btn" id="calc-btn" onclick="runCalculation()">
+          ⚡ EQUITY BERECHNEN
+        </button>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="results-area" id="results-area">
+        <div class="state-empty" id="results-empty">
+          Wähle deine Hand und eine Gegner-Range aus, dann klicke auf "Equity Berechnen".
+        </div>
+        <div id="results-content" class="hidden">
+          <div class="equity-bar-wrapper" id="equity-bar">
+            <div class="bar-segment bar-win" id="bar-win" style="width:0%">0%</div>
+            <div class="bar-segment bar-tie" id="bar-tie" style="width:0%">0%</div>
+            <div class="bar-segment bar-lose" id="bar-lose" style="width:0%">0%</div>
+            <div class="bar-segment bar-empty" id="bar-empty" style="width:100%">—</div>
+          </div>
+          <div class="equity-stats">
+            <div class="equity-stat stat-win">
+              <div class="stat-value" id="stat-win">0%</div>
+              <div class="stat-label">Win</div>
+            </div>
+            <div class="equity-stat stat-tie">
+              <div class="stat-value" id="stat-tie">0%</div>
+              <div class="stat-label">Tie</div>
+            </div>
+            <div class="equity-stat stat-lose">
+              <div class="stat-value" id="stat-lose">0%</div>
+              <div class="stat-label">Lose</div>
+            </div>
+          </div>
+          <div class="equity-detail" id="equity-detail"></div>
+
+          <!-- Bot Comparison -->
+          <div class="bot-comparison" id="bot-comparison">
+            <h3>🤖 Bot-Vergleich</h3>
+            <div class="bot-action">
+              <span class="action-badge" id="bot-badge">—</span>
+              <span class="action-desc" id="bot-desc">Gegner-Aktion basierend auf Equity</span>
+              <span class="hand-strength" id="bot-strength"></span>
+            </div>
+          </div>
+        </div>
+        <div id="results-loading" class="hidden">
+          <div class="state-loading">
+            <div class="spinner"></div>
+            <p style="margin-top:12px; color:var(--text-dim); font-size:0.9rem;" id="loading-text">Simulation läuft… 0%</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div>
+
+      <!-- OPPONENT RANGE GRID -->
+      <div class="tool-card" id="range-card">
+        <h2>🎯 Gegner-Range <span class="badge">13×13 Grid</span></h2>
+
+        <div class="range-grid-wrapper">
+          <div class="range-grid" id="range-grid">
+            <!-- Wird per JS befüllt -->
+          </div>
+        </div>
+
+        <!-- Presets -->
+        <div class="range-controls">
+          <button class="preset-btn" data-range="utg" onclick="setPreset('utg')">UTG 15%</button>
+          <button class="preset-btn" data-range="mp" onclick="setPreset('mp')">MP 20%</button>
+          <button class="preset-btn" data-range="co" onclick="setPreset('co')">CO 25%</button>
+          <button class="preset-btn" data-range="btn" onclick="setPreset('btn')">BTN 40%</button>
+          <button class="preset-btn" data-range="sb" onclick="setPreset('sb')">SB 50%</button>
+          <button class="preset-btn" data-range="bb" onclick="setPreset('bb')">BB 70%</button>
+          <button class="preset-btn" onclick="clearRange()">🗑 Leeren</button>
+        </div>
+
+        <!-- Range Text Input -->
+        <div class="range-text-input">
+          <textarea id="range-text" placeholder="Range-Text eingeben, z.B.: AKs, AKo, QQ+, JJ, T9s" oninput="onRangeTextInput()"></textarea>
+          <div class="range-info" id="range-info">0 Combos (0%)</div>
+        </div>
+      </div>
+
+      <!-- COMBOS STATS (optional) -->
+      <div class="tool-card mt-16" id="stats-card">
+        <h2>📊 Range-Statistik</h2>
+        <div id="range-stats-content">
+          <div class="text-dim" style="font-size:0.85rem;">Wähle Combos im Grid aus, um die Statistik zu sehen.</div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /grid-2col -->
+
+  <!-- Permalink -->
+  <div style="margin-top:16px; text-align:center;">
+    <button id="permalink-btn" onclick="copyPermalink()" style="padding:6px 16px; background:var(--bg-card-hover); border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.75rem; cursor:pointer;">🔗 Permalink kopieren</button>
+  </div>
+
+  <footer style="margin-top:32px; padding:16px 0; border-top:1px solid var(--border); text-align:center; color:var(--muted); font-size:0.75rem;">
+    ♠ ♥ ♦ ♣ Equity Calculator v1.0 — Läuft 100% clientseitig im Browser
+  </footer>
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="deck.js"></script>
+<script src="hand-eval.js"></script>
+<script src="range-parser.js"></script>
+<script>
+// ============================================================
+// GLobale State
+// ============================================================
+const RANKS_G = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
+const SUITS_G = ['s','h','d','c'];
+const SUIT_SYMBOLS_G = { s:'♠', h:'♥', d:'♦', c:'♣' };
+
+let heroCards = [null, null]; // [{rank, suit}, ...] or null
+let boardCards = [null, null, null, null, null];
+let rangeGrid = []; // 13x13: 0=unsel, 1=suited/pair, 2=offsuit
+let rangeCombos = []; // computed from grid
+
+let activeCardSlot = 0; // for hero card picker
+let activeBoardSlot = 0;
+
+let equityWorker = null;
+let isRunning = false;
+
+// ============================================================
+// Init Range Grid
+// ============================================================
+function initRangeGrid() {
+  rangeGrid = [];
+  for (let i = 0; i < 13; i++) {
+    rangeGrid[i] = [];
+    for (let j = 0; j < 13; j++) {
+      rangeGrid[i][j] = 0;
+    }
+  }
+  renderRangeGrid();
+  updateRangeInfo();
+}
+
+function renderRangeGrid() {
+  const grid = document.getElementById('range-grid');
+  grid.innerHTML = '';
+
+  // Header
+  grid.appendChild(createEl('div', 'rg-label', ''));
+  for (let j = 0; j < 13; j++) {
+    grid.appendChild(createEl('div', 'rg-label', RANKS_G[j]));
+  }
+
+  for (let i = 0; i < 13; i++) {
+    // Row label
+    grid.appendChild(createEl('div', 'rg-label', RANKS_G[i]));
+
+    for (let j = 0; j < 13; j++) {
+      const cell = document.createElement('div');
+      cell.className = 'rg-cell';
+      cell.dataset.i = i;
+      cell.dataset.j = j;
+
+      // Label
+      if (i === j) {
+        cell.textContent = RANKS_G[i] + RANKS_G[j];
+      } else {
+        cell.textContent = RANKS_G[Math.min(i,j)] + RANKS_G[Math.max(i,j)];
+      }
+
+      // State class
+      const state = rangeGrid[i][j];
+      if (state === 1) {
+        if (i === j) {
+          cell.classList.add('selected-pair');
+        } else if (i < j) {
+          // Upper triangle: state 1 = suited (natural)
+          cell.classList.add('selected-suited');
+        } else {
+          // Lower triangle: state 1 = offsuit (natural)
+          cell.classList.add('selected-offsuit');
+        }
+      } else if (state === 2) {
+        if (i < j) {
+          // Upper triangle: state 2 = offsuit
+          cell.classList.add('selected-offsuit');
+        } else {
+          // Lower triangle: state 2 = suited
+          cell.classList.add('selected-suited');
+        }
+      }
+
+      cell.addEventListener('click', () => toggleGridCell(i, j));
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function toggleGridCell(i, j) {
+  const state = rangeGrid[i][j];
+  if (i === j) {
+    // Pairs: toggle 0 ↔ 1
+    rangeGrid[i][j] = state === 1 ? 0 : 1;
+  } else {
+    // Off-diagonal: cycle 0 → 1 → 2 → 0
+    rangeGrid[i][j] = (state + 1) % 3;
+  }
+  renderRangeGrid();
+  updateRangeFromGrid();
+  updateRangeInfo();
+}
+
+// ============================================================
+// Range ↔ Combos
+// ============================================================
+function updateRangeFromGrid() {
+  rangeCombos = [];
+  for (let i = 0; i < 13; i++) {
+    for (let j = 0; j < 13; j++) {
+      const state = rangeGrid[i][j];
+      if (state === 0) continue;
+
+      if (i === j) {
+        // Diagonale: Paar
+        rangeCombos.push({ r1: RANKS_G[i], r2: RANKS_G[j], suited: true });
+      } else if (i < j) {
+        // Oberes Dreieck: r1 (höherer Rang) = row, r2 = col
+        // state 1 = suited, state 2 = offsuit
+        rangeCombos.push({
+          r1: RANKS_G[i],
+          r2: RANKS_G[j],
+          suited: state === 1
+        });
+      } else {
+        // Unteres Dreieck: r1 = col (höherer Rang), r2 = row
+        // state 1 = offsuit (natural), state 2 = suited
+        rangeCombos.push({
+          r1: RANKS_G[j],
+          r2: RANKS_G[i],
+          suited: state === 2
+        });
+      }
+    }
+  }
+
+  // Update text input
+  const text = combosToRangeString(rangeCombos);
+  document.getElementById('range-text').value = text;
+}
+
+function applyRangeToGrid(combos) {
+  // Reset grid
+  for (let i = 0; i < 13; i++) {
+    for (let j = 0; j < 13; j++) {
+      rangeGrid[i][j] = 0;
+    }
+  }
+
+  for (const c of combos) {
+    const idx1 = RANKS_G.indexOf(c.r1);
+    const idx2 = RANKS_G.indexOf(c.r2);
+    if (idx1 === -1 || idx2 === -1) continue;
+
+    if (idx1 === idx2) {
+      // Paar
+      rangeGrid[idx1][idx2] = 1;
+    } else if (c.suited) {
+      // Suited: höherer Rang in Zeile, niedrigerer in Spalte → oberes Dreieck
+      const row = Math.min(idx1, idx2);
+      const col = Math.max(idx1, idx2);
+      rangeGrid[row][col] = 1;
+    } else {
+      // Offsuit: niedrigerer Rang in Zeile, höherer in Spalte → unteres Dreieck
+      const row = Math.max(idx1, idx2);
+      const col = Math.min(idx1, idx2);
+      rangeGrid[row][col] = 2;
+    }
+  }
+
+  renderRangeGrid();
+  updateRangeFromGrid();
+  updateRangeInfo();
+}
+
+function onRangeTextInput() {
+  const text = document.getElementById('range-text').value;
+  const combos = parseRangeString(text);
+  applyRangeToGrid(combos);
+}
+
+// ============================================================
+// Presets
+// ============================================================
+const PRESETS = {
+  utg: 'AA, KK, QQ, JJ, TT, 99, 88, 77, 66, 55, AKs, AKo, AQs, AQo, AJs, ATs, KQs, KQo, KJs, QJs, JTs',
+  mp: 'AA, KK, QQ, JJ, TT, 99, 88, 77, 66, 55, AKs, AKo, AQs, AQo, AJs, AJo, ATs, ATo, KQs, KQo, KJs, KTs, QJs, QTs, JTs, T9s',
+  co: 'AA, KK, QQ, JJ, TT, 99, 88, 77, 66, 55, 44, 33, AKs, AKo, AQs, AQo, AJs, AJo, ATs, ATo, A9s, A8s, A7s, A6s, A5s, A4s, A3s, A2s, KQs, KQo, KJs, KTs, K9s, QJs, QTs, Q9s, JTs, J9s, T9s, T8s, 98s, 87s, 76s, 65s',
+  btn: 'AA, KK, QQ, JJ, TT, 99, 88, 77, 66, 55, 44, 33, 22, AKs, AKo, AQs, AQo, AJs, AJo, ATs, ATo, A9s, A8s, A7s, A6s, A5s, A4s, A3s, A2s, KQs, KQo, KJs, KTs, K9s, K8s, K7s, QJs, QTs, Q9s, Q8s, JTs, J9s, J8s, T9s, T8s, T7s, 98s, 97s, 87s, 86s, 76s, 75s, 65s, 54s, 43s, 32s',
+  sb: 'AA, KK, QQ, JJ, TT, 99, 88, 77, 66, 55, 44, 33, 22, AKs, AKo, AQs, AQo, AJs, AJo, ATs, ATo, A9s, A8s, A7s, A6s, A5s, A4s, A3s, A2s, KQs, KQo, KJs, KTs, K9s, K8s, K7s, K6s, K5s, K4s, QJs, QTs, Q9s, Q8s, Q7s, Q6s, JTs, J9s, J8s, J7s, T9s, T8s, T7s, T6s, 98s, 97s, 96s, 87s, 86s, 85s, 76s, 75s, 74s, 65s, 64s, 54s, 53s, 43s',
+  bb: 'AA, KK, QQ, JJ, TT, 99, 88, 77, 66, 55, 44, 33, 22, AKs, AKo, AQs, AQo, AJs, AJo, ATs, ATo, A9s, A8s, A7s, A6s, A5s, A4s, A3s, A2s, KQs, KQo, KJs, KTs, K9s, K8s, K7s, K6s, K5s, K4s, K3s, K2s, QJs, QTs, Q9s, Q8s, Q7s, Q6s, Q5s, Q4s, JTs, J9s, J8s, J7s, J6s, J5s, T9s, T8s, T7s, T6s, T5s, 98s, 97s, 96s, 95s, 87s, 86s, 85s, 84s, 76s, 75s, 74s, 73s, 65s, 64s, 63s, 54s, 53s, 52s, 43s, 42s, 32s'
+};
+
+function setPreset(name) {
+  const rangeStr = PRESETS[name];
+  if (!rangeStr) return;
+  const combos = parseRangeString(rangeStr);
+  applyRangeToGrid(combos);
+
+  // Highlight active preset
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.preset-btn[data-range="${name}"]`);
+  if (btn) btn.classList.add('active');
+}
+
+function clearRange() {
+  initRangeGrid();
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+}
+
+// ============================================================
+// Range Info
+// ============================================================
+function updateRangeInfo() {
+  const count = countCombos(rangeCombos);
+  const pct = ((count / 1326) * 100).toFixed(1);
+  document.getElementById('range-info').textContent = `${count} Combos (${pct}%)`;
+
+  // Update stats card
+  const statsEl = document.getElementById('range-stats-content');
+  if (count === 0) {
+    statsEl.innerHTML = '<div class="text-dim" style="font-size:0.85rem;">Wähle Combos im Grid aus, um die Statistik zu sehen.</div>';
+    return;
+  }
+
+  let pairs = 0, suited = 0, offsuit = 0;
+  for (const c of rangeCombos) {
+    if (c.r1 === c.r2) pairs += 6;
+    else if (c.suited) suited += 4;
+    else offsuit += 12;
+  }
+
+  statsEl.innerHTML = `
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; text-align:center;">
+      <div><span style="font-family:var(--font-mono); font-size:1.2rem; font-weight:700; color:var(--accent);">${pairs}</span><br><span style="font-size:0.7rem; color:var(--text-dim);">Pairs</span></div>
+      <div><span style="font-family:var(--font-mono); font-size:1.2rem; font-weight:700; color:var(--success);">${suited}</span><br><span style="font-size:0.7rem; color:var(--text-dim);">Suited</span></div>
+      <div><span style="font-family:var(--font-mono); font-size:1.2rem; font-weight:700; color:#60a5fa;">${offsuit}</span><br><span style="font-size:0.7rem; color:var(--text-dim);">Offsuit</span></div>
+    </div>
+    <div style="margin-top:8px; text-align:center; font-size:0.75rem; color:var(--text-dim);">
+      Gesamt: <strong style="color:var(--text);">${count}</strong> Combos (${pct}%)
+    </div>
+  `;
+}
+
+// ============================================================
+// Hero Card Input
+// ============================================================
+function pickHeroRank(rank) {
+  const slot = activeCardSlot;
+  if (!heroCards[slot]) heroCards[slot] = {};
+  heroCards[slot].rank = rank;
+  updateHeroDisplay(slot);
+  closeCardPicker();
+}
+
+function setHeroSuit(slot, suit) {
+  if (!heroCards[slot]) heroCards[slot] = {};
+  heroCards[slot].suit = suit;
+  updateHeroDisplay(slot);
+}
+
+function updateHeroDisplay(slot) {
+  const card = heroCards[slot];
+  const el = document.getElementById(`hero-card-${slot}`);
+  const suitBtns = document.getElementById(`hero-suits-${slot}`);
+
+  if (card && card.rank && card.suit) {
+    el.innerHTML = `<span class="rank">${card.rank}</span><span class="suit">${SUIT_SYMBOLS_G[card.suit]}</span>`;
+    el.className = `card-visual has-card suit-${card.suit}`;
+  } else if (card && card.rank) {
+    el.innerHTML = `<span class="rank">${card.rank}</span><span class="suit" style="color:var(--muted);">?</span>`;
+    el.className = 'card-visual has-card';
+  } else {
+    el.innerHTML = '<span class="placeholder">Karte</span>';
+    el.className = 'card-visual';
+  }
+
+  // Suit buttons highlight
+  suitBtns.querySelectorAll('.suit-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.suit === (card ? card.suit : null));
+  });
+}
+
+function openCardPicker(slot) {
+  activeCardSlot = slot;
+  document.getElementById('picker-slot-label').textContent = slot + 1;
+  document.getElementById('rank-picker').classList.remove('hidden');
+}
+
+function closeCardPicker() {
+  document.getElementById('rank-picker').classList.add('hidden');
+}
+
+// ============================================================
+// Board Input
+// ============================================================
+function openBoardPicker(index) {
+  activeBoardSlot = index;
+  document.getElementById('board-slot-label').textContent = index + 1;
+  document.getElementById('board-picker').classList.remove('hidden');
+  document.querySelectorAll('.board-slot').forEach((s, i) => {
+    s.classList.toggle('focused', i === index);
+  });
+}
+
+function closeBoardPicker() {
+  document.getElementById('board-picker').classList.add('hidden');
+  document.querySelectorAll('.board-slot').forEach(s => s.classList.remove('focused'));
+}
+
+let pendingBoardCard = { rank: null, suit: null };
+
+function setBoardRank(rank) {
+  pendingBoardCard.rank = rank;
+  document.getElementById('board-rank-btns').querySelectorAll('.rank-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === rank);
+  });
+}
+
+function setBoardSuit(suit) {
+  pendingBoardCard.suit = suit;
+  document.getElementById('board-suit-btns').querySelectorAll('.suit-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.suit === suit);
+  });
+}
+
+function confirmBoardCard() {
+  if (!pendingBoardCard.rank || !pendingBoardCard.suit) return;
+  boardCards[activeBoardSlot] = { rank: pendingBoardCard.rank, suit: pendingBoardCard.suit };
+  renderBoard();
+  closeBoardPicker();
+  pendingBoardCard = { rank: null, suit: null };
+}
+
+function clearBoardSlot() {
+  boardCards[activeBoardSlot] = null;
+  renderBoard();
+  closeBoardPicker();
+}
+
+function renderBoard() {
+  const slots = document.querySelectorAll('.board-slot');
+  slots.forEach((el, i) => {
+    const card = boardCards[i];
+    if (card && card.rank && card.suit) {
+      el.innerHTML = `
+        <span class="rank">${card.rank}</span>
+        <span class="suit">${SUIT_SYMBOLS_G[card.suit]}</span>
+        <button class="remove-btn" onclick="removeBoardCard(${i})">✕</button>
+      `;
+      el.className = `board-slot has-card suit-${card.suit}`;
+    } else {
+      const labels = ['Flop 1', 'Flop 2', 'Flop 3', 'Turn', 'River'];
+      el.innerHTML = `<span class="slot-label">${labels[i]}</span>`;
+      el.className = 'board-slot';
+    }
+  });
+}
+
+function removeBoardCard(index) {
+  boardCards[index] = null;
+  renderBoard();
+}
+
+// ============================================================
+// Monte-Carlo Simulation
+// ============================================================
+function runCalculation() {
+  // Validate inputs
+  const validHero = heroCards.every(c => c && c.rank && c.suit);
+  if (!validHero) {
+    showError('Bitte wähle beide Hero-Karten aus.');
+    return;
+  }
+
+  if (rangeCombos.length === 0) {
+    showError('Bitte wähle eine Gegner-Range aus.');
+    return;
+  }
+
+  // Check hero cards are unique
+  const heroIds = heroCards.map(c => c.rank + c.suit);
+  if (heroIds[0] === heroIds[1]) {
+    showError('Die beiden Hero-Karten müssen unterschiedlich sein.');
+    return;
+  }
+
+  // Check board cards are unique and don't conflict with hero
+  const usedCards = new Set(heroIds);
+  for (const c of boardCards) {
+    if (!c || !c.rank || !c.suit) continue;
+    const id = c.rank + c.suit;
+    if (usedCards.has(id)) {
+      showError(`Karte ${c.rank}${SUIT_SYMBOLS_G[c.suit]} ist bereits vergeben.`);
+      return;
+    }
+    usedCards.add(id);
+  }
+
+  // Show loading
+  document.getElementById('results-empty').classList.add('hidden');
+  document.getElementById('results-content').classList.add('hidden');
+  document.getElementById('results-loading').classList.remove('hidden');
+  document.getElementById('loading-text').textContent = 'Simulation läuft… 0%';
+  document.getElementById('calc-btn').disabled = true;
+
+  // Start worker
+  if (equityWorker) {
+    equityWorker.terminate();
+  }
+  equityWorker = new Worker('equity-worker.js');
+
+  equityWorker.onmessage = function(e) {
+    const data = e.data;
+
+    if (data.type === 'progress' || data.type === 'result') {
+      const pct = data.done ? Math.round((data.done / data.total) * 100) : 100;
+      document.getElementById('loading-text').textContent =
+        `Simulation läuft… ${pct}% (${data.done}/${data.total})`;
+
+      if (data.type === 'result') {
+        showResults(data);
+      }
+    }
+  };
+
+  equityWorker.onerror = function(err) {
+    showError('Worker-Fehler: ' + err.message);
+    document.getElementById('results-loading').classList.add('hidden');
+    document.getElementById('calc-btn').disabled = false;
+  };
+
+  // Prepare data
+  const heroHand = heroCards.map(c => ({ rank: c.rank, suit: c.suit }));
+
+  // Make sure we pass combos properly
+  const combosToSend = rangeCombos.map(c => ({
+    r1: c.r1, r2: c.r2, suited: c.suited
+  }));
+
+  const boardToSend = boardCards.map(c => c && c.rank && c.suit ? { rank: c.rank, suit: c.suit } : null);
+
+  equityWorker.postMessage({
+    heroHand,
+    opponentCombos: combosToSend,
+    board: boardToSend,
+    iterations: 10000
+  });
+}
+
+function showResults(data) {
+  const { wins, ties, losses, total } = data;
+  const winPct = (wins / total * 100).toFixed(1);
+  const tiePct = (ties / total * 100).toFixed(1);
+  const losePct = (losses / total * 100).toFixed(1);
+
+  // Hide loading, show results
+  document.getElementById('results-loading').classList.add('hidden');
+  document.getElementById('results-content').classList.remove('hidden');
+  document.getElementById('calc-btn').disabled = false;
+
+  // Stats
+  document.getElementById('stat-win').textContent = winPct + '%';
+  document.getElementById('stat-tie').textContent = tiePct + '%';
+  document.getElementById('stat-lose').textContent = losePct + '%';
+
+  // Detail
+  document.getElementById('equity-detail').textContent =
+    `${total.toLocaleString()} Simulationen • Win: ${wins} • Tie: ${ties} • Lose: ${losses}`;
+
+  // Bar
+  const barWin = document.getElementById('bar-win');
+  const barTie = document.getElementById('bar-tie');
+  const barLose = document.getElementById('bar-lose');
+  const barEmpty = document.getElementById('bar-empty');
+
+  if (winPct > 0) {
+    barWin.style.width = winPct + '%';
+    barWin.textContent = winPct + '%';
+  } else { barWin.style.width = '0'; barWin.textContent = ''; }
+
+  if (tiePct > 0) {
+    barTie.style.width = tiePct + '%';
+    barTie.textContent = tiePct + '%';
+  } else { barTie.style.width = '0'; barTie.textContent = ''; }
+
+  if (losePct > 0) {
+    barLose.style.width = losePct + '%';
+    barLose.textContent = losePct + '%';
+  } else { barLose.style.width = '0'; barLose.textContent = ''; }
+
+  const remaining = 100 - parseFloat(winPct) - parseFloat(tiePct) - parseFloat(losePct);
+  if (remaining > 0.1) {
+    barEmpty.style.width = remaining + '%';
+    barEmpty.textContent = '';
+  } else {
+    barEmpty.style.width = '0';
+  }
+
+  // Bot comparison
+  updateBotComparison(parseFloat(winPct), parseFloat(tiePct));
+}
+
+function updateBotComparison(winPct, tiePct) {
+  const badge = document.getElementById('bot-badge');
+  const desc = document.getElementById('bot-desc');
+  const strength = document.getElementById('bot-strength');
+
+  // Simplified engine logic
+  const equity = winPct + tiePct / 2;
+
+  strength.textContent = `Equity: ${equity.toFixed(1)}%`;
+
+  if (equity >= 55) {
+    badge.textContent = '♠ RAISE';
+    badge.className = 'action-badge raise';
+    desc.textContent = 'Starke Hand — Bot würde raisen (Value Bet).';
+  } else if (equity >= 40) {
+    badge.textContent = '♠ CALL';
+    badge.className = 'action-badge call';
+    desc.textContent = 'Durchschnittliche Hand — Bot würde callen (oder checken).';
+  } else if (equity >= 25) {
+    badge.textContent = '♠ CALL (marginal)';
+    badge.className = 'action-badge call';
+    desc.textContent = 'Schwache Hand — Bot würde nur mit guter Position/Implied Odds callen.';
+  } else {
+    badge.textContent = '♠ FOLD';
+    badge.className = 'action-badge fold';
+    desc.textContent = 'Sehr schwache Hand — Bot würde folden.';
+  }
+}
+
+function showError(msg) {
+  document.getElementById('results-empty').classList.add('hidden');
+  document.getElementById('results-content').classList.add('hidden');
+  document.getElementById('results-loading').classList.add('hidden');
+  document.getElementById('calc-btn').disabled = false;
+
+  const area = document.getElementById('results-area');
+  let errEl = document.getElementById('error-msg');
+  if (!errEl) {
+    errEl = document.createElement('div');
+    errEl.id = 'error-msg';
+    errEl.className = 'state-error';
+    area.appendChild(errEl);
+  }
+  errEl.textContent = '⚠️ ' + msg;
+  errEl.classList.remove('hidden');
+}
+
+// ============================================================
+// Permalink
+// ============================================================
+function buildPermalink() {
+  const params = {};
+
+  // Hero hand
+  const hero = heroCards.map(c => c ? c.rank + c.suit : '--').join('');
+  if (hero !== '--') params.h = hero;
+
+  // Board
+  const board = boardCards.map(c => c && c.rank && c.suit ? c.rank + c.suit : '-').join('');
+  if (board.replace(/-/g, '').length > 0) params.b = board;
+
+  // Range text
+  const rangeText = document.getElementById('range-text').value.trim();
+  if (rangeText) params.r = rangeText;
+
+  const qs = Object.entries(params).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+  return window.location.origin + window.location.pathname + '#' + qs;
+}
+
+function copyPermalink() {
+  const url = buildPermalink();
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('permalink-btn');
+    const orig = btn.textContent;
+    btn.textContent = '✅ Kopiert!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  });
+}
+
+function loadFromPermalink() {
+  if (!window.location.hash) return;
+  const hash = window.location.hash.slice(1);
+  const params = new URLSearchParams(hash);
+
+  const heroStr = params.get('h');
+  if (heroStr && heroStr.length === 4) {
+    for (let i = 0; i < 2; i++) {
+      const rank = heroStr[i * 2];
+      const suit = heroStr[i * 2 + 1];
+      if (RANKS_G.includes(rank) && SUITS_G.includes(suit)) {
+        heroCards[i] = { rank, suit };
+        updateHeroDisplay(i);
+      }
+    }
+  }
+
+  const boardStr = params.get('b');
+  if (boardStr) {
+    for (let i = 0; i < Math.min(boardStr.length / 2, 5); i++) {
+      const rank = boardStr[i * 2];
+      const suit = boardStr[i * 2 + 1];
+      if (rank !== '-' && RANKS_G.includes(rank) && SUITS_G.includes(suit)) {
+        boardCards[i] = { rank, suit };
+      }
+    }
+    renderBoard();
+  }
+
+  const rangeStr = params.get('r');
+  if (rangeStr) {
+    document.getElementById('range-text').value = rangeStr;
+    const combos = parseRangeString(rangeStr);
+    applyRangeToGrid(combos);
+  }
+}
+
+// ============================================================
+// Utilities
+// ============================================================
+function createEl(tag, className, text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text) el.textContent = text;
+  return el;
+}
+
+// ============================================================
+// Init
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  initRangeGrid();
+  renderBoard();
+  loadFromPermalink();
+});
+</script>
+
+</body>
+</html>

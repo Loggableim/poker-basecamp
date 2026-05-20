@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout currentPath="/bot-vs-human" title="⚔️ Bot vs Mensch" description="100 Hände · Live · Postmortems — Der Bot fordert heraus. Wer gewinnt?">
+  <div class="page-header">
+    <h1>⚔️ Bot vs Mensch</h1>
+    <p class="intro">100 Hände · Live · Postmortems. Der Bot fordert heraus — und wir dokumentieren jede Hand. Transparent, ungeschönt, live.</p>
+  </div>
+
+  <section class="section">
+    <div class="grid-2">
+      <div>
+        <div class="section-header">
+          <div class="sh-sigil">⚔</div>
+          <h2>Aktuelle Challenge</h2>
+        </div>
+        <div style="border:1px solid var(--border);background:var(--bg-card);padding:24px;border-radius:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <span style="font-size:1.5rem;">🤖 vs 🧑</span>
+            <span class="tool-badge live">🟢 Live</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:center;">
+            <div>
+              <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Bot</div>
+              <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--pink);">47</div>
+              <div style="font-size:0.68rem;color:var(--text-dim);">Hände gewonnen</div>
+            </div>
+            <div>
+              <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Mensch</div>
+              <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);">42</div>
+              <div style="font-size:0.68rem;color:var(--text-dim);">Hände gewonnen</div>
+            </div>
+          </div>
+          <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);">
+            <span>Progress: 89/100</span>
+            <span>Bot Equity: 52.8%</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-header">
+          <div class="sh-sigil" style="background:var(--gold-dim);color:var(--bg);">📋</div>
+          <h2>Postmortems</h2>
+        </div>
+        <div class="art-list">
+          <a href="#" class="art-item">
+            <span class="ai-icon">📋</span>
+            <div class="ai-text">
+              <h3>Hand #42 — Der Bot foldet die Nuts</h3>
+              <p>Warum die Engine einen Flush auf dem Board nicht erkannte — und wie wir den Bug fanden.</p>
+            </div>
+            <span class="ai-arrow">→</span>
+          </a>
+          <a href="#" class="art-item">
+            <span class="ai-icon">📋</span>
+            <div class="ai-text">
+              <h3>Hand #37 — Bluff-Catch mit 3rd Pair</h3>
+              <p>Der Bot callt einen River-Bet mit 3rd Pair — und liegt richtig. GTO at work.</p>
+            </div>
+            <span class="ai-arrow">→</span>
+          </a>
+          <a href="#" class="art-item">
+            <span class="ai-icon">📋</span>
+            <div class="ai-text">
+              <h3>Hand #28 — Der ICM-Fold</h3>
+              <p>Bubble-Situation: Bot foldet KK preflop. Warum das richtig war — und der Mensch es nicht glauben konnte.</p>
+            </div>
+            <span class="ai-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="sh-sigil" style="background:var(--green-dim);">📊</div>
+      <h2>Statistik</h2>
+    </div>
+    <div class="kpi-strip" style="padding:0;">
+      <div class="ks-item">
+        <div class="ks-val pink">52.8%</div>
+        <div class="ks-lbl">Bot Win Rate</div>
+      </div>
+      <div class="ks-item">
+        <div class="ks-val gold">+€12.40</div>
+        <div class="ks-lbl">Bot Net (€)</div>
+      </div>
+      <div class="ks-item">
+        <div class="ks-val green">89</div>
+        <div class="ks-lbl">Total Hands</div>
+      </div>
+      <div class="ks-item">
+        <div class="ks-val mauve">6</div>
+        <div class="ks-lbl">Blunders</div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

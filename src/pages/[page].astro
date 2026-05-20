@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map(page => ({
+    params: { page: page.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const { Content } = await page.render();
+---
+
+<BaseLayout currentPath={"/" + page.slug} title={page.data.title} description={page.data.description}>
+  <div class="page-header">
+    <h1>{page.data.title}</h1>
+  </div>
+  <article class="section" style="max-width:820px;">
+    <div class="content-styles">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .content-styles h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-top: 40px;
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+  .content-styles h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  .content-styles p {
+    margin-bottom: 18px;
+    line-height: 1.7;
+  }
+  .content-styles a {
+    color: var(--pink);
+    text-decoration: underline;
+  }
+  .content-styles a:hover {
+    color: var(--gold);
+  }
+  .content-styles strong {
+    color: var(--gold);
+  }
+  .content-styles ul, .content-styles ol {
+    margin-bottom: 18px;
+    padding-left: 24px;
+  }
+  .content-styles li {
+    margin-bottom: 6px;
+    line-height: 1.6;
+  }
+  .content-styles hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 30px 0;
+  }
+</style>

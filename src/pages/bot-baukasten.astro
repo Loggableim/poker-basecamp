@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout currentPath="/bot-baukasten" title="🔧 Bot-Baukasten" description="6 Module · Bau dir deinen eigenen Poker Bot — von Null bis zur Decision Engine">
+  <div class="page-header">
+    <h1>🔧 Bot-Baukasten</h1>
+    <p class="intro">Bau dir deinen eigenen Poker Bot — von Null bis zur laufenden Decision Engine. 6 Module, progressive Komplexität. Early-Bird verfügbar.</p>
+  </div>
+
+  <section class="section">
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-card-header">
+          <div class="tool-icon">🌐</div>
+          <span class="tool-badge hot">🔥 Starter</span>
+        </div>
+        <h3>Modul 1: Chrome CDP &amp; Playwright Setup</h3>
+        <p>Browser-Automation von Grund auf. Chrome mit Remote Debugging starten, Playwright-Setup, Navigation auf Poker-Rooms.</p>
+        <div class="tool-features">
+          <span>Setup</span>
+          <span>Browser</span>
+          <span>Playwright</span>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-card-header">
+          <div class="tool-icon">👁️</div>
+          <span class="tool-badge hot">🔥 Basis</span>
+        </div>
+        <h3>Modul 2: DOM-Reader &amp; Game State</h3>
+        <p>Playtech-Iframes parsen, Shadow-DOMs durchdringen, Game-State aufbauen. Inklusive Hash-basiertem Stabilitätsfilter.</p>
+        <div class="tool-features">
+          <span>DOM</span>
+          <span>Parser</span>
+          <span>Stability</span>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-card-header">
+          <div class="tool-icon">🧠</div>
+          <span class="tool-badge hot">🔥 Premium</span>
+        </div>
+        <h3>Modul 3: Decision Engine (3-Stage)</h3>
+        <p>Das Herzstück: Push/Fold Nash, ICM, MDF + Mixed Strategy. Hand-Classifier, Board-Texture, SPR. Der Teil, der wirklich gewinnt.</p>
+        <div class="tool-features">
+          <span>Engine</span>
+          <span>GTO</span>
+          <span>Nash</span>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-card-header">
+          <div class="tool-icon">🖱️</div>
+          <span class="tool-badge soon">⚡ Modul 4</span>
+        </div>
+        <h3>Modul 4: BrowserActor &amp; Actions</h3>
+        <p>Entscheidungen in Klicks umsetzen. Button-Koordinaten berechnen, Anti-Detection, Error-Handling bei disconnected Sessions.</p>
+        <div class="tool-features">
+          <span>Actions</span>
+          <span>Klicks</span>
+          <span>Anti-Detect</span>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-card-header">
+          <div class="tool-icon">📊</div>
+          <span class="tool-badge soon">⚡ Modul 5</span>
+        </div>
+        <h3>Modul 5: Dashboard &amp; Live-Monitoring</h3>
+        <p>FastAPI-Dashboard, Echtzeit-Updates, Multi-Table-Layout. Dein Bot sichtbar gemacht — live vom Tisch.</p>
+        <div class="tool-features">
+          <span>FastAPI</span>
+          <span>Dashboard</span>
+          <span>Real-Time</span>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-card-header">
+          <div class="tool-icon">🚀</div>
+          <span class="tool-badge soon">⚡ Modul 6</span>
+        </div>
+        <h3>Modul 6: Production &amp; Deployment</h3>
+        <p>Vom Dev-Script zum 24/7-Bot. VM-Setup, Chrome-Headless, Logging, Alerting, Anti-Bot-Detection im echten Einsatz.</p>
+        <div class="tool-features">
+          <span>Deploy</span>
+          <span>VM</span>
+          <span>24/7</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div style="max-width:500px;margin:0 auto;text-align:center;border:1px solid var(--gold-dim);background:rgba(212,168,68,0.03);padding:30px;border-radius:12px;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:6px;">Early Bird Paket</h3>
+      <p style="color:var(--text-dim);margin-bottom:4px;">Alle 6 Module + Source Code + Discord-Zugang</p>
+      <p style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold);margin:12px 0;">€199</p>
+      <p style="font-size:0.72rem;color:var(--muted);margin-bottom:16px;">(Normalpreis ab €299) · Limitierte Plätze</p>
+      <a href="#" class="btn-wash primary">🔥 Jetzt sichern</a>
+    </div>
+  </section>
+
+  <section class="section" style="text-align:center;">
+    <p style="color:var(--text-dim);font-size:0.85rem;">
+      Alle Module bauen aufeinander auf und sind als Bundle oder einzeln erhältlich.<br />
+      Inklusive: 1:1 Code-Review · Zugang zur Bot-Dev Discord-Community · Lifetime-Updates
+    </p>
+  </section>
+</BaseLayout>
